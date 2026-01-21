@@ -1,0 +1,109 @@
+{
+  "expectation_suite_name": "gold_slot_performance_suite",
+  "meta": {
+    "great_expectations_version": "0.18.0",
+    "notes": "Data quality expectations for Gold slot performance KPIs"
+  },
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 1,
+        "max_value": null
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "net_win"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "actual_hold_pct"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "theoretical_win"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "machine_id"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "business_date"
+      }
+    },
+    {
+      "expectation_type": "expect_compound_columns_to_be_unique",
+      "kwargs": {
+        "column_list": ["machine_id", "business_date"]
+      },
+      "meta": {
+        "notes": "One record per machine per day"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "actual_hold_pct",
+        "min_value": -50,
+        "max_value": 100,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Hold percentage typically 0-100%, allow small variance"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "total_coin_in",
+        "min_value": 0,
+        "max_value": null
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "total_coin_out",
+        "min_value": 0,
+        "max_value": null
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "total_games",
+        "min_value": 0,
+        "max_value": null
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "performance_status",
+        "value_set": ["HIGH_PERFORMER", "UNDERPERFORMER", "LOW_ACTIVITY", "NORMAL"]
+      }
+    },
+    {
+      "expectation_type": "expect_column_mean_to_be_between",
+      "kwargs": {
+        "column": "avg_data_quality",
+        "min_value": 70,
+        "max_value": 100
+      },
+      "meta": {
+        "notes": "Average data quality from Silver should be maintained"
+      }
+    }
+  ]
+}

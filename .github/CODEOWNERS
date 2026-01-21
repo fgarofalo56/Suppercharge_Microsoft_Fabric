@@ -1,0 +1,24 @@
+# Code Owners for Microsoft Fabric POC
+# These users will be automatically requested for review
+
+# Default owners for everything
+* @frgarofa
+
+# Infrastructure (IaC)
+/infra/ @frgarofa
+
+# Documentation
+/docs/ @frgarofa
+*.md @frgarofa
+
+# Data Generation
+/data-generation/ @frgarofa
+
+# Notebooks
+/notebooks/ @frgarofa
+
+# GitHub Actions
+/.github/ @frgarofa
+
+# Tutorials
+/tutorials/ @frgarofa

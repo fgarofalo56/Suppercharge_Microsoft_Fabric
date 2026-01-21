@@ -1,0 +1,142 @@
+{
+  "expectation_suite_name": "bronze_slot_telemetry_suite",
+  "meta": {
+    "great_expectations_version": "0.18.0",
+    "notes": "Data quality expectations for Bronze slot telemetry table"
+  },
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 1,
+        "max_value": null
+      },
+      "meta": {
+        "notes": "Table should have at least 1 record"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "machine_id"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "event_type"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "event_timestamp"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "coin_in"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "machine_id"
+      },
+      "meta": {
+        "notes": "Machine ID is required"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "event_timestamp"
+      },
+      "meta": {
+        "notes": "Timestamp is required"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "event_type"
+      },
+      "meta": {
+        "notes": "Event type is required"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "machine_id",
+        "regex": "^SLOT-[0-9]{4}$"
+      },
+      "meta": {
+        "notes": "Machine ID format: SLOT-XXXX"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "event_type",
+        "value_set": [
+          "GAME_PLAY",
+          "JACKPOT",
+          "METER_UPDATE",
+          "DOOR_OPEN",
+          "DOOR_CLOSE",
+          "POWER_ON",
+          "POWER_OFF",
+          "BILL_IN",
+          "TICKET_OUT",
+          "TILT"
+        ]
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "coin_in",
+        "min_value": 0,
+        "max_value": null,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Coin in should be non-negative"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "coin_out",
+        "min_value": 0,
+        "max_value": null,
+        "mostly": 0.99
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "zone",
+        "value_set": [
+          "North",
+          "South",
+          "East",
+          "West",
+          "VIP",
+          "High Limit",
+          "Penny",
+          null
+        ]
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "denomination",
+        "value_set": [0.01, 0.05, 0.25, 0.50, 1.00, 2.00, 5.00, 10.00, 25.00, 100.00, null]
+      }
+    }
+  ]
+}

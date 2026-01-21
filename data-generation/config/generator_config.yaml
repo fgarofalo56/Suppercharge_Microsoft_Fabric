@@ -1,0 +1,187 @@
+# Data Generator Configuration
+# Casino Fabric POC
+
+# Global settings
+global:
+  seed: 42  # For reproducibility
+  default_days: 30
+  output_format: parquet
+
+# Volume settings by environment
+environments:
+  demo:
+    slot_telemetry:
+      records: 500000
+      days: 30
+    player_profiles:
+      records: 10000
+    table_games:
+      records: 100000
+      days: 30
+    financial:
+      records: 50000
+      days: 30
+    security:
+      records: 10000
+      days: 30
+    compliance:
+      records: 5000
+      days: 30
+
+  small:
+    slot_telemetry:
+      records: 10000
+      days: 7
+    player_profiles:
+      records: 1000
+    table_games:
+      records: 5000
+      days: 7
+    financial:
+      records: 2000
+      days: 7
+    security:
+      records: 500
+      days: 7
+    compliance:
+      records: 200
+      days: 7
+
+  production:
+    slot_telemetry:
+      records: 5000000
+      days: 90
+    player_profiles:
+      records: 100000
+    table_games:
+      records: 1000000
+      days: 90
+    financial:
+      records: 500000
+      days: 90
+    security:
+      records: 100000
+      days: 90
+    compliance:
+      records: 50000
+      days: 90
+
+# Slot Machine Settings
+slot_machine:
+  machine_id_prefix: "SLOT"
+  machine_id_range: [1000, 9999]
+  zones:
+    - name: "North"
+      weight: 0.2
+    - name: "South"
+      weight: 0.2
+    - name: "East"
+      weight: 0.2
+    - name: "West"
+      weight: 0.2
+    - name: "VIP"
+      weight: 0.1
+    - name: "High Limit"
+      weight: 0.05
+    - name: "Penny"
+      weight: 0.05
+  denominations:
+    - value: 0.01
+      weight: 0.30
+    - value: 0.05
+      weight: 0.10
+    - value: 0.25
+      weight: 0.25
+    - value: 1.00
+      weight: 0.20
+    - value: 5.00
+      weight: 0.10
+    - value: 25.00
+      weight: 0.04
+    - value: 100.00
+      weight: 0.01
+  event_types:
+    - type: "GAME_PLAY"
+      weight: 0.80
+    - type: "METER_UPDATE"
+      weight: 0.10
+    - type: "BILL_IN"
+      weight: 0.05
+    - type: "DOOR_OPEN"
+      weight: 0.02
+    - type: "JACKPOT"
+      weight: 0.02
+    - type: "TILT"
+      weight: 0.01
+  manufacturers:
+    - "IGT"
+    - "Aristocrat"
+    - "Scientific Games"
+    - "Konami"
+    - "Everi"
+
+# Player Settings
+player:
+  player_id_prefix: "P"
+  player_id_range: [10000, 99999]
+  loyalty_tiers:
+    - tier: "Bronze"
+      weight: 0.40
+    - tier: "Silver"
+      weight: 0.30
+    - tier: "Gold"
+      weight: 0.15
+    - tier: "Platinum"
+      weight: 0.10
+    - tier: "Diamond"
+      weight: 0.05
+  min_age: 21
+  max_age: 85
+
+# Compliance Settings
+compliance:
+  ctr_threshold: 10000  # USD
+  w2g_slot_threshold: 1200  # USD
+  w2g_table_threshold: 600  # USD at 300:1 odds
+  sar_structuring_window: 24  # hours
+  sar_structuring_threshold: 8000  # USD
+  filing_types:
+    - type: "CTR"
+      weight: 0.50
+    - type: "W2G"
+      weight: 0.35
+    - type: "SAR"
+      weight: 0.15
+
+# Financial Settings
+financial:
+  transaction_types:
+    - type: "CASH_IN"
+      weight: 0.35
+    - type: "CASH_OUT"
+      weight: 0.30
+    - type: "CHIP_PURCHASE"
+      weight: 0.15
+    - type: "CHIP_REDEMPTION"
+      weight: 0.10
+    - type: "MARKER"
+      weight: 0.05
+    - type: "MARKER_PAYMENT"
+      weight: 0.05
+  cage_locations:
+    - "Main Cage"
+    - "North Cage"
+    - "South Cage"
+    - "VIP Cage"
+    - "High Limit Cage"
+  amount_ranges:
+    small: [20, 500]
+    medium: [500, 5000]
+    large: [5000, 50000]
+    ctr_level: [10000, 100000]
+
+# Streaming Settings
+streaming:
+  events_per_second: 50
+  batch_size: 100
+  flush_interval_seconds: 1

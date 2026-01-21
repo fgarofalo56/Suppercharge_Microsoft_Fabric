@@ -1,0 +1,190 @@
+name: Validate Infrastructure (PR)
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'infra/**'
+      - '.github/workflows/deploy-infra*.yml'
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    name: Validate Bicep
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Bicep
+        run: |
+          az bicep build --file infra/main.bicep
+          echo "✅ Bicep build successful"
+
+      - name: Lint Bicep
+        id: lint
+        continue-on-error: true
+        run: |
+          az bicep lint --file infra/main.bicep 2>&1 | tee lint-output.txt
+          if [ ${PIPESTATUS[0]} -ne 0 ]; then
+            echo "has_warnings=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload Lint Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bicep-lint-results
+          path: lint-output.txt
+
+  what-if:
+    name: What-If Analysis
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Run What-If (Dev)
+        id: whatif
+        run: |
+          RESULT=$(az deployment sub what-if \
+            --location eastus2 \
+            --template-file infra/main.bicep \
+            --parameters infra/environments/dev/dev.bicepparam \
+            --no-prompt 2>&1) || true
+
+          # Save for PR comment
+          echo "$RESULT" > whatif-output.txt
+
+          # Create summary
+          echo "### What-If Analysis Results" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "$RESULT" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const whatifOutput = fs.readFileSync('whatif-output.txt', 'utf8');
+
+            const comment = `## Infrastructure Change Preview
+
+            This PR includes infrastructure changes. Below is the What-If analysis showing what will change:
+
+            <details>
+            <summary>📋 What-If Results (click to expand)</summary>
+
+            \`\`\`
+            ${whatifOutput.substring(0, 60000)}
+            \`\`\`
+
+            </details>
+
+            **Note:** This is a preview of changes that will be applied when merged to main.
+            `;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(c =>
+              c.user.type === 'Bot' &&
+              c.body.includes('## Infrastructure Change Preview')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: infra/
+          framework: bicep
+          output_format: sarif
+          output_file_path: results.sarif
+          soft_fail: true
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: results.sarif
+
+  cost-estimate:
+    name: Cost Estimate
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Estimate Costs
+        run: |
+          echo "### Estimated Monthly Costs" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Resource | SKU | Est. Monthly Cost |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-----|-------------------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Fabric Capacity | F64 | ~\$8,000 |" >> $GITHUB_STEP_SUMMARY
+          echo "| Purview | Standard | ~\$500 |" >> $GITHUB_STEP_SUMMARY
+          echo "| Storage (1TB) | Hot | ~\$20 |" >> $GITHUB_STEP_SUMMARY
+          echo "| Key Vault | Standard | ~\$5 |" >> $GITHUB_STEP_SUMMARY
+          echo "| Log Analytics | 100GB | ~\$250 |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Total** | | **~\$8,775/month** |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "_Note: Actual costs may vary based on usage._" >> $GITHUB_STEP_SUMMARY
+
+  summary:
+    name: PR Summary
+    runs-on: ubuntu-latest
+    needs: [validate, what-if, security-scan, cost-estimate]
+    if: always()
+    steps:
+      - name: Generate Summary
+        run: |
+          echo "## PR Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Bicep Validation | ${{ needs.validate.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| What-If Analysis | ${{ needs.what-if.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security Scan | ${{ needs.security-scan.result == 'success' && '✅' || '⚠️' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Cost Estimate | ${{ needs.cost-estimate.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY

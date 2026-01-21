@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Slot Machine Telemetry",
+  "description": "Schema for slot machine telemetry events following SAS protocol patterns",
+  "type": "object",
+  "required": ["machine_id", "event_type", "event_timestamp"],
+  "properties": {
+    "machine_id": {
+      "type": "string",
+      "pattern": "^SLOT-[0-9]{4}$",
+      "description": "Unique identifier for the slot machine"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": ["GAME_PLAY", "JACKPOT", "METER_UPDATE", "DOOR_OPEN", "DOOR_CLOSE", "POWER_ON", "POWER_OFF", "BILL_IN", "TICKET_OUT", "TILT"],
+      "description": "Type of event recorded"
+    },
+    "event_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of the event"
+    },
+    "coin_in": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Amount wagered in dollars"
+    },
+    "coin_out": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Amount paid out in dollars"
+    },
+    "games_played": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "Number of games played in this event"
+    },
+    "jackpot_amount": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Jackpot amount if applicable"
+    },
+    "zone": {
+      "type": ["string", "null"],
+      "enum": ["North", "South", "East", "West", "VIP", "High Limit", "Penny", null],
+      "description": "Casino floor zone location"
+    },
+    "denomination": {
+      "type": ["number", "null"],
+      "enum": [0.01, 0.05, 0.25, 0.50, 1.00, 2.00, 5.00, 10.00, 25.00, 100.00, null],
+      "description": "Machine denomination in dollars"
+    },
+    "manufacturer": {
+      "type": ["string", "null"],
+      "description": "Slot machine manufacturer"
+    },
+    "machine_type": {
+      "type": ["string", "null"],
+      "enum": ["Video Slots", "Mechanical Reels", "Video Poker", "Progressive", null],
+      "description": "Type of slot machine"
+    },
+    "player_id": {
+      "type": ["string", "null"],
+      "pattern": "^P[0-9]+$",
+      "description": "Player ID if carded play"
+    },
+    "session_id": {
+      "type": ["string", "null"],
+      "description": "Session identifier for grouped events"
+    }
+  }
+}

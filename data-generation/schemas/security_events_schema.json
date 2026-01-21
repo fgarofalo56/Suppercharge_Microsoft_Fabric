@@ -1,0 +1,206 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Security Events Schema",
+  "description": "Schema for casino security and surveillance events",
+  "type": "object",
+  "required": [
+    "event_id",
+    "event_type",
+    "event_timestamp",
+    "location_id"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this security event"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "BADGE_SWIPE",
+        "DOOR_ENTRY",
+        "ACCESS_GRANTED",
+        "ACCESS_DENIED",
+        "CAMERA_ALERT",
+        "MOTION_DETECTED",
+        "CAMERA_OBSTRUCTION",
+        "EXCLUSION_CHECK",
+        "EXCLUSION_VIOLATION",
+        "INCIDENT_REPORT",
+        "ALTERCATION",
+        "MEDICAL_EMERGENCY",
+        "THREAT_DETECTED",
+        "WEAPON_DETECTED",
+        "TRESPASS",
+        "UNAUTHORIZED_ACCESS",
+        "SUSPICIOUS_ACTIVITY",
+        "PATRON_COMPLAINT",
+        "ESCORT_REQUEST",
+        "SECURITY_PATROL"
+      ],
+      "description": "Type of security event"
+    },
+    "event_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when event occurred"
+    },
+    "location_id": {
+      "type": "string",
+      "description": "Location identifier where event occurred",
+      "pattern": "^LOC-[A-Z0-9]{3,10}$"
+    },
+    "location_type": {
+      "type": ["string", "null"],
+      "enum": [
+        "GAMING_FLOOR",
+        "CAGE",
+        "COUNT_ROOM",
+        "VAULT",
+        "ENTRANCE",
+        "EXIT",
+        "PARKING",
+        "RESTAURANT",
+        "HOTEL",
+        "BACK_OF_HOUSE",
+        "SURVEILLANCE_ROOM",
+        "SERVER_ROOM",
+        null
+      ],
+      "description": "Type of location"
+    },
+    "severity_level": {
+      "type": "string",
+      "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+      "description": "Severity level of the event"
+    },
+    "person_id": {
+      "type": ["string", "null"],
+      "description": "Person involved (employee ID or patron tracking ID)"
+    },
+    "person_type": {
+      "type": ["string", "null"],
+      "enum": ["EMPLOYEE", "PATRON", "VENDOR", "CONTRACTOR", "UNKNOWN", null],
+      "description": "Type of person involved"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "maxLength": 1000,
+      "description": "Detailed description of the event"
+    },
+    "camera_id": {
+      "type": ["string", "null"],
+      "description": "Camera identifier if surveillance-related"
+    },
+    "badge_id": {
+      "type": ["string", "null"],
+      "description": "Badge/credential identifier if access-related"
+    },
+    "door_id": {
+      "type": ["string", "null"],
+      "description": "Door/access point identifier"
+    },
+    "responding_officer_id": {
+      "type": ["string", "null"],
+      "description": "Security officer responding to incident"
+    },
+    "response_timestamp": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp when security responded"
+    },
+    "resolution_timestamp": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp when incident was resolved"
+    },
+    "resolution_status": {
+      "type": ["string", "null"],
+      "enum": ["PENDING", "IN_PROGRESS", "RESOLVED", "ESCALATED", "FALSE_ALARM", null],
+      "description": "Current status of the incident"
+    },
+    "resolution_notes": {
+      "type": ["string", "null"],
+      "maxLength": 2000,
+      "description": "Notes about resolution"
+    },
+    "exclusion_info": {
+      "type": ["object", "null"],
+      "description": "Exclusion-related information",
+      "properties": {
+        "exclusion_type": {
+          "type": "string",
+          "enum": ["SELF_EXCLUSION", "STATE_EXCLUSION", "CASINO_EXCLUSION", "GAMING_COMMISSION"]
+        },
+        "exclusion_id": {
+          "type": "string"
+        },
+        "match_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "matched_by": {
+          "type": "string",
+          "enum": ["FACIAL_RECOGNITION", "ID_CHECK", "MANUAL", "LICENSE_PLATE"]
+        }
+      }
+    },
+    "incident_info": {
+      "type": ["object", "null"],
+      "description": "Incident-specific information",
+      "properties": {
+        "incident_number": {
+          "type": "string"
+        },
+        "police_notified": {
+          "type": "boolean"
+        },
+        "police_report_number": {
+          "type": ["string", "null"]
+        },
+        "injuries_reported": {
+          "type": "boolean"
+        },
+        "property_damage": {
+          "type": "boolean"
+        },
+        "witnesses": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "gaming_related": {
+      "type": ["boolean", "null"],
+      "description": "Whether incident is gaming/floor related"
+    },
+    "table_id": {
+      "type": ["string", "null"],
+      "description": "Table ID if gaming floor incident"
+    },
+    "machine_id": {
+      "type": ["string", "null"],
+      "description": "Slot machine ID if applicable"
+    },
+    "amount_involved": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Dollar amount involved (if applicable)"
+    },
+    "attachments": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string", "enum": ["VIDEO", "IMAGE", "DOCUMENT", "AUDIO"] },
+          "reference_id": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" }
+        }
+      },
+      "description": "References to attached evidence"
+    }
+  },
+  "additionalProperties": false
+}

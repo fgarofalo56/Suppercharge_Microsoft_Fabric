@@ -1,0 +1,136 @@
+# Environment and secrets
+.env
+.env.*
+!.env.sample
+*.local
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+tmpclaude-*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.env/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Azure and Bicep
+.azure/
+*.azcli
+
+# Terraform (if used)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.sample
+
+# Node.js (if any tooling)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs/
+*.log
+
+# Test outputs
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Great Expectations
+great_expectations/uncommitted/
+
+# Generated data (large files)
+data-generation/output/
+*.parquet
+*.csv
+!**/schemas/*.csv
+!**/config/*.csv
+
+# Power BI
+*.pbix
+*.pbit
+
+# Fabric exports
+*.lakehouse
+*.warehouse
+*.notebook
+
+# Credentials and keys
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+credentials/
+secrets/
+
+# Build artifacts
+bin/
+obj/
+out/
+
+# Documentation build
+docs/_build/
+site/

@@ -1,0 +1,69 @@
+# Great Expectations Configuration
+# Casino Fabric POC - Data Quality Validation
+
+config_version: 3.0
+
+# Data sources
+datasources:
+  casino_bronze:
+    class_name: Datasource
+    module_name: great_expectations.datasource
+    execution_engine:
+      class_name: SparkDFExecutionEngine
+      module_name: great_expectations.execution_engine
+    data_connectors:
+      default_inferred_data_connector_name:
+        class_name: InferredAssetFilesystemDataConnector
+        base_directory: ../sample-data/
+        default_regex:
+          group_names:
+            - data_asset_name
+          pattern: (.*)\.parquet
+
+  casino_delta:
+    class_name: Datasource
+    module_name: great_expectations.datasource
+    execution_engine:
+      class_name: SparkDFExecutionEngine
+      module_name: great_expectations.execution_engine
+      spark_config:
+        spark.sql.extensions: io.delta.sql.DeltaSparkSessionExtension
+        spark.sql.catalog.spark_catalog: org.apache.spark.sql.delta.catalog.DeltaCatalog
+
+# Stores for expectations, validations, and checkpoints
+stores:
+  expectations_store:
+    class_name: ExpectationsStore
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      base_directory: expectations/
+
+  validations_store:
+    class_name: ValidationsStore
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      base_directory: uncommitted/validations/
+
+  evaluation_parameter_store:
+    class_name: EvaluationParameterStore
+
+  checkpoint_store:
+    class_name: CheckpointStore
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      base_directory: checkpoints/
+
+# Data Docs for reporting
+data_docs_sites:
+  local_site:
+    class_name: SiteBuilder
+    show_how_to_buttons: true
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      base_directory: uncommitted/data_docs/local_site/
+    site_index_builder:
+      class_name: DefaultSiteIndexBuilder
+
+# Anonymized usage statistics
+anonymous_usage_statistics:
+  enabled: false

@@ -1,0 +1,118 @@
+{
+  "expectation_suite_name": "silver_slot_cleansed_suite",
+  "meta": {
+    "great_expectations_version": "0.18.0",
+    "notes": "Data quality expectations for Silver slot cleansed table"
+  },
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 1,
+        "max_value": null
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "_dq_score"
+      },
+      "meta": {
+        "notes": "Data quality score column must exist in Silver"
+      }
+    },
+    {
+      "expectation_type": "expect_column_mean_to_be_between",
+      "kwargs": {
+        "column": "_dq_score",
+        "min_value": 70,
+        "max_value": 100
+      },
+      "meta": {
+        "notes": "Average data quality score should be above 70%"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "_dq_score",
+        "min_value": 0,
+        "max_value": 100
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "machine_id"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "event_type"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "event_timestamp"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "event_date"
+      }
+    },
+    {
+      "expectation_type": "expect_compound_columns_to_be_unique",
+      "kwargs": {
+        "column_list": ["machine_id", "event_timestamp", "event_type"]
+      },
+      "meta": {
+        "notes": "No duplicates on natural key after deduplication"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "coin_in",
+        "min_value": 0,
+        "max_value": null
+      },
+      "meta": {
+        "notes": "Negative values should be cleaned to 0"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "coin_out",
+        "min_value": 0,
+        "max_value": null
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "event_hour",
+        "min_value": 0,
+        "max_value": 23
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "column": "event_timestamp",
+        "type_": "TimestampType"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "column": "event_date",
+        "type_": "DateType"
+      }
+    }
+  ]
+}

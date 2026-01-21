@@ -1,0 +1,153 @@
+name: Validate Bicep
+
+on:
+  push:
+    paths:
+      - 'infra/**/*.bicep'
+      - 'infra/**/*.bicepparam'
+  pull_request:
+    paths:
+      - 'infra/**/*.bicep'
+      - 'infra/**/*.bicepparam'
+
+jobs:
+  validate:
+    name: Validate Bicep Templates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bicep
+        run: |
+          az bicep install
+          az bicep version
+
+      - name: Find Bicep Files
+        id: find-bicep
+        run: |
+          FILES=$(find infra -name "*.bicep" -type f | tr '\n' ' ')
+          echo "files=$FILES" >> $GITHUB_OUTPUT
+          echo "Found Bicep files: $FILES"
+
+      - name: Build All Bicep Files
+        run: |
+          for file in ${{ steps.find-bicep.outputs.files }}; do
+            echo "Building: $file"
+            az bicep build --file "$file" || exit 1
+          done
+          echo "✅ All Bicep files built successfully"
+
+      - name: Lint All Bicep Files
+        run: |
+          WARNINGS=0
+          ERRORS=0
+
+          for file in ${{ steps.find-bicep.outputs.files }}; do
+            echo "Linting: $file"
+            OUTPUT=$(az bicep lint --file "$file" 2>&1) || true
+
+            if echo "$OUTPUT" | grep -q "Warning"; then
+              WARNINGS=$((WARNINGS + 1))
+              echo "⚠️ Warnings in $file"
+            fi
+
+            if echo "$OUTPUT" | grep -q "Error"; then
+              ERRORS=$((ERRORS + 1))
+              echo "❌ Errors in $file"
+            fi
+          done
+
+          echo "### Lint Results" >> $GITHUB_STEP_SUMMARY
+          echo "- Files with warnings: $WARNINGS" >> $GITHUB_STEP_SUMMARY
+          echo "- Files with errors: $ERRORS" >> $GITHUB_STEP_SUMMARY
+
+          if [ $ERRORS -gt 0 ]; then
+            exit 1
+          fi
+
+      - name: Check Best Practices
+        run: |
+          echo "### Best Practices Check" >> $GITHUB_STEP_SUMMARY
+
+          # Check for hardcoded locations
+          if grep -r "location: 'eastus'" infra/ --include="*.bicep" | grep -v ".bicepparam"; then
+            echo "⚠️ Found hardcoded locations in Bicep files" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No hardcoded locations" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Check for missing descriptions
+          MISSING_DESC=$(grep -r "^param " infra/ --include="*.bicep" | grep -v "@description" | wc -l)
+          if [ $MISSING_DESC -gt 0 ]; then
+            echo "⚠️ $MISSING_DESC parameters missing @description" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ All parameters have descriptions" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Check for secure parameters
+          if grep -r "param.*password.*string" infra/ --include="*.bicep" | grep -v "@secure()"; then
+            echo "❌ Found password parameters without @secure()" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "✅ All sensitive parameters are secure" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  arm-ttk:
+    name: ARM TTK Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build ARM from Bicep
+        run: |
+          az bicep build --file infra/main.bicep --outfile infra/main.json
+
+      - name: Run ARM-TTK
+        uses: microsoft/action-armttk@v1
+        with:
+          input_path: infra/main.json
+          skip_tests: 'Template Should Not Contain Blanks'
+
+  documentation:
+    name: Generate Documentation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate Module Documentation
+        run: |
+          echo "# Bicep Modules" > docs/BICEP_MODULES.md
+          echo "" >> docs/BICEP_MODULES.md
+          echo "Auto-generated documentation for Bicep modules." >> docs/BICEP_MODULES.md
+          echo "" >> docs/BICEP_MODULES.md
+
+          for dir in infra/modules/*/; do
+            MODULE_NAME=$(basename "$dir")
+            echo "## $MODULE_NAME" >> docs/BICEP_MODULES.md
+            echo "" >> docs/BICEP_MODULES.md
+
+            for file in "$dir"*.bicep; do
+              if [ -f "$file" ]; then
+                FILENAME=$(basename "$file")
+                echo "### $FILENAME" >> docs/BICEP_MODULES.md
+                echo "" >> docs/BICEP_MODULES.md
+
+                # Extract parameters
+                echo "**Parameters:**" >> docs/BICEP_MODULES.md
+                grep -E "^@description|^param " "$file" | while read -r line; do
+                  echo "- $line" >> docs/BICEP_MODULES.md
+                done
+                echo "" >> docs/BICEP_MODULES.md
+              fi
+            done
+          done
+
+      - name: Commit Documentation
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: Update Bicep module documentation [skip ci]"
+          file_pattern: docs/BICEP_MODULES.md

@@ -66,7 +66,7 @@ class PlayerGenerator(BaseGenerator):
             "date_of_birth": "date",
             "ssn_hash": "string",
             "ssn_masked": "string",
-            "address_line1": "string",
+            "address": "string",
             "city": "string",
             "state": "string",
             "zip_code": "string",
@@ -93,7 +93,7 @@ class PlayerGenerator(BaseGenerator):
 
     def generate_record(self) -> dict[str, Any]:
         """Generate a single player profile."""
-        player_id = f"PLY-{np.random.randint(1, 999999):06d}"
+        player_id = f"P{np.random.randint(1, 999999)}"
         loyalty_number = f"LC{np.random.randint(100000000, 999999999)}"
 
         # Generate personal info
@@ -156,7 +156,7 @@ class PlayerGenerator(BaseGenerator):
             ).isoformat(),
             "ssn_hash": self.hash_value(ssn, self._salt),
             "ssn_masked": self.mask_ssn(ssn),
-            "address_line1": (
+            "address": (
                 self.faker.street_address()
                 if self.include_pii
                 else "*** Masked Address ***"

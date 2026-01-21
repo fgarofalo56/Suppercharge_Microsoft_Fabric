@@ -245,7 +245,7 @@ class FinancialGenerator(BaseGenerator):
             )
 
         elif txn_type in ["WIRE_TRANSFER_IN", "WIRE_TRANSFER_OUT"]:
-            record["wire_reference"] = f"WIRE-{np.random.randint(1000000000, 9999999999)}"
+            record["wire_reference"] = f"WIRE-{np.random.randint(100000000, 999999999)}{np.random.randint(0, 9)}"
 
         elif txn_type in ["MARKER_ISSUE", "MARKER_PAYMENT"]:
             record["marker_number"] = f"MKR-{np.random.randint(100000, 999999)}"

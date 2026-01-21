@@ -20,38 +20,51 @@ from .base_generator import BaseGenerator
 class SecurityGenerator(BaseGenerator):
     """Generate security and surveillance event data."""
 
+    # Event types aligned with security_events_schema.json
     EVENT_TYPES = [
         "BADGE_SWIPE",
-        "DOOR_ACCESS",
+        "DOOR_ENTRY",
+        "ACCESS_GRANTED",
+        "ACCESS_DENIED",
         "CAMERA_ALERT",
+        "MOTION_DETECTED",
+        "CAMERA_OBSTRUCTION",
+        "EXCLUSION_CHECK",
+        "EXCLUSION_VIOLATION",
         "INCIDENT_REPORT",
-        "VISITOR_CHECK_IN",
-        "VISITOR_CHECK_OUT",
-        "ALARM_TRIGGERED",
-        "ALARM_CLEARED",
-        "PATROL_CHECKPOINT",
-        "VEHICLE_ENTRY",
-        "VEHICLE_EXIT",
-        "SUSPICIOUS_ACTIVITY",
+        "ALTERCATION",
         "MEDICAL_EMERGENCY",
+        "THREAT_DETECTED",
+        "WEAPON_DETECTED",
+        "TRESPASS",
+        "UNAUTHORIZED_ACCESS",
+        "SUSPICIOUS_ACTIVITY",
+        "PATRON_COMPLAINT",
         "ESCORT_REQUEST",
+        "SECURITY_PATROL",
     ]
 
     EVENT_WEIGHTS = [
-        0.30,  # BADGE_SWIPE
-        0.20,  # DOOR_ACCESS
-        0.10,  # CAMERA_ALERT
+        0.20,  # BADGE_SWIPE
+        0.15,  # DOOR_ENTRY
+        0.10,  # ACCESS_GRANTED
+        0.05,  # ACCESS_DENIED
+        0.08,  # CAMERA_ALERT
+        0.06,  # MOTION_DETECTED
+        0.02,  # CAMERA_OBSTRUCTION
+        0.03,  # EXCLUSION_CHECK
+        0.01,  # EXCLUSION_VIOLATION
         0.05,  # INCIDENT_REPORT
-        0.05,  # VISITOR_CHECK_IN
-        0.05,  # VISITOR_CHECK_OUT
-        0.03,  # ALARM_TRIGGERED
-        0.03,  # ALARM_CLEARED
-        0.08,  # PATROL_CHECKPOINT
-        0.04,  # VEHICLE_ENTRY
-        0.04,  # VEHICLE_EXIT
-        0.01,  # SUSPICIOUS_ACTIVITY
-        0.01,  # MEDICAL_EMERGENCY
-        0.01,  # ESCORT_REQUEST
+        0.02,  # ALTERCATION
+        0.02,  # MEDICAL_EMERGENCY
+        0.01,  # THREAT_DETECTED
+        0.01,  # WEAPON_DETECTED
+        0.02,  # TRESPASS
+        0.03,  # UNAUTHORIZED_ACCESS
+        0.04,  # SUSPICIOUS_ACTIVITY
+        0.03,  # PATRON_COMPLAINT
+        0.02,  # ESCORT_REQUEST
+        0.05,  # SECURITY_PATROL
     ]
 
     ZONES = [
@@ -212,6 +225,44 @@ class SecurityGenerator(BaseGenerator):
         else:
             return "Grave"
 
+    def _generate_location_id(self, zone: str) -> str:
+        """Generate location_id matching pattern ^LOC-[A-Z0-9]{3,10}$."""
+        # Map zones to location codes
+        zone_codes = {
+            "Main Floor": "MF",
+            "Cage": "CG",
+            "Count Room": "CR",
+            "Vault": "VLT",
+            "Surveillance Room": "SR",
+            "Server Room": "SVR",
+            "Executive Offices": "EXO",
+            "Employee Entrance": "ENT",
+            "Loading Dock": "LD",
+            "Parking Garage": "PKG",
+            "Hotel Lobby": "HL",
+            "Restaurant": "RST",
+            "Bar": "BAR",
+            "Retail": "RTL",
+        }
+        code = zone_codes.get(zone, "GEN")
+        suffix = np.random.randint(100, 999)
+        return f"LOC-{code}{suffix}"
+
+    def _get_severity_level(self, event_type: str) -> str:
+        """Get severity level based on event type (uppercase per schema)."""
+        critical_events = ["WEAPON_DETECTED", "THREAT_DETECTED", "EXCLUSION_VIOLATION"]
+        high_events = ["ALTERCATION", "MEDICAL_EMERGENCY", "TRESPASS", "UNAUTHORIZED_ACCESS"]
+        medium_events = ["INCIDENT_REPORT", "SUSPICIOUS_ACTIVITY", "ACCESS_DENIED", "CAMERA_OBSTRUCTION"]
+
+        if event_type in critical_events:
+            return "CRITICAL"
+        elif event_type in high_events:
+            return "HIGH"
+        elif event_type in medium_events:
+            return "MEDIUM"
+        else:
+            return "LOW"
+
     def generate_record(self) -> dict[str, Any]:
         """Generate a single security event."""
         event_type = self.weighted_choice(self.EVENT_TYPES, self.EVENT_WEIGHTS)
@@ -222,29 +273,33 @@ class SecurityGenerator(BaseGenerator):
             "event_id": self.generate_uuid(),
             "event_type": event_type,
             "event_timestamp": timestamp,
+            "location_id": self._generate_location_id(zone),
             "zone": zone,
             "location_detail": f"{zone} - {np.random.choice(['North', 'South', 'East', 'West', 'Central'])}",
             "security_level": self._get_security_level(zone),
+            "severity_level": self._get_severity_level(event_type),
             "shift": self._get_shift(timestamp),
         }
 
-        # Event-specific data
-        if event_type in ["BADGE_SWIPE", "DOOR_ACCESS"]:
+        # Event-specific data based on updated event types
+        if event_type in ["BADGE_SWIPE", "DOOR_ENTRY", "ACCESS_GRANTED", "ACCESS_DENIED"]:
             record = self._add_access_event(record, zone)
-        elif event_type == "CAMERA_ALERT":
+        elif event_type in ["CAMERA_ALERT", "MOTION_DETECTED", "CAMERA_OBSTRUCTION"]:
             record = self._add_camera_alert(record, zone)
-        elif event_type == "INCIDENT_REPORT":
+        elif event_type in ["INCIDENT_REPORT", "ALTERCATION", "PATRON_COMPLAINT"]:
             record = self._add_incident(record)
-        elif event_type in ["VISITOR_CHECK_IN", "VISITOR_CHECK_OUT"]:
-            record = self._add_visitor_event(record)
-        elif event_type in ["ALARM_TRIGGERED", "ALARM_CLEARED"]:
-            record = self._add_alarm_event(record)
-        elif event_type == "PATROL_CHECKPOINT":
+        elif event_type in ["EXCLUSION_CHECK", "EXCLUSION_VIOLATION"]:
+            record = self._add_exclusion_event(record)
+        elif event_type in ["THREAT_DETECTED", "WEAPON_DETECTED", "TRESPASS", "UNAUTHORIZED_ACCESS"]:
+            record = self._add_threat_event(record)
+        elif event_type == "SECURITY_PATROL":
             record = self._add_patrol_event(record)
-        elif event_type in ["VEHICLE_ENTRY", "VEHICLE_EXIT"]:
-            record = self._add_vehicle_event(record)
         elif event_type == "SUSPICIOUS_ACTIVITY":
             record = self._add_suspicious_activity(record)
+        elif event_type == "MEDICAL_EMERGENCY":
+            record = self._add_medical_emergency(record)
+        elif event_type == "ESCORT_REQUEST":
+            record = self._add_escort_event(record)
 
         # Add nullable defaults
         for field in [
@@ -376,6 +431,68 @@ class SecurityGenerator(BaseGenerator):
             "Known advantage player identified",
             "Possible chip passing detected",
             "Individual matching exclusion list description",
+        ])
+        record["responding_officer_id"] = f"SEC-{np.random.randint(1, 50):03d}"
+        return record
+
+    def _add_exclusion_event(self, record: dict[str, Any]) -> dict[str, Any]:
+        """Add exclusion check/violation event data."""
+        record["incident_number"] = f"EXC-{datetime.now().strftime('%Y%m%d')}-{np.random.randint(1, 99):02d}"
+        record["incident_description"] = np.random.choice([
+            "Self-exclusion list match detected",
+            "State exclusion list match",
+            "Casino exclusion match - previous incident",
+            "Gaming commission exclusion match",
+        ])
+        record["responding_officer_id"] = f"SEC-{np.random.randint(1, 50):03d}"
+        record["resolution_status"] = self.weighted_choice(
+            ["Open", "Investigating", "Resolved", "Closed"],
+            [0.30, 0.30, 0.20, 0.20],
+        )
+        return record
+
+    def _add_threat_event(self, record: dict[str, Any]) -> dict[str, Any]:
+        """Add threat/weapon/trespass event data."""
+        record["incident_number"] = f"THR-{datetime.now().strftime('%Y%m%d')}-{np.random.randint(1, 99):02d}"
+        record["incident_description"] = np.random.choice([
+            "Verbal threat reported",
+            "Suspicious package detected",
+            "Unauthorized individual in restricted area",
+            "Previous trespass warning violation",
+            "Potential weapon detected by screening",
+        ])
+        record["responding_officer_id"] = f"SEC-{np.random.randint(1, 50):03d}"
+        record["resolution_status"] = self.weighted_choice(
+            ["Open", "Investigating", "Resolved", "Closed"],
+            [0.40, 0.30, 0.15, 0.15],
+        )
+        return record
+
+    def _add_medical_emergency(self, record: dict[str, Any]) -> dict[str, Any]:
+        """Add medical emergency event data."""
+        record["incident_number"] = f"MED-{datetime.now().strftime('%Y%m%d')}-{np.random.randint(1, 99):02d}"
+        record["incident_category"] = "Medical"
+        record["incident_description"] = np.random.choice([
+            "Patron experiencing chest pain",
+            "Slip and fall incident",
+            "Intoxicated patron requiring assistance",
+            "Diabetic emergency",
+            "Patron fainted on gaming floor",
+        ])
+        record["responding_officer_id"] = f"SEC-{np.random.randint(1, 50):03d}"
+        record["resolution_status"] = self.weighted_choice(
+            ["Open", "Investigating", "Resolved", "Closed"],
+            [0.20, 0.20, 0.30, 0.30],
+        )
+        return record
+
+    def _add_escort_event(self, record: dict[str, Any]) -> dict[str, Any]:
+        """Add escort request event data."""
+        record["incident_description"] = np.random.choice([
+            "VIP escort to vehicle",
+            "Large cash out escort",
+            "Patron requested security escort",
+            "Employee escort to parking",
         ])
         record["responding_officer_id"] = f"SEC-{np.random.randint(1, 50):03d}"
         return record

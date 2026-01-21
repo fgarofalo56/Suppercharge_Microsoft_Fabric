@@ -19,11 +19,7 @@ try:
 except ImportError:
     EVENTHUB_AVAILABLE = False
 
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from slot_machine_generator import SlotMachineGenerator
+from ..slot_machine_generator import SlotMachineGenerator
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

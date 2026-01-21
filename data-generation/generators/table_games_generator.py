@@ -17,7 +17,7 @@ import numpy as np
 from .base_generator import BaseGenerator
 
 
-class TableGameGenerator(BaseGenerator):
+class TableGamesGenerator(BaseGenerator):
     """Generate table game transactions and events."""
 
     GAME_TYPES = ["Blackjack", "Craps", "Roulette", "Baccarat", "Poker", "Pai Gow"]
@@ -104,11 +104,17 @@ class TableGameGenerator(BaseGenerator):
             limits = self.TABLE_LIMITS[game_type]
             min_bet, max_bet = limits[np.random.randint(0, len(limits))]
 
+            # Generate zone code for table_id (first 2 letters of zone)
+            zone = np.random.choice(self.ZONES)
+            zone_code = "".join(c for c in zone if c.isupper())[:2]
+            if len(zone_code) < 2:
+                zone_code = zone[:2].upper()
+
             table = {
-                "table_id": f"TBL-{table_num:04d}",
+                "table_id": f"TBL-{zone_code}-{table_num:03d}",
                 "table_number": table_num,
                 "game_type": game_type,
-                "zone": np.random.choice(self.ZONES),
+                "zone": zone,
                 "min_bet": min_bet,
                 "max_bet": max_bet,
                 "positions": 7 if game_type == "Blackjack" else 8,

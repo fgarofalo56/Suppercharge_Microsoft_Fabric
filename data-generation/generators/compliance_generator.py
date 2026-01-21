@@ -20,6 +20,10 @@ from .base_generator import BaseGenerator
 class ComplianceGenerator(BaseGenerator):
     """Generate compliance and regulatory filing data."""
 
+    # filing_type enum values per schema (CTR, SAR, W2G only)
+    FILING_TYPES = ["CTR", "SAR", "W2G"]
+
+    # Extended report types for internal use (includes MTLAP, CTRC)
     REPORT_TYPES = ["CTR", "SAR", "W2G", "MTLAP", "CTRC"]
 
     # W-2G thresholds by game type
@@ -102,16 +106,20 @@ class ComplianceGenerator(BaseGenerator):
     def generate_record(self) -> dict[str, Any]:
         """Generate a single compliance record."""
         # Weight toward CTR and W2G (most common filings)
-        report_type = self.weighted_choice(
-            self.REPORT_TYPES,
-            [0.35, 0.15, 0.45, 0.03, 0.02],
+        # Use FILING_TYPES to match schema enum: CTR, SAR, W2G
+        filing_type = self.weighted_choice(
+            self.FILING_TYPES,
+            [0.40, 0.15, 0.45],  # Adjusted weights for 3 types
         )
 
         timestamp = self.random_datetime()
 
         record = {
-            "report_id": f"{report_type}-{datetime.now().strftime('%Y%m%d')}-{np.random.randint(10000, 99999)}",
-            "report_type": report_type,
+            "filing_id": f"{filing_type}-{datetime.now().strftime('%Y%m%d')}-{np.random.randint(10000, 99999)}",
+            "filing_type": filing_type,
+            "filing_timestamp": timestamp,
+            "report_type": filing_type,  # Keep for backward compatibility
+            "report_id": f"{filing_type}-{datetime.now().strftime('%Y%m%d')}-{np.random.randint(10000, 99999)}",
             "report_timestamp": timestamp,
             "player_id": f"PLY-{np.random.randint(1, 10000):06d}",
             "compliance_officer_id": f"CO-{np.random.randint(1, 10):02d}",
@@ -122,16 +130,12 @@ class ComplianceGenerator(BaseGenerator):
         record = self._add_player_info(record)
 
         # Generate type-specific data
-        if report_type == "CTR":
+        if filing_type == "CTR":
             record = self._generate_ctr(record, timestamp)
-        elif report_type == "SAR":
+        elif filing_type == "SAR":
             record = self._generate_sar(record, timestamp)
-        elif report_type == "W2G":
+        elif filing_type == "W2G":
             record = self._generate_w2g(record, timestamp)
-        elif report_type == "MTLAP":
-            record = self._generate_mtlap(record, timestamp)
-        elif report_type == "CTRC":
-            record = self._generate_ctrc(record, timestamp)
 
         # Add nullable defaults
         for field in [
@@ -178,6 +182,7 @@ class ComplianceGenerator(BaseGenerator):
 
         record["transaction_date"] = timestamp.strftime("%Y-%m-%d")
         record["transaction_amount"] = total_amount
+        record["amount"] = total_amount  # Schema field
         record["cash_in_amount"] = cash_in
         record["cash_out_amount"] = cash_out
 
@@ -203,13 +208,15 @@ class ComplianceGenerator(BaseGenerator):
         record["suspicious_activity_date"] = timestamp.strftime("%Y-%m-%d")
 
         # SAR amount can vary widely
-        record["transaction_amount"] = round(
+        sar_amount = round(
             np.random.choice(
                 [5000, 9000, 9500, 9900, 15000, 25000, 50000],
                 p=[0.15, 0.25, 0.20, 0.15, 0.10, 0.10, 0.05],
             ),
             2,
         )
+        record["transaction_amount"] = sar_amount
+        record["amount"] = sar_amount  # Schema field
 
         record["sar_category"] = np.random.choice(self.SAR_CATEGORIES)
         record["sar_narrative"] = self._generate_sar_narrative(record["sar_category"])
@@ -261,6 +268,7 @@ class ComplianceGenerator(BaseGenerator):
         record["transaction_date"] = timestamp.strftime("%Y-%m-%d")
         record["jackpot_amount"] = jackpot_amount
         record["transaction_amount"] = jackpot_amount
+        record["amount"] = jackpot_amount  # Schema field
 
         # Add machine or table ID
         if game_type in ["Slots", "Video Poker"]:

@@ -13,7 +13,7 @@ Provides synthetic data generators for casino/gaming domain:
 
 from .base_generator import BaseGenerator
 from .slot_machine_generator import SlotMachineGenerator
-from .table_games_generator import TableGameGenerator
+from .table_games_generator import TableGamesGenerator as TableGameGenerator
 from .player_generator import PlayerGenerator
 from .financial_generator import FinancialGenerator
 from .security_generator import SecurityGenerator

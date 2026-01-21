@@ -70,7 +70,7 @@ resource purviewDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-pr
 // Role Assignment - Data Curator for Managed Identity
 // =============================================================================
 
-var purviewDataCuratorRoleId = 'a]f8bf84c-4de3-462a-b576-41e6c7478f52' // Purview Data Curator
+var purviewDataCuratorRoleId = 'af8bf84c-4de3-462a-b576-41e6c7478f52' // Purview Data Curator
 
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(purviewAccount.id, managedIdentityPrincipalId, purviewDataCuratorRoleId)

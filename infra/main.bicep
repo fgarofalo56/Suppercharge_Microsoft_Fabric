@@ -47,6 +47,9 @@ param logRetentionDays int = 90
 @description('Tags to apply to all resources')
 param tags object = {}
 
+@description('Deployment timestamp (auto-generated)')
+param deployedAt string = utcNow()
+
 // =============================================================================
 // Variables
 // =============================================================================
@@ -64,7 +67,7 @@ var defaultTags = union(tags, {
   Environment: environment
   Project: 'Microsoft Fabric POC'
   ManagedBy: 'Bicep'
-  DeployedAt: utcNow()
+  DeployedAt: deployedAt
 })
 
 // =============================================================================

@@ -127,14 +127,95 @@ deployment-outputs.json
 *.warehouse
 *.notebook
 
-# Credentials and keys
+# =============================================================================
+# SECURITY: Credentials, Keys, Secrets, and PII
+# =============================================================================
+# CRITICAL: Never commit sensitive data to the repository
+
+# Private keys and certificates
 *.pem
 *.key
 *.crt
 *.p12
 *.pfx
+*.jks
+*.keystore
+*.cer
+*.der
+*.pub
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+
+# Credential files
 credentials/
 secrets/
+.secrets/
+**/secrets/**
+**/credentials/**
+*.credential
+*.credentials
+
+# Azure-specific secrets
+*.publishsettings
+serviceprincipal.json
+azure.json
+**/appsettings.*.json
+!**/appsettings.sample.json
+
+# AWS (in case of cross-cloud)
+.aws/
+aws.credentials
+
+# GCP
+*.json.enc
+*-service-account*.json
+*-credentials*.json
+
+# Database connection strings
+*.sql.config
+connection-strings.json
+database.json
+
+# Token files
+*.token
+*.tokens
+.npmrc
+.pypirc
+.netrc
+
+# Kubeconfig
+kubeconfig
+*.kubeconfig
+
+# SSH
+.ssh/
+
+# GPG
+*.gpg
+*.asc
+secring.*
+
+# Environment files (comprehensive)
+.env
+.env.*
+!.env.sample
+!.env.example
+!.env.template
+*.local.env
+local.settings.json
+!local.settings.sample.json
+
+# Sensitive data exports
+**/exports/**/pii_*
+**/exports/**/sensitive_*
+*dump*.sql
+*backup*.sql
+
+# Wallet files (crypto/certificates)
+wallet/
+*.wallet
 
 # Build artifacts
 bin/

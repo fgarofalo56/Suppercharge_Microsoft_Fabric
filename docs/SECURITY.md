@@ -11,6 +11,7 @@
 - [🛡️ Security Architecture](#️-security-architecture)
 - [👤 Identity and Access Management](#-identity-and-access-management)
 - [🔒 Data Protection](#-data-protection)
+- [🔐 Repository Security](#-repository-security)
 - [🌐 Network Security](#-network-security)
 - [📋 Compliance Requirements](#-compliance-requirements)
 - [📊 Audit and Monitoring](#-audit-and-monitoring)
@@ -200,6 +201,95 @@ def mask_pii(df):
             concat(lit("****-****-****-"), col("card_number").substr(-4, 4))) \
         .drop("ssn", "card_number")
 ```
+
+---
+
+## 🔐 Repository Security
+
+### Preventing Secret Leaks
+
+This repository implements multiple layers of protection to prevent accidental commits of sensitive data:
+
+| Protection Layer | Implementation | Status |
+|-----------------|----------------|--------|
+| **`.gitignore`** | Comprehensive patterns for secrets, keys, credentials | ✅ Active |
+| **Pre-commit Hook** | Scans staged files for high-risk patterns | ✅ Available |
+| **Sample Files** | `.env.sample` with placeholders only | ✅ In Use |
+| **PII Masking** | All sample data uses hashed/masked PII | ✅ Verified |
+
+### Enabling the Pre-Commit Hook
+
+```bash
+# Configure Git to use the repository's hooks
+git config core.hooksPath .githooks
+
+# Verify it's enabled
+git config --get core.hooksPath
+```
+
+### What Gets Blocked
+
+The pre-commit hook will **block commits** containing:
+
+| Category | Examples |
+|----------|----------|
+| 🔑 **Azure Keys** | Storage account keys, SAS tokens |
+| 🔑 **Cloud Credentials** | AWS access keys, GCP service accounts |
+| 🔑 **API Keys** | Any `api_key=`, `apikey:` patterns |
+| 🔑 **Private Keys** | PEM, PPK, RSA private keys |
+| 🔑 **Tokens** | JWT tokens, GitHub tokens, Slack tokens |
+| 🔑 **Connection Strings** | Strings with embedded passwords |
+
+### What Gets Warned
+
+The hook will **warn** (but not block) for:
+
+| Category | Notes |
+|----------|-------|
+| ⚠️ **SSN Patterns** | In code files (sample-data CSV is excluded) |
+| ⚠️ **Credit Cards** | 16-digit patterns |
+| ⚠️ **Email Addresses** | In Python files (docs excluded) |
+
+### Files Ignored by Security Scans
+
+- Documentation files (`*.md`)
+- Sample/example templates (`*.sample`, `*.example`)
+- Test files (`test_*.py`, `conftest.py`)
+- Sample data directory (`sample-data/`)
+
+### Best Practices
+
+> ✅ **DO:**
+> - Use `.env` files for local secrets (gitignored)
+> - Store production secrets in Azure Key Vault
+> - Use managed identities for Azure authentication
+> - Mask all PII in sample/test data
+> - Enable the pre-commit hook for all contributors
+
+> ❌ **DON'T:**
+> - Commit real credentials, even "temporarily"
+> - Store secrets in code comments
+> - Use `--no-verify` without careful review
+> - Include real customer data in samples
+
+### Emergency: Committed a Secret?
+
+If you accidentally commit sensitive data:
+
+```bash
+# 1. Remove from history (if not pushed)
+git reset --soft HEAD~1
+# Remove the secret from the file
+git add -A
+git commit -m "fix: remove sensitive data"
+
+# 2. If already pushed, rotate the credential immediately!
+# Then use git filter-branch or BFG Repo-Cleaner to remove from history
+
+# 3. Report the incident per your security policy
+```
+
+> ⚠️ **Important:** Assume any committed credential is compromised. Always rotate secrets that were accidentally committed, even if removed quickly.
 
 ---
 

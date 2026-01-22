@@ -1,0 +1,56 @@
+# Financial Data Validation Checkpoint
+# Validates cage financial transactions
+# CRITICAL: Ensures accuracy for CTR threshold tracking and reconciliation
+
+name: financial_checkpoint
+config_version: 1.0
+template_name:
+module_name: great_expectations.checkpoint
+class_name: Checkpoint
+
+# Execution behavior
+run_name_template: "%Y%m%d-%H%M%S-financial-validation"
+
+# Expectation suites to validate
+expectation_suite_name: financial_suite
+
+# Action list
+action_list:
+  - name: store_validation_result
+    action:
+      class_name: StoreValidationResultAction
+  - name: store_evaluation_params
+    action:
+      class_name: StoreEvaluationParametersAction
+  - name: update_data_docs
+    action:
+      class_name: UpdateDataDocsAction
+      site_names:
+        - local_site
+
+# Batch request configuration
+batch_request: {}
+
+# Evaluation parameters
+evaluation_parameters: {}
+
+# Runtime configuration
+runtime_configuration:
+  result_format:
+    result_format: COMPLETE
+    include_unexpected_rows: true
+    partial_unexpected_count: 50
+    unexpected_index_column_names:
+      - transaction_id
+      - transaction_type
+      - amount
+
+# Validations list
+validations:
+  - batch_request:
+      datasource_name: casino_bronze
+      data_connector_name: runtime_data_connector
+      data_asset_name: financial_transactions
+      batch_identifiers:
+        default_identifier_name: bronze_financial_data
+    expectation_suite_name: financial_suite

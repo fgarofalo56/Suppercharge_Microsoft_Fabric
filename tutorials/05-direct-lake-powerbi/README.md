@@ -1,88 +1,286 @@
-# Tutorial 05: Direct Lake & Power BI
+# 📊 Tutorial 05: Direct Lake & Power BI
 
-This tutorial covers creating Direct Lake semantic models and Power BI reports for casino analytics.
+<div align="center">
 
-## Learning Objectives
+![Tutorial 05](https://img.shields.io/badge/Tutorial-05-blue?style=for-the-badge)
+![Power BI](https://img.shields.io/badge/Power%20BI-Business%20Intelligence-yellow?style=for-the-badge)
+![Intermediate](https://img.shields.io/badge/Level-Intermediate-yellow?style=for-the-badge)
 
-By the end of this tutorial, you will:
+</div>
 
-1. Understand Direct Lake mode
-2. Create a semantic model from Gold tables
-3. Define DAX measures for KPIs
-4. Build executive and operational reports
+> **🏠 [Home](../../README.md)** > **📖 [Tutorials](../README.md)** > **📊 Direct Lake & Power BI**
 
-## Direct Lake Overview
+---
 
-Direct Lake provides:
-- **Sub-second query performance** on Delta tables
-- **No data import** - queries go directly to OneLake
-- **Automatic refresh** when data changes
-- **Full DAX support** for calculations
+## 📊 Tutorial 05: Direct Lake & Power BI - Executive Analytics
 
-```
-Gold Tables (Delta) → Direct Lake Semantic Model → Power BI Reports
-       ↑                        │
-  OneLake Storage          Automatic Sync
-```
+| Attribute | Details |
+|-----------|---------|
+| **Difficulty** | ⭐⭐ Intermediate |
+| **Time Estimate** | ⏱️ 60-90 minutes |
+| **Focus Area** | Business Intelligence |
+| **Key Skills** | Direct Lake, Semantic Models, DAX, Power BI Reports |
 
-## Prerequisites
+---
 
-- Completed Gold layer tutorials
-- Gold tables populated in `lh_gold`
-- Power BI license (Pro or Premium)
-
-## Step 1: Create Semantic Model
-
-### From Lakehouse
-
-1. Open `lh_gold` Lakehouse
-2. Click **New semantic model**
-3. Select tables:
-   - `gold_slot_performance`
-   - `gold_player_360`
-   - `gold_compliance_reporting`
-   - `dim_date`
-   - `dim_machine`
-4. Name: `Casino Analytics Model`
-5. Click **Create**
-
-### Verify Direct Lake Mode
-
-1. Open the semantic model
-2. Click **Settings**
-3. Verify **Storage mode**: Direct Lake
-4. Confirm tables show "DirectLake" in diagram
-
-## Step 2: Define Relationships
-
-### Open Model View
-
-1. Click on semantic model
-2. Select **Model view**
-
-### Create Relationships
+### 📊 Progress Tracker
 
 ```
-dim_date [date_key] → gold_slot_performance [business_date]
-dim_machine [machine_id] → gold_slot_performance [machine_id]
-dim_date [date_key] → gold_compliance_reporting [report_date]
+┌────────┬────────┬────────┬────────┬────────┬────────┬────────┬────────┬────────┬────────┐
+│   00   │   01   │   02   │   03   │   04   │   05   │   06   │   07   │   08   │   09   │
+│ SETUP  │ BRONZE │ SILVER │  GOLD  │   RT   │  PBI   │ PIPES  │  GOV   │ MIRROR │  AI/ML │
+├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
+│   ✓    │   ✓    │   ✓    │   ✓    │   ✓    │  📊    │   ○    │   ○    │   ○    │   ○    │
+└────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┘
+                                                  ▲
+                                                  │
+                                             YOU ARE HERE
 ```
 
-Configure each relationship:
-- **Cardinality:** Many-to-One
+| Navigation | Link |
+|------------|------|
+| ⬅️ **Previous** | [04-Real-Time Analytics](../04-real-time-analytics/README.md) |
+| ➡️ **Next** | [06-Data Pipelines](../06-data-pipelines/README.md) |
+
+---
+
+## 📋 Overview
+
+This tutorial covers creating **Direct Lake semantic models** and **Power BI reports** for casino executive analytics. Direct Lake provides sub-second query performance directly against Delta tables in OneLake, combining the speed of Import mode with the freshness of DirectQuery.
+
+> **💡 Why Direct Lake?**
+>
+> Traditional BI approaches require choosing between:
+> - **Import mode**: Fast queries but stale data (requires refresh)
+> - **DirectQuery**: Fresh data but slower performance
+>
+> **Direct Lake delivers both**: Sub-second queries on always-fresh Delta table data, with no scheduled refresh required.
+
+---
+
+## 🎯 Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- [ ] Understand Direct Lake mode and its benefits
+- [ ] Create a semantic model from Gold layer tables
+- [ ] Define table relationships for star schema
+- [ ] Build DAX measures for casino KPIs
+- [ ] Create executive and operational Power BI reports
+- [ ] Configure row-level security (RLS)
+
+---
+
+## 🏗️ Direct Lake Architecture
+
+```mermaid
+flowchart TB
+    subgraph OneLake["☁️ OneLake"]
+        GOLD[(Gold Delta Tables)]
+    end
+
+    subgraph DirectLake["🔗 Direct Lake"]
+        SM[Semantic Model]
+        REL[Relationships]
+        DAX[DAX Measures]
+    end
+
+    subgraph PowerBI["📊 Power BI"]
+        EXEC[Executive Dashboard]
+        OPS[Operations Report]
+        COMP[Compliance Report]
+    end
+
+    GOLD --> |Direct Lake Connection| SM
+    SM --> REL
+    REL --> DAX
+    DAX --> EXEC
+    DAX --> OPS
+    DAX --> COMP
+
+    style OneLake fill:#e3f2fd
+    style DirectLake fill:#fff8e1
+    style PowerBI fill:#e8f5e9
+```
+
+### Direct Lake Benefits
+
+| Feature | Description |
+|---------|-------------|
+| **Sub-second queries** | Queries execute directly against Delta tables with V-Order optimization |
+| **No data import** | No duplication of data - queries go directly to OneLake |
+| **Automatic freshness** | Data updates are automatically visible without refresh |
+| **Full DAX support** | All DAX calculations, time intelligence, and measures work |
+| **Fallback protection** | Automatically falls back to DirectQuery if needed |
+
+---
+
+## 📋 Prerequisites
+
+Before starting this tutorial, ensure you have:
+
+- [ ] ✅ Completed [Tutorial 03: Gold Layer](../03-gold-layer/README.md)
+- [ ] ✅ Gold tables populated in `lh_gold` Lakehouse:
+  - `gold_slot_performance`
+  - `gold_player_360`
+  - `gold_compliance_reporting`
+  - `dim_date` (dimension table)
+  - `dim_machine` (dimension table)
+- [ ] ✅ Power BI license (Pro or Premium Per User)
+- [ ] ✅ Fabric workspace with semantic model creation permissions
+
+> **⚠️ License Note**
+>
+> Power BI Pro or Premium Per User (PPU) license is required to create and share semantic models. Users consuming reports need at least a Free license if content is in a Premium capacity.
+
+---
+
+## 🛠️ Step 1: Create Semantic Model
+
+### 1.1 Create from Lakehouse
+
+1. Navigate to your workspace (`casino-fabric-poc`)
+2. Open the `lh_gold` Lakehouse
+3. Click **New semantic model** in the toolbar
+4. Select tables to include:
+
+| Table | Type | Purpose |
+|-------|------|---------|
+| ✅ `gold_slot_performance` | Fact | Daily slot machine performance metrics |
+| ✅ `gold_player_360` | Fact/Dim | Player profiles and value scores |
+| ✅ `gold_compliance_reporting` | Fact | Regulatory filing summaries |
+| ✅ `dim_date` | Dimension | Date hierarchy for time intelligence |
+| ✅ `dim_machine` | Dimension | Machine master data |
+
+5. Configure semantic model:
+
+| Setting | Value |
+|---------|-------|
+| **Name** | `Casino Analytics Model` |
+| **Workspace** | `casino-fabric-poc` |
+
+6. Click **Create**
+
+### 1.2 Verify Direct Lake Mode
+
+After creation, verify the model is using Direct Lake:
+
+1. Open the semantic model in your workspace
+2. Click **Settings** (gear icon)
+3. Verify **Storage mode** shows: `Direct Lake`
+4. In the model diagram, confirm tables display "DirectLake" badge
+
+> **💡 Direct Lake Requirements**
+>
+> For Direct Lake to work optimally:
+> - Tables must be Delta format in OneLake
+> - V-Order optimization should be enabled (default in Fabric)
+> - Tables should have reasonable row counts (billions supported)
+> - Complex calculated columns may cause DirectQuery fallback
+
+---
+
+## 🛠️ Step 2: Define Table Relationships
+
+A well-designed star schema is critical for optimal query performance and intuitive reporting.
+
+### 2.1 Open Model View
+
+1. Click on the semantic model
+2. Select **Model view** from the left panel
+
+### 2.2 Create Relationships
+
+```mermaid
+erDiagram
+    dim_date ||--o{ gold_slot_performance : "date_key"
+    dim_date ||--o{ gold_compliance_reporting : "report_date"
+    dim_machine ||--o{ gold_slot_performance : "machine_id"
+    gold_player_360 ||--o{ gold_slot_performance : "player_id"
+
+    dim_date {
+        date date_key PK
+        int year
+        int month
+        int day
+        string month_name
+        string day_of_week
+    }
+
+    dim_machine {
+        string machine_id PK
+        string manufacturer
+        string game_type
+        decimal denomination
+        string zone
+    }
+
+    gold_slot_performance {
+        date business_date FK
+        string machine_id FK
+        string zone
+        decimal total_coin_in
+        decimal total_coin_out
+        int total_games
+    }
+
+    gold_player_360 {
+        string player_id PK
+        string loyalty_tier
+        boolean vip_flag
+        string churn_risk
+        decimal player_value_score
+    }
+
+    gold_compliance_reporting {
+        date report_date FK
+        int ctr_count
+        int sar_count
+        int w2g_count
+        decimal ctr_total_amount
+    }
+```
+
+### 2.3 Configure Each Relationship
+
+Create the following relationships by dragging columns between tables:
+
+| From Table | From Column | To Table | To Column | Cardinality | Cross-filter |
+|------------|-------------|----------|-----------|-------------|--------------|
+| `dim_date` | `date_key` | `gold_slot_performance` | `business_date` | One-to-Many | Single |
+| `dim_machine` | `machine_id` | `gold_slot_performance` | `machine_id` | One-to-Many | Single |
+| `dim_date` | `date_key` | `gold_compliance_reporting` | `report_date` | One-to-Many | Single |
+
+**For each relationship, configure:**
+- **Cardinality:** Many-to-One (from fact to dimension)
 - **Cross-filter direction:** Single
-- **Active:** Yes
+- **Make this relationship active:** Yes
 
-## Step 3: Create DAX Measures
+> **⚠️ Relationship Best Practices**
+>
+> - Always use **single cross-filter direction** for better performance
+> - Avoid bidirectional filters unless absolutely necessary
+> - Use **integer keys** when possible for faster joins
+> - Validate relationships with sample queries
 
-### Open DAX Editor
+---
 
-1. In semantic model, click **New measure**
-2. Create measures in a "Measures" table
+## 🛠️ Step 3: Create DAX Measures
 
-### Slot Performance Measures
+DAX measures provide calculated metrics that respond to filter context in reports.
+
+### 3.1 Create Measures Table
+
+1. In the model view, click **New measure**
+2. Create a "Measures" display folder to organize measures
+
+### 3.2 Slot Performance Measures
 
 ```dax
+// ===========================================
+// SLOT PERFORMANCE MEASURES
+// ===========================================
+
 // Total Coin In
 Total Coin In =
 SUM(gold_slot_performance[total_coin_in])
@@ -91,26 +289,39 @@ SUM(gold_slot_performance[total_coin_in])
 Total Coin Out =
 SUM(gold_slot_performance[total_coin_out])
 
-// Net Win
+// Net Win (House Win)
 Net Win =
 [Total Coin In] - [Total Coin Out]
 
 // Hold Percentage
 Hold % =
-DIVIDE([Net Win], [Total Coin In], 0) * 100
+DIVIDE(
+    [Net Win],
+    [Total Coin In],
+    0
+) * 100
 
-// Theoretical Win
+// Theoretical Win (based on programmed hold)
 Theoretical Win =
 SUMX(
     gold_slot_performance,
-    gold_slot_performance[total_coin_in] * gold_slot_performance[avg_theoretical_hold]
+    gold_slot_performance[total_coin_in] *
+    gold_slot_performance[avg_theoretical_hold]
 )
 
-// Hold Variance
+// Hold Variance (Actual vs Theoretical)
 Hold Variance =
 [Net Win] - [Theoretical Win]
 
-// Games Played
+// Hold Variance % (for alerting)
+Hold Variance % =
+DIVIDE(
+    [Hold Variance],
+    [Theoretical Win],
+    0
+) * 100
+
+// Total Games Played
 Total Games =
 SUM(gold_slot_performance[total_games])
 
@@ -120,7 +331,11 @@ SUM(gold_slot_performance[unique_players])
 
 // Average Bet
 Avg Bet =
-DIVIDE([Total Coin In], [Total Games], 0)
+DIVIDE(
+    [Total Coin In],
+    [Total Games],
+    0
+)
 
 // Win Per Machine
 Win Per Machine =
@@ -129,11 +344,19 @@ DIVIDE(
     DISTINCTCOUNT(gold_slot_performance[machine_id]),
     0
 )
+
+// Active Machines Count
+Active Machines =
+DISTINCTCOUNT(gold_slot_performance[machine_id])
 ```
 
-### Player Measures
+### 3.3 Player Analytics Measures
 
 ```dax
+// ===========================================
+// PLAYER MEASURES
+// ===========================================
+
 // Total Players
 Total Players =
 COUNTROWS(gold_player_360)
@@ -142,8 +365,16 @@ COUNTROWS(gold_player_360)
 VIP Players =
 CALCULATE(
     COUNTROWS(gold_player_360),
-    gold_player_360[vip_flag] = TRUE
+    gold_player_360[vip_flag] = TRUE()
 )
+
+// VIP Percentage
+VIP % =
+DIVIDE(
+    [VIP Players],
+    [Total Players],
+    0
+) * 100
 
 // High Churn Risk Players
 High Churn Risk Players =
@@ -160,17 +391,36 @@ AVERAGE(gold_player_360[player_value_score])
 Total Player Theo =
 SUM(gold_player_360[total_theo_win])
 
-// Active Players (30 days)
+// Active Players (visited in last 30 days)
 Active Players 30D =
 CALCULATE(
     COUNTROWS(gold_player_360),
     gold_player_360[days_since_visit] <= 30
 )
+
+// Lapsed Players (no visit in 90+ days)
+Lapsed Players =
+CALCULATE(
+    COUNTROWS(gold_player_360),
+    gold_player_360[days_since_visit] > 90
+)
+
+// Player Retention Rate
+Retention Rate 30D =
+DIVIDE(
+    [Active Players 30D],
+    [Total Players],
+    0
+) * 100
 ```
 
-### Compliance Measures
+### 3.4 Compliance Measures
 
 ```dax
+// ===========================================
+// COMPLIANCE MEASURES
+// ===========================================
+
 // Total CTR Filings
 CTR Count =
 SUM(gold_compliance_reporting[ctr_count])
@@ -183,238 +433,605 @@ SUM(gold_compliance_reporting[sar_count])
 W2G Count =
 SUM(gold_compliance_reporting[w2g_count])
 
-// CTR Amount
+// Total Regulatory Filings
+Total Filings =
+[CTR Count] + [SAR Count] + [W2G Count]
+
+// CTR Total Amount
 CTR Total Amount =
 SUM(gold_compliance_reporting[ctr_total_amount])
 
-// Compliance Filing Rate
+// Average Daily Filing Rate
 Daily Filing Rate =
 DIVIDE(
-    [CTR Count] + [SAR Count] + [W2G Count],
+    [Total Filings],
     DISTINCTCOUNT(gold_compliance_reporting[report_date]),
+    0
+)
+
+// SAR Rate (per 1000 players)
+SAR Rate =
+DIVIDE(
+    [SAR Count],
+    [Total Players] / 1000,
     0
 )
 ```
 
-### Time Intelligence Measures
+### 3.5 Time Intelligence Measures
 
 ```dax
-// Coin In MTD
+// ===========================================
+// TIME INTELLIGENCE MEASURES
+// ===========================================
+
+// Coin In - Month to Date
 Coin In MTD =
-TOTALMTD([Total Coin In], dim_date[date_key])
+TOTALMTD(
+    [Total Coin In],
+    dim_date[date_key]
+)
 
-// Coin In YTD
+// Coin In - Year to Date
 Coin In YTD =
-TOTALYTD([Total Coin In], dim_date[date_key])
+TOTALYTD(
+    [Total Coin In],
+    dim_date[date_key]
+)
 
-// Net Win Previous Period
-Net Win PP =
+// Net Win - Previous Month
+Net Win PM =
 CALCULATE(
     [Net Win],
     DATEADD(dim_date[date_key], -1, MONTH)
 )
 
-// Net Win Growth %
-Net Win Growth % =
+// Net Win - Month over Month Growth %
+Net Win MoM % =
+VAR CurrentMonth = [Net Win]
+VAR PreviousMonth = [Net Win PM]
+RETURN
 DIVIDE(
-    [Net Win] - [Net Win PP],
-    [Net Win PP],
+    CurrentMonth - PreviousMonth,
+    PreviousMonth,
     0
 ) * 100
 
-// 7-Day Rolling Avg Coin In
+// Net Win - Previous Year
+Net Win PY =
+CALCULATE(
+    [Net Win],
+    SAMEPERIODLASTYEAR(dim_date[date_key])
+)
+
+// Net Win - Year over Year Growth %
+Net Win YoY % =
+VAR CurrentPeriod = [Net Win]
+VAR PreviousYear = [Net Win PY]
+RETURN
+DIVIDE(
+    CurrentPeriod - PreviousYear,
+    PreviousYear,
+    0
+) * 100
+
+// 7-Day Rolling Average Coin In
 Coin In 7D Avg =
 AVERAGEX(
-    DATESINPERIOD(dim_date[date_key], MAX(dim_date[date_key]), -7, DAY),
+    DATESINPERIOD(
+        dim_date[date_key],
+        MAX(dim_date[date_key]),
+        -7,
+        DAY
+    ),
     [Total Coin In]
+)
+
+// 30-Day Rolling Average Net Win
+Net Win 30D Avg =
+AVERAGEX(
+    DATESINPERIOD(
+        dim_date[date_key],
+        MAX(dim_date[date_key]),
+        -30,
+        DAY
+    ),
+    [Net Win]
 )
 ```
 
-## Step 4: Create Report - Executive Dashboard
+> **💡 DAX Best Practices**
+>
+> - Use **measures over calculated columns** for better performance
+> - Avoid **FILTER()** with large tables - use simpler predicates
+> - Use **variables (VAR)** to improve readability and avoid recalculation
+> - Test measures with different filter contexts before deploying
 
-### Create New Report
+---
 
-1. From semantic model, click **Create report**
-2. Or in Power BI service, **+ New** > **Report** > Select model
+## 🛠️ Step 4: Create Executive Dashboard
 
-### Page 1: Executive Summary
+### 4.1 Create New Report
 
-#### Layout
+1. From the semantic model, click **Create report**
+   - Or in Power BI service: **+ New** > **Report** > Select `Casino Analytics Model`
+2. The report canvas opens in edit mode
+
+### 4.2 Page 1: Executive Summary
+
+#### Layout Design
 
 ```
-┌────────────────────────────────────────────────────────────┐
-│  CASINO EXECUTIVE DASHBOARD              Date: [Slicer]    │
-├──────────┬──────────┬──────────┬──────────┬───────────────┤
-│  Net Win │ Hold %   │ Players  │ Games    │   Zone Filter │
-│  $2.5M   │  8.2%    │  12,450  │ 1.2M     │   [Slicer]    │
-├──────────┴──────────┴──────────┴──────────┴───────────────┤
-│                    NET WIN TREND                           │
-│  [Line Chart - Daily Net Win over time]                   │
-├───────────────────────────┬────────────────────────────────┤
-│   ZONE PERFORMANCE        │   TOP 10 MACHINES              │
-│   [Bar Chart]             │   [Table]                      │
-├───────────────────────────┴────────────────────────────────┤
-│   COMPLIANCE SUMMARY       │   PLAYER TIER DISTRIBUTION    │
-│   CTR: 45  SAR: 12  W2G:   │   [Donut Chart]               │
-│   234                      │                                │
-└────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│  🎰 CASINO EXECUTIVE DASHBOARD                        📅 Date: [Date Slicer]   │
+├──────────────┬──────────────┬──────────────┬──────────────┬────────────────────┤
+│   💰         │    📊        │    👥        │    🎮        │   🏷️ Zone Filter   │
+│   $2.5M      │    8.2%      │   12,450     │    1.2M      │   [Dropdown]       │
+│   Net Win    │   Hold %     │   Players    │   Games      │                    │
+│   ▲ +5.2%    │   ▼ -0.3%    │   ▲ +2.1%    │   ▲ +8.4%    │                    │
+├──────────────┴──────────────┴──────────────┴──────────────┴────────────────────┤
+│                         📈 NET WIN TREND (30 Days)                              │
+│  ████████████████████████████████████████████████████████████████████████████  │
+│  [Line Chart - Daily Net Win with trend line and target]                        │
+├─────────────────────────────────────────┬───────────────────────────────────────┤
+│   📊 PERFORMANCE BY ZONE                │   🏆 TOP 10 MACHINES                  │
+│   ┌─────────────────────────────┐       │   ┌─────────────────────────────────┐ │
+│   │ ████████████ Main Floor     │       │   │ Machine  │ Zone   │ Net Win    │ │
+│   │ ██████████ High Limit       │       │   │ SM-0234  │ VIP    │ $45,230    │ │
+│   │ ████████ VIP                │       │   │ SM-0089  │ HL     │ $38,420    │ │
+│   │ ██████ Penny Palace         │       │   │ SM-0445  │ Main   │ $32,100    │ │
+│   └─────────────────────────────┘       │   └─────────────────────────────────┘ │
+├─────────────────────────────────────────┼───────────────────────────────────────┤
+│   📋 COMPLIANCE SUMMARY                 │   👥 PLAYER TIER DISTRIBUTION         │
+│   ┌────────┬────────┬────────┐          │        ┌─────────────┐                │
+│   │  CTR   │  SAR   │  W2G   │          │       ╱  Platinum   ╲                │
+│   │   45   │   12   │  234   │          │      ╱    Gold       ╲               │
+│   │ $4.2M  │        │ $1.8M  │          │     ╱     Silver      ╲              │
+│   └────────┴────────┴────────┘          │    ╱      Bronze       ╲             │
+│                                          │        [Donut Chart]                 │
+└─────────────────────────────────────────┴───────────────────────────────────────┘
 ```
 
 #### Create Visuals
 
-**Card Visuals (KPIs):**
-1. Net Win - Format: Currency
-2. Hold % - Format: Percentage
-3. Unique Players - Format: Number
-4. Total Games - Format: Number
+**1. KPI Cards (Top Row)**
 
-**Line Chart (Trend):**
-- X-axis: `dim_date[date_key]`
-- Y-axis: `[Net Win]`
-- Legend: (optional) Zone
+Create 4 card visuals with conditional formatting:
 
-**Bar Chart (Zone Performance):**
-- Y-axis: `gold_slot_performance[zone]`
-- X-axis: `[Net Win]`
-- Sort: Descending by Net Win
+| Card | Measure | Format | Trend |
+|------|---------|--------|-------|
+| Net Win | `[Net Win]` | Currency, $0.0M | Compare to `[Net Win PM]` |
+| Hold % | `[Hold %]` | Percentage, 0.0% | Target: 8.0% |
+| Unique Players | `[Unique Players]` | Number, #,##0 | Compare to previous |
+| Total Games | `[Total Games]` | Number, 0.0M | Compare to previous |
 
-**Table (Top Machines):**
-- Columns: machine_id, zone, [Net Win], [Hold %], [Total Games]
-- Top N filter: Top 10 by Net Win
+**2. Net Win Trend (Line Chart)**
 
-**Donut Chart (Player Tiers):**
-- Legend: `gold_player_360[loyalty_tier]`
-- Values: Count of player_id
+| Property | Value |
+|----------|-------|
+| **X-axis** | `dim_date[date_key]` |
+| **Y-axis** | `[Net Win]` |
+| **Secondary Y-axis** | `[Net Win 30D Avg]` (trend line) |
+| **Reference line** | Target value or previous period |
 
-### Page 2: Slot Operations
+**3. Performance by Zone (Bar Chart)**
 
-#### Layout
+| Property | Value |
+|----------|-------|
+| **Y-axis** | `gold_slot_performance[zone]` |
+| **X-axis** | `[Net Win]` |
+| **Sort** | Descending by Net Win |
+| **Data colors** | Conditional by performance |
+
+**4. Top 10 Machines (Table)**
+
+| Column | Measure/Field |
+|--------|---------------|
+| Machine ID | `gold_slot_performance[machine_id]` |
+| Zone | `gold_slot_performance[zone]` |
+| Net Win | `[Net Win]` |
+| Hold % | `[Hold %]` |
+| Games | `[Total Games]` |
+
+Apply **Top N filter**: Top 10 by Net Win
+
+**5. Compliance Summary (Multi-row Card)**
+
+| Metric | Measure |
+|--------|---------|
+| CTR Count | `[CTR Count]` |
+| SAR Count | `[SAR Count]` |
+| W2G Count | `[W2G Count]` |
+| CTR Amount | `[CTR Total Amount]` |
+
+**6. Player Tier Distribution (Donut Chart)**
+
+| Property | Value |
+|----------|-------|
+| **Legend** | `gold_player_360[loyalty_tier]` |
+| **Values** | Count of `player_id` |
+| **Colors** | Platinum (gold), Gold, Silver, Bronze |
+
+### 4.3 Page 2: Slot Operations
+
+#### Layout Design
 
 ```
-┌────────────────────────────────────────────────────────────┐
-│  SLOT OPERATIONS                    Filters: [Date] [Zone]│
-├──────────────────────────────────────────────────────────┤
-│                  MACHINE PERFORMANCE MATRIX               │
-│  [Matrix: Zone x Denomination with Coin In, Hold %, Games]│
-├───────────────────────────┬────────────────────────────────┤
-│   HOURLY ACTIVITY         │   HOLD VARIANCE ANALYSIS      │
-│   [Area Chart]            │   [Scatter Plot]              │
-├───────────────────────────┼────────────────────────────────┤
-│   MANUFACTURER PERF       │   JACKPOT SUMMARY             │
-│   [Clustered Bar]         │   [Table with totals]         │
-└───────────────────────────┴────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│  🎰 SLOT OPERATIONS                     📅 Date: [Range]  🏷️ Zone: [Multi]     │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                    📊 MACHINE PERFORMANCE MATRIX                                 │
+│  ┌───────────────────────────────────────────────────────────────────────────┐  │
+│  │ Zone/Denom  │  $0.01  │  $0.05  │  $0.25  │  $1.00  │  $5.00  │  Total   │  │
+│  ├─────────────┼─────────┼─────────┼─────────┼─────────┼─────────┼──────────┤  │
+│  │ Main Floor  │  $125K  │  $89K   │  $234K  │  $456K  │  $78K   │  $982K   │  │
+│  │ High Limit  │    -    │    -    │  $45K   │  $234K  │  $567K  │  $846K   │  │
+│  └───────────────────────────────────────────────────────────────────────────┘  │
+├─────────────────────────────────────────┬───────────────────────────────────────┤
+│   📈 HOURLY ACTIVITY PATTERN            │   📊 HOLD VARIANCE ANALYSIS           │
+│   ┌─────────────────────────────┐       │   ┌─────────────────────────────────┐ │
+│   │ [Area chart by hour]        │       │   │ [Scatter: Theo vs Actual]       │ │
+│   │                             │       │   │   x: Theoretical Win             │ │
+│   │ Peak: 8PM-11PM              │       │   │   y: Actual Win                  │ │
+│   │ Low: 4AM-7AM                │       │   │   Color by variance              │ │
+│   └─────────────────────────────┘       │   └─────────────────────────────────┘ │
+├─────────────────────────────────────────┼───────────────────────────────────────┤
+│   🏭 MANUFACTURER PERFORMANCE           │   🎰 JACKPOT SUMMARY                  │
+│   ┌─────────────────────────────┐       │   ┌─────────────────────────────────┐ │
+│   │ [Clustered bar chart]       │       │   │ Total Jackpots: 234             │ │
+│   │   - IGT                     │       │   │ Total Amount: $1.2M             │ │
+│   │   - Aristocrat              │       │   │ Largest: $45,230 (SM-0234)      │ │
+│   │   - Scientific Games        │       │   │ [Table of recent jackpots]      │ │
+│   └─────────────────────────────┘       │   └─────────────────────────────────┘ │
+└─────────────────────────────────────────┴───────────────────────────────────────┘
 ```
 
-### Page 3: Player Analytics
+#### Key Visuals
 
-#### Layout
+**1. Performance Matrix**
+- Visual type: Matrix
+- Rows: Zone
+- Columns: Denomination
+- Values: Net Win, Hold %, Games
+
+**2. Hold Variance Scatter Plot**
+- X-axis: Theoretical Win
+- Y-axis: Net Win (Actual)
+- Size: Total Games
+- Color saturation: Hold Variance %
+- Reference line: y=x (where actual = theoretical)
+
+### 4.4 Page 3: Player Analytics
+
+#### Layout Design
 
 ```
-┌────────────────────────────────────────────────────────────┐
-│  PLAYER ANALYTICS                              [Tier Slicer]│
-├──────────┬──────────┬──────────┬──────────────────────────┤
-│  Total   │  VIP     │  At Risk │  Avg Value              │
-│ Players  │ Players  │ (Churn)  │  Score                  │
-├──────────┴──────────┴──────────┴──────────────────────────┤
-│           PLAYER VALUE DISTRIBUTION                        │
-│  [Histogram of player_value_score]                        │
-├───────────────────────────┬────────────────────────────────┤
-│   TIER BREAKDOWN          │   CHURN RISK ANALYSIS         │
-│   [Stacked Bar]           │   [Pie Chart]                 │
-├───────────────────────────┴────────────────────────────────┤
-│             TOP PLAYERS BY THEO                            │
-│  [Table: player_id, tier, theo, visits, churn_risk]       │
-└────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│  👥 PLAYER ANALYTICS                           🏷️ Tier: [Slicer] 📅 [Date]     │
+├──────────────┬──────────────┬──────────────┬────────────────────────────────────┤
+│   👥         │   ⭐         │    ⚠️        │    📈                               │
+│   45,230     │   2,340      │    1,256     │    72.5                            │
+│   Total      │   VIP        │   At Risk    │    Avg Value                       │
+│   Players    │   Players    │   (Churn)    │    Score                           │
+├──────────────┴──────────────┴──────────────┴────────────────────────────────────┤
+│                    📊 PLAYER VALUE DISTRIBUTION                                  │
+│  ┌───────────────────────────────────────────────────────────────────────────┐  │
+│  │ [Histogram of player_value_score with normal curve overlay]               │  │
+│  └───────────────────────────────────────────────────────────────────────────┘  │
+├─────────────────────────────────────────┬───────────────────────────────────────┤
+│   📊 TIER BREAKDOWN                     │   ⚠️ CHURN RISK ANALYSIS             │
+│   ┌─────────────────────────────┐       │   ┌─────────────────────────────────┐ │
+│   │ [Stacked bar by tier]       │       │   │ [Pie: High/Medium/Low risk]     │ │
+│   │   Platinum: 5%              │       │   │                                 │ │
+│   │   Gold: 15%                 │       │   │   High: 12%                     │ │
+│   │   Silver: 30%               │       │   │   Medium: 28%                   │ │
+│   │   Bronze: 50%               │       │   │   Low: 60%                      │ │
+│   └─────────────────────────────┘       │   └─────────────────────────────────┘ │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                    🏆 TOP PLAYERS BY THEORETICAL VALUE                          │
+│  ┌───────────────────────────────────────────────────────────────────────────┐  │
+│  │ Player ID  │  Tier     │  Total Theo  │  Visits  │  Churn Risk  │ Action  │  │
+│  │ PLY-00234  │ Platinum  │   $125,000   │   45     │    Low       │  [View] │  │
+│  │ PLY-00892  │ Platinum  │   $98,500    │   38     │    Medium    │  [View] │  │
+│  └───────────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Step 5: Configure Report Settings
+---
 
-### Publish Report
+## 🛠️ Step 5: Configure Report Settings
 
-1. Save report: `Casino Executive Dashboard`
+### 5.1 Publish Report
+
+1. Save the report: **File** > **Save as** > `Casino Executive Dashboard`
 2. Click **Publish**
 3. Select workspace: `casino-fabric-poc`
 
-### Set Refresh Schedule
+### 5.2 Verify Direct Lake Refresh
 
-For Direct Lake, data updates automatically. But you can configure:
+For Direct Lake semantic models, data updates are automatic:
 
-1. Open report in service
-2. Click **Settings**
-3. Under **Refresh**, verify "DirectLake - no refresh needed"
+1. Open the report in Power BI service
+2. Click **Settings** (gear icon) on the semantic model
+3. Verify under **Refresh**:
+   - Shows: "Direct Lake - data is always current"
+   - No scheduled refresh is needed
 
-### Configure RLS (Row-Level Security)
+> **💡 Direct Lake Refresh Behavior**
+>
+> - Data changes in Delta tables are visible within seconds
+> - No manual refresh button needed
+> - If framing (metadata sync) is needed, it happens automatically
+> - Monitor with semantic model refresh history for any issues
+
+### 5.3 Configure Row-Level Security (RLS)
+
+Restrict data access by user role (e.g., zone managers see only their zones).
+
+#### Create RLS Role
+
+1. Open semantic model in **Edit** mode
+2. Go to **Modeling** > **Manage roles**
+3. Create new role: `Zone Manager`
+
+#### Define DAX Filter
 
 ```dax
-// Example: Restrict by zone
+// RLS Rule: Zone-based access
+// Users see only their assigned zone(s)
 [Zone Security] =
-VAR CurrentUserZone = LOOKUPVALUE(
-    UserZones[Zone],
-    UserZones[UserEmail], USERPRINCIPALNAME()
-)
+VAR UserZones =
+    LOOKUPVALUE(
+        UserZoneMapping[Zone],
+        UserZoneMapping[UserEmail],
+        USERPRINCIPALNAME()
+    )
 RETURN
-    gold_slot_performance[zone] = CurrentUserZone
-    || CurrentUserZone = "All"
+    gold_slot_performance[zone] = UserZones
+    || UserZones = "All"  // "All" grants full access
 ```
 
-## Step 6: Create Paginated Report (Optional)
+#### Alternative: Multiple Zones per User
 
-For compliance reporting that requires exact formatting:
+```dax
+// RLS Rule: Support multiple zones per user
+[Zone Security Multi] =
+VAR UserEmail = USERPRINCIPALNAME()
+VAR AllowedZones =
+    CALCULATETABLE(
+        VALUES(UserZoneMapping[Zone]),
+        UserZoneMapping[UserEmail] = UserEmail
+    )
+RETURN
+    gold_slot_performance[zone] IN AllowedZones
+    || "All" IN AllowedZones
+```
 
-### In Power BI Report Builder
+#### Test RLS
 
-1. Connect to semantic model
-2. Create dataset with compliance measures
-3. Design tabular layout for CTR/SAR/W2G reports
-4. Add parameters for date range
-5. Export format: PDF for regulators
+1. Click **View as role** in Power BI Desktop
+2. Select `Zone Manager` role
+3. Enter test user email
+4. Verify data is filtered correctly
 
-## Validation Checklist
+---
 
-- [ ] Semantic model created with Direct Lake
-- [ ] Relationships configured correctly
-- [ ] All DAX measures calculating
-- [ ] Executive dashboard complete
-- [ ] Report published to workspace
-- [ ] Data refreshing automatically
+## 🛠️ Step 6: Create Paginated Report (Optional)
 
-## Performance Optimization
+For compliance reporting requiring exact formatting and pagination.
+
+### 6.1 Use Power BI Report Builder
+
+1. Download **Power BI Report Builder** (free)
+2. Create new report connecting to semantic model
+3. Design compliance-friendly layouts:
+   - CTR summary with transaction details
+   - SAR filing log with timestamps
+   - W2G jackpot listing with IRS form format
+
+### 6.2 Paginated Report Features
+
+| Feature | Use Case |
+|---------|----------|
+| **Pixel-perfect formatting** | Regulatory forms requiring exact layout |
+| **Multi-page export** | Reports spanning multiple pages |
+| **Parameterized** | Date range, zone, filing type filters |
+| **Export formats** | PDF, Excel, Word for regulator submission |
+
+---
+
+## ✅ Validation Checklist
+
+Verify your Power BI implementation:
+
+| Component | Status | Verification |
+|-----------|--------|--------------|
+| Semantic model created | ⬜ | Model appears in workspace |
+| Storage mode = Direct Lake | ⬜ | Settings show "Direct Lake" |
+| Relationships configured | ⬜ | Diagram shows connected tables |
+| All DAX measures work | ⬜ | Measures return values in report |
+| Executive dashboard complete | ⬜ | All 3 pages with visualizations |
+| Report published | ⬜ | Report accessible in workspace |
+| Data is fresh | ⬜ | Changes in Gold tables appear immediately |
+| (Optional) RLS configured | ⬜ | "View as role" shows filtered data |
+
+### Quick Validation Steps
+
+1. **Test Direct Lake freshness:**
+   - Update a record in Gold table
+   - Refresh report page
+   - Verify change appears (within seconds)
+
+2. **Test DAX measures:**
+   - Create a table with all measures
+   - Filter by different dates/zones
+   - Verify calculations are correct
+
+3. **Test performance:**
+   - Report should load in < 5 seconds
+   - Visuals should respond to slicers instantly
+
+---
+
+## 🔧 Performance Optimization
 
 ### For Direct Lake
 
-1. **Pre-aggregate in Gold layer** where possible
-2. **Avoid complex calculated columns** - use measures
-3. **Limit table columns** - only include needed fields
-4. **Use numeric keys** for relationships
+| Optimization | Description |
+|--------------|-------------|
+| **Pre-aggregate in Gold** | Create summary tables for common aggregations |
+| **Limit columns** | Only include needed columns in semantic model |
+| **Use numeric keys** | Integer keys are faster than string keys |
+| **Avoid complex calculated columns** | Use measures instead |
+| **Monitor fallback** | Check if queries fall back to DirectQuery |
 
 ### For Reports
 
-1. **Limit visuals per page** - 6-8 maximum
-2. **Use slicers efficiently** - dropdown for many values
-3. **Avoid ALL function** on large tables
-4. **Test with realistic data volumes**
+| Optimization | Description |
+|--------------|-------------|
+| **Limit visuals per page** | 6-8 visuals maximum for performance |
+| **Use slicers efficiently** | Dropdown for high-cardinality fields |
+| **Avoid ALLEXCEPT/ALL** | These can cause full table scans |
+| **Use bookmarks** | For pre-filtered views instead of complex filters |
+| **Test with production data** | Validate performance with realistic volumes |
 
-## Troubleshooting
+### Monitoring Direct Lake
 
-### Fallback to Import Mode
+Check the semantic model for fallback indicators:
 
-If queries fall back to DirectQuery:
-1. Check table doesn't exceed limits
-2. Verify no unsupported DAX functions
-3. Review complex calculated columns
+```dax
+// Query to identify fallback scenarios
+// Run in DAX Studio or external tools
+EVALUATE
+INFO.STORAGETABLECOLUMNS()
+```
 
-### Slow Query Performance
+---
 
-1. Check Gold table partitioning
-2. Review measure complexity
-3. Add filters to reduce data scanned
+## 🔧 Troubleshooting
 
-## Next Steps
+### Issue: Fallback to DirectQuery Mode
 
-Continue to [Tutorial 06: Data Pipelines](../06-data-pipelines/README.md).
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| Slow queries | DirectQuery fallback | Check for unsupported DAX patterns |
+| "DQ" indicator | Complex calculations | Simplify calculated columns |
+| Timeout errors | Large table scans | Add filters, pre-aggregate |
 
-## Resources
+**Common fallback triggers:**
+- Complex calculated columns with RELATED()
+- Very large tables (check row counts)
+- Certain DAX functions on large datasets
 
-- [Direct Lake Overview](https://learn.microsoft.com/fabric/data-warehouse/direct-lake-mode)
-- [DAX Reference](https://learn.microsoft.com/dax/)
-- [Power BI Best Practices](https://learn.microsoft.com/power-bi/guidance/)
+### Issue: Slow Query Performance
+
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| Report loads slowly | Too many visuals | Reduce visual count per page |
+| Slicers lag | High cardinality | Use dropdown, add search |
+| Aggregations slow | No pre-aggregation | Create Gold summary tables |
+
+### Issue: Data Not Refreshing
+
+| Symptom | Cause | Solution |
+|---------|-------|----------|
+| Stale data | Framing issue | Check semantic model refresh logs |
+| No updates | Table not synced | Verify OneLake sync status |
+| Partial updates | Delta log issues | Rebuild Delta table |
+
+---
+
+## 🎉 Summary
+
+Congratulations! You have successfully built executive analytics using Direct Lake and Power BI.
+
+### What You Accomplished
+
+- ✅ Created a **Direct Lake semantic model** for casino analytics
+- ✅ Defined **table relationships** for star schema
+- ✅ Built **DAX measures** for slot, player, and compliance KPIs
+- ✅ Created **time intelligence** calculations (MTD, YTD, trends)
+- ✅ Designed **executive dashboards** with automatic data refresh
+- ✅ Configured **row-level security** for zone-based access
+
+### Key Takeaways
+
+| Concept | Key Point |
+|---------|-----------|
+| **Direct Lake** | Combines Import speed with DirectQuery freshness |
+| **No Refresh Needed** | Data updates automatically from Delta tables |
+| **Star Schema** | Fact + Dimension tables for optimal performance |
+| **DAX Measures** | Dynamic calculations that respond to filter context |
+| **RLS** | Secure data access by user role |
+
+### Architecture Achieved
+
+```mermaid
+flowchart LR
+    subgraph Data["🗄️ Data Layer"]
+        DT[Delta Tables<br/>Gold Layer]
+    end
+
+    subgraph Semantic["📊 Semantic Layer"]
+        DL[Direct Lake<br/>Semantic Model]
+    end
+
+    subgraph Reporting["📈 Reporting Layer"]
+        EXEC[Executive<br/>Dashboard]
+        OPS[Operations<br/>Report]
+        COMP[Compliance<br/>Report]
+    end
+
+    DT --> |Auto-sync| DL
+    DL --> EXEC
+    DL --> OPS
+    DL --> COMP
+
+    style Data fill:#e3f2fd
+    style Semantic fill:#fff8e1
+    style Reporting fill:#e8f5e9
+```
+
+---
+
+## 🚀 Next Steps
+
+Continue your learning journey:
+
+**Next Tutorial:** [Tutorial 06: Data Pipelines](../06-data-pipelines/README.md) - Orchestrate end-to-end data workflows
+
+**Optional Deep Dives:**
+- Add more sophisticated DAX calculations
+- Create mobile-optimized report layouts
+- Implement Q&A natural language queries
+- Set up email subscriptions and alerts
+
+---
+
+## 📚 Resources
+
+| Resource | Link |
+|----------|------|
+| Direct Lake Overview | [Microsoft Learn](https://learn.microsoft.com/fabric/get-started/direct-lake-overview) |
+| DAX Reference | [DAX Guide](https://learn.microsoft.com/dax/) |
+| Power BI Best Practices | [Guidance Docs](https://learn.microsoft.com/power-bi/guidance/) |
+| Semantic Model Design | [Star Schema Guide](https://learn.microsoft.com/power-bi/guidance/star-schema) |
+| Row-Level Security | [RLS Documentation](https://learn.microsoft.com/power-bi/enterprise/service-admin-rls) |
+
+---
+
+## 🧭 Navigation
+
+| Previous | Up | Next |
+|:---------|:--:|-----:|
+| [⬅️ 04-Real-Time Analytics](../04-real-time-analytics/README.md) | [📖 Tutorials Index](../README.md) | [06-Data Pipelines ➡️](../06-data-pipelines/README.md) |
+
+---
+
+<div align="center">
+
+**Questions or issues?** Open an issue in the [GitHub repository](https://github.com/your-repo/issues)
+
+*Tutorial 05 of 10 in the Microsoft Fabric Casino POC Series*
+
+</div>

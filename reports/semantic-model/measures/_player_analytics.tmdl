@@ -1,0 +1,413 @@
+/// =============================================================================
+/// Measure Group: Player Analytics
+/// =============================================================================
+///
+/// Player-centric metrics for marketing, retention, and CRM
+///
+/// =============================================================================
+
+table '_Player Analytics'
+    lineageTag: measures-player
+    description: "Player analytics and segmentation metrics"
+
+    column _placeholder
+        dataType: string
+        isHidden: true
+        lineageTag: measures-player-ph
+        sourceColumn: none
+        expression: "Measures Table"
+
+    /// ==========================================================================
+    /// PLAYER COUNTS
+    /// ==========================================================================
+
+    measure 'Total Players' =
+        COUNTROWS(fact_player_activity)
+        formatString: #,##0
+        lineageTag: m-total-players
+        displayFolder: "Counts"
+        description: "Total number of players in system"
+
+    measure 'VIP Players' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[vip_flag] = TRUE
+        )
+        formatString: #,##0
+        lineageTag: m-vip-players
+        displayFolder: "Counts"
+        description: "Count of VIP flagged players"
+
+    measure 'VIP %' =
+        DIVIDE([VIP Players], [Total Players], 0) * 100
+        formatString: 0.0"%"
+        lineageTag: m-vip-pct
+        displayFolder: "Counts"
+        description: "Percentage of VIP players"
+
+    measure 'Active Players 30D' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[days_since_visit] <= 30
+        )
+        formatString: #,##0
+        lineageTag: m-active-30d
+        displayFolder: "Counts"
+        description: "Players with activity in last 30 days"
+
+    measure 'Active Players 7D' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[days_since_visit] <= 7
+        )
+        formatString: #,##0
+        lineageTag: m-active-7d
+        displayFolder: "Counts"
+        description: "Players with activity in last 7 days"
+
+    measure 'Inactive Players' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[days_since_visit] > 90
+        )
+        formatString: #,##0
+        lineageTag: m-inactive
+        displayFolder: "Counts"
+        description: "Players inactive for 90+ days"
+
+    measure 'New Players MTD' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            DATESMTD(fact_player_activity[enrollment_date])
+        )
+        formatString: #,##0
+        lineageTag: m-new-mtd
+        displayFolder: "Counts"
+        description: "New enrollments month to date"
+
+    /// ==========================================================================
+    /// PLAYER VALUE METRICS
+    /// ==========================================================================
+
+    measure 'Avg Player Value Score' =
+        AVERAGE(fact_player_activity[player_value_score])
+        formatString: #,##0
+        lineageTag: m-avg-value-score
+        displayFolder: "Value"
+        description: "Average player value score (0-1000)"
+
+    measure 'Total Player Theo' =
+        SUM(fact_player_activity[total_theo_win])
+        formatString: \$#,##0
+        lineageTag: m-total-player-theo
+        displayFolder: "Value"
+        description: "Total theoretical win from all players"
+
+    measure 'Avg Player Theo' =
+        AVERAGE(fact_player_activity[total_theo_win])
+        formatString: \$#,##0.00
+        lineageTag: m-avg-player-theo
+        displayFolder: "Value"
+        description: "Average theo per player"
+
+    measure 'VIP Total Theo' =
+        CALCULATE(
+            SUM(fact_player_activity[total_theo_win]),
+            fact_player_activity[vip_flag] = TRUE
+        )
+        formatString: \$#,##0
+        lineageTag: m-vip-theo
+        displayFolder: "Value"
+        description: "Total theo from VIP players"
+
+    measure 'VIP Theo %' =
+        DIVIDE([VIP Total Theo], [Total Player Theo], 0) * 100
+        formatString: 0.0"%"
+        lineageTag: m-vip-theo-pct
+        displayFolder: "Value"
+        description: "VIP contribution to total theo"
+
+    measure 'Player LTV Estimate' =
+        SUMX(
+            fact_player_activity,
+            fact_player_activity[total_theo_win] *
+            DIVIDE(365, COALESCE(fact_player_activity[account_age_days], 1), 0) * 3
+        )
+        formatString: \$#,##0
+        lineageTag: m-player-ltv
+        displayFolder: "Value"
+        description: "Estimated 3-year lifetime value"
+
+    measure 'Avg Player LTV' =
+        DIVIDE([Player LTV Estimate], [Total Players], 0)
+        formatString: \$#,##0.00
+        lineageTag: m-avg-ltv
+        displayFolder: "Value"
+        description: "Average player lifetime value"
+
+    /// ==========================================================================
+    /// CHURN ANALYSIS
+    /// ==========================================================================
+
+    measure 'High Churn Risk' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[churn_risk] = "High"
+        )
+        formatString: #,##0
+        lineageTag: m-high-churn
+        displayFolder: "Churn"
+        description: "Players at high churn risk"
+
+    measure 'Medium-High Churn Risk' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[churn_risk] = "Medium-High"
+        )
+        formatString: #,##0
+        lineageTag: m-med-high-churn
+        displayFolder: "Churn"
+        description: "Players at medium-high churn risk"
+
+    measure 'Medium Churn Risk' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[churn_risk] = "Medium"
+        )
+        formatString: #,##0
+        lineageTag: m-med-churn
+        displayFolder: "Churn"
+        description: "Players at medium churn risk"
+
+    measure 'Low Churn Risk' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[churn_risk] = "Low"
+        )
+        formatString: #,##0
+        lineageTag: m-low-churn
+        displayFolder: "Churn"
+        description: "Players at low churn risk"
+
+    measure 'Active (No Churn Risk)' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[churn_risk] = "Active"
+        )
+        formatString: #,##0
+        lineageTag: m-no-churn
+        displayFolder: "Churn"
+        description: "Active players with no churn risk"
+
+    measure 'At Risk Theo' =
+        CALCULATE(
+            SUM(fact_player_activity[total_theo_win]),
+            fact_player_activity[churn_risk] IN {"High", "Medium-High"}
+        )
+        formatString: \$#,##0
+        lineageTag: m-at-risk-theo
+        displayFolder: "Churn"
+        description: "Theo value at high churn risk"
+
+    measure 'Avg Churn Score' =
+        AVERAGE(fact_player_activity[churn_risk_score])
+        formatString: #,##0
+        lineageTag: m-avg-churn-score
+        displayFolder: "Churn"
+        description: "Average churn risk score (0-100)"
+
+    measure 'Churn Risk Rate' =
+        DIVIDE(
+            [High Churn Risk] + [Medium-High Churn Risk],
+            [Total Players],
+            0
+        ) * 100
+        formatString: 0.0"%"
+        lineageTag: m-churn-rate
+        displayFolder: "Churn"
+        description: "Percentage of players at elevated churn risk"
+
+    /// ==========================================================================
+    /// TIER ANALYSIS
+    /// ==========================================================================
+
+    measure 'Diamond Players' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[loyalty_tier] = "Diamond"
+        )
+        formatString: #,##0
+        lineageTag: m-diamond
+        displayFolder: "Tiers"
+        description: "Diamond tier players"
+
+    measure 'Platinum Players' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[loyalty_tier] = "Platinum"
+        )
+        formatString: #,##0
+        lineageTag: m-platinum
+        displayFolder: "Tiers"
+        description: "Platinum tier players"
+
+    measure 'Gold Players' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[loyalty_tier] = "Gold"
+        )
+        formatString: #,##0
+        lineageTag: m-gold
+        displayFolder: "Tiers"
+        description: "Gold tier players"
+
+    measure 'Silver Players' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[loyalty_tier] = "Silver"
+        )
+        formatString: #,##0
+        lineageTag: m-silver
+        displayFolder: "Tiers"
+        description: "Silver tier players"
+
+    measure 'Bronze Players' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[loyalty_tier] = "Bronze"
+        )
+        formatString: #,##0
+        lineageTag: m-bronze
+        displayFolder: "Tiers"
+        description: "Bronze tier players"
+
+    measure 'Diamond Theo' =
+        CALCULATE(
+            SUM(fact_player_activity[total_theo_win]),
+            fact_player_activity[loyalty_tier] = "Diamond"
+        )
+        formatString: \$#,##0
+        lineageTag: m-diamond-theo
+        displayFolder: "Tiers"
+        description: "Total theo from Diamond players"
+
+    /// ==========================================================================
+    /// ENGAGEMENT METRICS
+    /// ==========================================================================
+
+    measure 'Avg Days Since Visit' =
+        AVERAGE(fact_player_activity[days_since_visit])
+        formatString: #,##0.0
+        lineageTag: m-avg-days-since
+        displayFolder: "Engagement"
+        description: "Average days since last visit"
+
+    measure 'Avg Total Visits' =
+        AVERAGE(fact_player_activity[total_visits])
+        formatString: #,##0.0
+        lineageTag: m-avg-visits
+        displayFolder: "Engagement"
+        description: "Average visits per player"
+
+    measure 'Total Gaming Activity' =
+        SUM(fact_player_activity[total_gaming_activity])
+        formatString: \$#,##0
+        lineageTag: m-total-gaming
+        displayFolder: "Engagement"
+        description: "Combined slot and table activity"
+
+    measure 'Avg Gaming Activity' =
+        AVERAGE(fact_player_activity[total_gaming_activity])
+        formatString: \$#,##0.00
+        lineageTag: m-avg-gaming
+        displayFolder: "Engagement"
+        description: "Average gaming activity per player"
+
+    /// ==========================================================================
+    /// GAME PREFERENCE
+    /// ==========================================================================
+
+    measure 'Slot Preference Players' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[preferred_game_type] = "Slots"
+        )
+        formatString: #,##0
+        lineageTag: m-slot-pref
+        displayFolder: "Preference"
+        description: "Players who prefer slots"
+
+    measure 'Table Preference Players' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[preferred_game_type] = "Tables"
+        )
+        formatString: #,##0
+        lineageTag: m-table-pref
+        displayFolder: "Preference"
+        description: "Players who prefer tables"
+
+    measure 'Mixed Preference Players' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[preferred_game_type] = "Mixed/Unknown"
+        )
+        formatString: #,##0
+        lineageTag: m-mixed-pref
+        displayFolder: "Preference"
+        description: "Players with mixed preference"
+
+    measure 'Slot Preference %' =
+        DIVIDE([Slot Preference Players], [Total Players], 0) * 100
+        formatString: 0.0"%"
+        lineageTag: m-slot-pref-pct
+        displayFolder: "Preference"
+        description: "Percentage preferring slots"
+
+    /// ==========================================================================
+    /// SEGMENTATION
+    /// ==========================================================================
+
+    measure 'High Value Players' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[player_segment] = "High Value"
+        )
+        formatString: #,##0
+        lineageTag: m-high-value
+        displayFolder: "Segments"
+        description: "High value segment players"
+
+    measure 'Medium Value Players' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[player_segment] = "Medium Value"
+        )
+        formatString: #,##0
+        lineageTag: m-med-value
+        displayFolder: "Segments"
+        description: "Medium value segment players"
+
+    measure 'Low Value Players' =
+        CALCULATE(
+            COUNTROWS(fact_player_activity),
+            fact_player_activity[player_segment] = "Low Value"
+        )
+        formatString: #,##0
+        lineageTag: m-low-value
+        displayFolder: "Segments"
+        description: "Low value segment players"
+
+    measure 'Marketing Opt-In %' =
+        DIVIDE(
+            CALCULATE(
+                COUNTROWS(fact_player_activity),
+                fact_player_activity[marketing_opt_in] = TRUE
+            ),
+            [Total Players],
+            0
+        ) * 100
+        formatString: 0.0"%"
+        lineageTag: m-optin-pct
+        displayFolder: "Segments"
+        description: "Percentage opted in to marketing"

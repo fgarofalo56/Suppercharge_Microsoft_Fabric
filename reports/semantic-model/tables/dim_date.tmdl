@@ -1,0 +1,233 @@
+/// =============================================================================
+/// Dimension: Date
+/// =============================================================================
+///
+/// Purpose: Standard date dimension for time-based analysis
+/// Grain: One row per calendar day
+/// Update Pattern: Static (generated via DAX or pre-loaded)
+///
+/// =============================================================================
+
+table dim_date
+    lineageTag: dim-date-001
+    dataCategory: Time
+
+    /// Mark as date table for time intelligence
+    annotation __PBI_TimeIntelligenceEnabled = true
+
+    /// ==========================================================================
+    /// COLUMNS
+    /// ==========================================================================
+
+    column Date
+        dataType: dateTime
+        formatString: Short Date
+        isKey: true
+        lineageTag: dim-date-date
+        summarizeBy: none
+        sourceColumn: Date
+        annotation SummarizationSetBy = Automatic
+
+    column date_key
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-date-key
+        summarizeBy: none
+        sourceColumn: date_key
+        description: "Integer date key in YYYYMMDD format"
+
+    column Year
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-date-year
+        summarizeBy: none
+        sourceColumn: Year
+
+    column Quarter
+        dataType: string
+        lineageTag: dim-date-quarter
+        summarizeBy: none
+        sourceColumn: Quarter
+        description: "Calendar quarter (Q1-Q4)"
+        sortByColumn: 'Quarter Number'
+
+    column 'Quarter Number'
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-date-quarter-num
+        summarizeBy: none
+        sourceColumn: QuarterNumber
+        isHidden: true
+
+    column Month
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-date-month
+        summarizeBy: none
+        sourceColumn: Month
+
+    column 'Month Name'
+        dataType: string
+        lineageTag: dim-date-month-name
+        summarizeBy: none
+        sourceColumn: MonthName
+        sortByColumn: Month
+
+    column 'Month Short'
+        dataType: string
+        lineageTag: dim-date-month-short
+        summarizeBy: none
+        sourceColumn: MonthShort
+        sortByColumn: Month
+
+    column Week
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-date-week
+        summarizeBy: none
+        sourceColumn: Week
+        description: "ISO week number"
+
+    column Day
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-date-day
+        summarizeBy: none
+        sourceColumn: Day
+
+    column 'Day Name'
+        dataType: string
+        lineageTag: dim-date-day-name
+        summarizeBy: none
+        sourceColumn: DayName
+        sortByColumn: 'Day of Week'
+
+    column 'Day Short'
+        dataType: string
+        lineageTag: dim-date-day-short
+        summarizeBy: none
+        sourceColumn: DayShort
+        sortByColumn: 'Day of Week'
+
+    column 'Day of Week'
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-date-dow
+        summarizeBy: none
+        sourceColumn: DayOfWeek
+        description: "1=Sunday, 7=Saturday"
+
+    column 'Is Weekend'
+        dataType: boolean
+        lineageTag: dim-date-weekend
+        summarizeBy: none
+        sourceColumn: IsWeekend
+
+    column 'Is Holiday'
+        dataType: boolean
+        lineageTag: dim-date-holiday
+        summarizeBy: none
+        sourceColumn: IsHoliday
+
+    column 'Fiscal Year'
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-date-fy
+        summarizeBy: none
+        sourceColumn: FiscalYear
+        description: "Fiscal year (Oct-Sep)"
+
+    column 'Fiscal Quarter'
+        dataType: string
+        lineageTag: dim-date-fq
+        summarizeBy: none
+        sourceColumn: FiscalQuarter
+        description: "Fiscal quarter (FQ1-FQ4)"
+
+    column 'Year Month'
+        dataType: string
+        lineageTag: dim-date-ym
+        summarizeBy: none
+        sourceColumn: YearMonth
+        description: "YYYY-MM format for sorting"
+
+    column 'Year Week'
+        dataType: string
+        lineageTag: dim-date-yw
+        summarizeBy: none
+        sourceColumn: YearWeek
+        description: "YYYY-WW format for sorting"
+
+    /// ==========================================================================
+    /// HIERARCHIES
+    /// ==========================================================================
+
+    hierarchy 'Calendar'
+        lineageTag: dim-date-cal-hier
+
+        level Year
+            column: Year
+            lineageTag: dim-date-cal-year
+
+        level Quarter
+            column: Quarter
+            lineageTag: dim-date-cal-quarter
+
+        level Month
+            column: 'Month Name'
+            lineageTag: dim-date-cal-month
+
+        level Day
+            column: Date
+            lineageTag: dim-date-cal-day
+
+    hierarchy 'Fiscal'
+        lineageTag: dim-date-fiscal-hier
+
+        level 'Fiscal Year'
+            column: 'Fiscal Year'
+            lineageTag: dim-date-fy-level
+
+        level 'Fiscal Quarter'
+            column: 'Fiscal Quarter'
+            lineageTag: dim-date-fq-level
+
+    /// ==========================================================================
+    /// CALCULATED TABLE (DAX-generated date dimension)
+    /// ==========================================================================
+    ///
+    /// If loading from DAX instead of source table, use:
+    ///
+    /// partition 'dim_date-calculated' = calculated
+    ///     expression:
+    ///         ```
+    ///         VAR MinDate = DATE(2024, 1, 1)
+    ///         VAR MaxDate = DATE(2025, 12, 31)
+    ///         RETURN
+    ///         ADDCOLUMNS(
+    ///             CALENDAR(MinDate, MaxDate),
+    ///             "date_key", INT(FORMAT([Date], "YYYYMMDD")),
+    ///             "Year", YEAR([Date]),
+    ///             "Quarter", "Q" & QUARTER([Date]),
+    ///             "QuarterNumber", QUARTER([Date]),
+    ///             "Month", MONTH([Date]),
+    ///             "MonthName", FORMAT([Date], "MMMM"),
+    ///             "MonthShort", FORMAT([Date], "MMM"),
+    ///             "Week", WEEKNUM([Date]),
+    ///             "Day", DAY([Date]),
+    ///             "DayName", FORMAT([Date], "dddd"),
+    ///             "DayShort", FORMAT([Date], "ddd"),
+    ///             "DayOfWeek", WEEKDAY([Date]),
+    ///             "IsWeekend", WEEKDAY([Date]) IN {1, 7},
+    ///             "IsHoliday", FALSE,
+    ///             "FiscalYear", IF(MONTH([Date]) >= 10, YEAR([Date]) + 1, YEAR([Date])),
+    ///             "FiscalQuarter", "FQ" & SWITCH(TRUE(),
+    ///                 MONTH([Date]) IN {10,11,12}, 1,
+    ///                 MONTH([Date]) IN {1,2,3}, 2,
+    ///                 MONTH([Date]) IN {4,5,6}, 3,
+    ///                 4),
+    ///             "YearMonth", FORMAT([Date], "YYYY-MM"),
+    ///             "YearWeek", FORMAT([Date], "YYYY") & "-W" & FORMAT(WEEKNUM([Date]), "00")
+    ///         )
+    ///         ```
+    /// ==========================================================================

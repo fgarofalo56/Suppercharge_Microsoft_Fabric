@@ -1,36 +1,59 @@
-# Deployment Guide
+# 🚀 Deployment Guide
 
-This guide covers deploying the Microsoft Fabric Casino/Gaming POC environment using Infrastructure as Code (Bicep) and GitHub Actions.
+> 🏠 [Home](../README.md) > 📚 [Docs](./) > 🚀 Deployment
 
-## Prerequisites
+**Last Updated:** `2025-01-21` | **Version:** 1.0.0
+
+---
+
+## 📑 Table of Contents
+
+- [📋 Prerequisites](#-prerequisites)
+- [🛠️ Quick Deployment](#️-quick-deployment)
+- [🐳 Docker Deployment](#-docker-deployment)
+- [📜 Script-Based Deployment](#-script-based-deployment)
+- [🌍 Environment-Specific Deployment](#-environment-specific-deployment)
+- [🔄 GitHub Actions Deployment](#-github-actions-deployment)
+- [⚙️ Post-Deployment Configuration](#️-post-deployment-configuration)
+- [✅ Deployment Verification](#-deployment-verification)
+- [🔧 Troubleshooting](#-troubleshooting)
+- [🗑️ Cleanup](#️-cleanup)
+- [💰 Cost Optimization](#-cost-optimization)
+- [📚 Next Steps](#-next-steps)
+
+---
+
+## 📋 Prerequisites
+
+Before deploying, ensure you have completed all items in the [Prerequisites Guide](PREREQUISITES.md).
 
 ### Azure Requirements
 
-- **Azure Subscription:** Owner or Contributor access
-- **Microsoft Fabric:** Enabled in your tenant
-- **Resource Providers:** Register the following:
-  - `Microsoft.Fabric`
-  - `Microsoft.Purview`
-  - `Microsoft.Storage`
-  - `Microsoft.KeyVault`
-  - `Microsoft.Network`
-  - `Microsoft.OperationalInsights`
+| Requirement | Details |
+|-------------|---------|
+| **Azure Subscription** | Owner or Contributor access |
+| **Microsoft Fabric** | Enabled in your tenant |
+| **Resource Providers** | See list below |
+
+**Required Resource Providers:**
+
+```
+Microsoft.Fabric
+Microsoft.Purview
+Microsoft.Storage
+Microsoft.KeyVault
+Microsoft.Network
+Microsoft.OperationalInsights
+```
 
 ### Local Tools
 
-```bash
-# Azure CLI (2.50+)
-az --version
-
-# Bicep (0.22+)
-az bicep version
-
-# Git
-git --version
-
-# PowerShell 7+ (optional, for scripts)
-pwsh --version
-```
+| Tool | Minimum Version | Check Command |
+|------|-----------------|---------------|
+| Azure CLI | 2.50+ | `az --version` |
+| Bicep | 0.22+ | `az bicep version` |
+| Git | 2.40+ | `git --version` |
+| PowerShell | 7.0+ | `pwsh --version` |
 
 ### Install Required Tools
 
@@ -46,7 +69,11 @@ az bicep upgrade
 winget install -e --id Microsoft.PowerShell
 ```
 
-## Quick Deployment
+---
+
+## 🛠️ Quick Deployment
+
+Follow these steps for a rapid deployment to the development environment.
 
 ### Step 1: Clone and Configure
 
@@ -61,6 +88,8 @@ cp .env.sample .env
 # Edit .env with your values
 code .env  # or your preferred editor
 ```
+
+> ℹ️ **Note:** Ensure all required values in `.env` are populated before proceeding.
 
 ### Step 2: Login to Azure
 
@@ -88,6 +117,8 @@ az deployment sub what-if \
   --parameters infra/environments/dev/dev.bicepparam
 ```
 
+> ℹ️ **Note:** Always run what-if analysis before deployment to review changes.
+
 ### Step 4: Deploy
 
 ```bash
@@ -99,9 +130,162 @@ az deployment sub create \
   --parameters infra/environments/dev/dev.bicepparam
 ```
 
-## Environment-Specific Deployment
+---
 
-### Development
+## 🐳 Docker Deployment
+
+Use Docker to run data generators without installing Python dependencies locally.
+
+### Quick Start with Docker
+
+```bash
+# Generate demo data (quick, small dataset)
+docker-compose run --rm demo-generator
+
+# Generate full dataset (30 days, all domains)
+docker-compose run --rm data-generator
+
+# Output data will be in ./output directory
+```
+
+### Available Docker Services
+
+| Service | Description | Use Case |
+|---------|-------------|----------|
+| `data-generator` | Full dataset generation | POC data population |
+| `demo-generator` | Small demo dataset | Quick testing |
+| `streaming-generator` | Real-time event streaming | Event Hub integration |
+| `data-validator` | Data quality validation | Verify generated data |
+
+### Docker Commands
+
+```bash
+# Build the Docker image
+docker-compose build
+
+# Generate specific data volumes
+docker-compose run --rm data-generator --slots 100000 --players 5000
+
+# Generate data in CSV format
+docker-compose run --rm data-generator --all --format csv
+
+# Stream to Azure Event Hub
+EVENTHUB_CONNECTION_STRING="your-connection-string" \
+EVENTHUB_NAME="slot-telemetry" \
+docker-compose up streaming-generator
+```
+
+### Docker Environment Variables
+
+Configure via `.env` file or command line:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DATA_FORMAT` | `parquet` | Output format |
+| `DATA_DAYS` | `30` | Days of data to generate |
+| `EVENTHUB_CONNECTION_STRING` | - | Event Hub connection |
+| `EVENTHUB_NAME` | `slot-telemetry` | Event Hub name |
+| `STREAMING_RATE` | `10` | Events per second |
+
+### Using Docker with Fabric Upload
+
+After generating data, upload to Fabric:
+
+```bash
+# 1. Generate data
+docker-compose run --rm data-generator --all --days 30
+
+# 2. Upload to Azure Storage (for Fabric import)
+az storage blob upload-batch \
+  --source ./output \
+  --destination bronze \
+  --account-name $STORAGE_ACCOUNT_NAME
+
+# 3. Import into Fabric Lakehouse via notebooks
+```
+
+---
+
+## 📜 Script-Based Deployment
+
+PowerShell scripts for automated deployment workflows.
+
+### Available Scripts
+
+| Script | Purpose | Usage |
+|--------|---------|-------|
+| `scripts/deploy.ps1` | Full infrastructure deployment | CI/CD pipelines |
+| `scripts/generate-data.ps1` | Data generation wrapper | Local/Docker execution |
+| `scripts/validate.ps1` | Run validation tests | Quality assurance |
+
+### Full Deployment Script
+
+```powershell
+# Deploy infrastructure with all defaults
+./scripts/deploy.ps1 -Environment dev
+
+# Deploy with custom parameters
+./scripts/deploy.ps1 `
+  -Environment staging `
+  -Location westus2 `
+  -SkipValidation $false
+
+# Deploy with cost estimation first
+./scripts/deploy.ps1 -Environment prod -ShowCostEstimate
+```
+
+### Data Generation Script
+
+```powershell
+# Generate all data locally
+./scripts/generate-data.ps1 -All -Days 30
+
+# Generate via Docker
+./scripts/generate-data.ps1 -UseDocker -All -Days 14
+
+# Generate specific data types
+./scripts/generate-data.ps1 -Slots 50000 -Players 2000 -Format csv
+```
+
+### Validation Script
+
+```powershell
+# Run all validations
+./scripts/validate.ps1
+
+# Run specific validation suites
+./scripts/validate.ps1 -Suite "slot_machine"
+
+# Generate HTML report
+./scripts/validate.ps1 -OutputReport ./validation-report.html
+```
+
+### Script Parameters Reference
+
+See individual script help for full parameter documentation:
+
+```powershell
+Get-Help ./scripts/deploy.ps1 -Full
+Get-Help ./scripts/generate-data.ps1 -Full
+Get-Help ./scripts/validate.ps1 -Full
+```
+
+---
+
+## 🌍 Environment-Specific Deployment
+
+### Environment Comparison
+
+| Setting | 🔧 Development | 🧪 Staging | 🏭 Production |
+|---------|---------------|-----------|--------------|
+| **SKU** | F2/F4 | F16/F32 | F64+ |
+| **Auto-pause** | Enabled | Enabled | Disabled |
+| **Private Endpoints** | Optional | Recommended | Required |
+| **Geo-redundancy** | Disabled | Enabled | Enabled |
+| **Cost Alerts** | Optional | Enabled | Enabled |
+| **Resource Lock** | None | CanNotDelete | CanNotDelete |
+
+### 🔧 Development Deployment
 
 ```bash
 az deployment sub create \
@@ -110,7 +294,7 @@ az deployment sub create \
   --parameters infra/environments/dev/dev.bicepparam
 ```
 
-### Staging
+### 🧪 Staging Deployment
 
 ```bash
 az deployment sub create \
@@ -119,7 +303,7 @@ az deployment sub create \
   --parameters infra/environments/staging/staging.bicepparam
 ```
 
-### Production
+### 🏭 Production Deployment
 
 ```bash
 az deployment sub create \
@@ -128,11 +312,15 @@ az deployment sub create \
   --parameters infra/environments/prod/prod.bicepparam
 ```
 
-## GitHub Actions Deployment
+> ⚠️ **Warning:** Production deployments should go through proper change management processes and approval workflows.
+
+---
+
+## 🔄 GitHub Actions Deployment
 
 ### Setting Up OIDC Authentication
 
-1. **Create Azure AD Application:**
+#### 1. Create Azure AD Application
 
 ```bash
 # Create app registration
@@ -155,7 +343,7 @@ az role assignment create \
   --scope "/subscriptions/$SUBSCRIPTION_ID"
 ```
 
-2. **Configure Federated Credentials:**
+#### 2. Configure Federated Credentials
 
 ```bash
 # Create federated credential for main branch
@@ -179,15 +367,15 @@ az ad app federated-credential create \
   }'
 ```
 
-3. **Add GitHub Secrets:**
+#### 3. Add GitHub Secrets
 
-Go to your repository Settings > Secrets and variables > Actions:
+Navigate to **Repository Settings** > **Secrets and variables** > **Actions**:
 
-| Secret | Value |
-|--------|-------|
-| `AZURE_CLIENT_ID` | Application (client) ID |
-| `AZURE_TENANT_ID` | Directory (tenant) ID |
-| `AZURE_SUBSCRIPTION_ID` | Subscription ID |
+| Secret Name | Value | Description |
+|-------------|-------|-------------|
+| `AZURE_CLIENT_ID` | Application (client) ID | From app registration |
+| `AZURE_TENANT_ID` | Directory (tenant) ID | Azure AD tenant |
+| `AZURE_SUBSCRIPTION_ID` | Subscription ID | Target subscription |
 
 ### Manual Workflow Trigger
 
@@ -198,7 +386,9 @@ gh workflow run deploy-infra.yml \
   -f environment=dev
 ```
 
-## Post-Deployment Configuration
+---
+
+## ⚙️ Post-Deployment Configuration
 
 ### 1. Verify Fabric Capacity
 
@@ -211,12 +401,14 @@ az resource list \
 
 ### 2. Configure Fabric Workspace
 
-After Bicep deployment, manually configure in Fabric Portal:
+After Bicep deployment, complete these manual steps in Fabric Portal:
 
-1. Navigate to [Microsoft Fabric](https://app.fabric.microsoft.com)
-2. Create workspace linked to deployed capacity
-3. Create Lakehouse for each medallion layer
-4. Import notebooks from `notebooks/` directory
+| Step | Action | Details |
+|------|--------|---------|
+| 1 | Navigate to Fabric | [app.fabric.microsoft.com](https://app.fabric.microsoft.com) |
+| 2 | Create workspace | Link to deployed capacity |
+| 3 | Create Lakehouses | One per medallion layer |
+| 4 | Import notebooks | From `notebooks/` directory |
 
 ### 3. Connect Purview
 
@@ -238,49 +430,61 @@ az keyvault set-policy \
   --secret-permissions get list set delete
 ```
 
-## Deployment Verification
+---
+
+## ✅ Deployment Verification
 
 ### Automated Verification Script
 
 ```bash
 # Run verification
 ./scripts/verify-deployment.sh
+```
 
-# Expected output:
-# ✓ Fabric capacity deployed
-# ✓ Purview account accessible
-# ✓ Storage account created
-# ✓ Key Vault configured
-# ✓ Network connectivity verified
+**Expected Output:**
+
+```
+✓ Fabric capacity deployed
+✓ Purview account accessible
+✓ Storage account created
+✓ Key Vault configured
+✓ Network connectivity verified
 ```
 
 ### Manual Verification Checklist
 
-- [ ] Fabric capacity shows in Azure portal
-- [ ] Fabric capacity shows in Fabric admin portal
-- [ ] Purview account accessible
-- [ ] Storage account ADLS Gen2 enabled
-- [ ] Key Vault secrets accessible
-- [ ] Log Analytics receiving logs
-- [ ] Private endpoints connected (if enabled)
+| Component | Check | Status |
+|-----------|-------|--------|
+| Fabric capacity | Shows in Azure portal | ☐ |
+| Fabric capacity | Shows in Fabric admin portal | ☐ |
+| Purview account | Accessible via portal | ☐ |
+| Storage account | ADLS Gen2 enabled | ☐ |
+| Key Vault | Secrets accessible | ☐ |
+| Log Analytics | Receiving logs | ☐ |
+| Private endpoints | Connected (if enabled) | ☐ |
 
-## Troubleshooting
+---
+
+## 🔧 Troubleshooting
 
 ### Common Issues
 
-#### Fabric Capacity Deployment Fails
+#### Issue: Fabric Capacity Deployment Fails
 
 ```
 Error: Microsoft.Fabric/capacities resource provider not registered
 ```
 
 **Solution:**
+
 ```bash
 az provider register --namespace Microsoft.Fabric
 az provider show --namespace Microsoft.Fabric --query "registrationState"
 ```
 
-#### Insufficient Permissions
+---
+
+#### Issue: Insufficient Permissions
 
 ```
 Error: AuthorizationFailed
@@ -288,21 +492,32 @@ Error: AuthorizationFailed
 
 **Solution:** Ensure you have Owner or Contributor role at subscription level.
 
-#### Capacity SKU Not Available
+```bash
+# Check your role assignments
+az role assignment list --assignee "$(az ad signed-in-user show --query id -o tsv)"
+```
+
+---
+
+#### Issue: Capacity SKU Not Available
 
 ```
 Error: SKU F64 not available in region
 ```
 
-**Solution:** Check [Fabric capacity availability](https://learn.microsoft.com/fabric/enterprise/region-availability) and choose supported region.
+**Solution:** Check [Fabric capacity availability](https://learn.microsoft.com/fabric/enterprise/region-availability) and choose a supported region.
 
-#### Purview Name Already Exists
+---
+
+#### Issue: Purview Name Already Exists
 
 ```
 Error: Purview account name already exists
 ```
 
 **Solution:** Purview names are globally unique. Use a different name in `.env`.
+
+---
 
 ### Deployment Logs
 
@@ -318,7 +533,11 @@ az deployment sub operation list \
   --query "[?properties.provisioningState=='Failed']"
 ```
 
-## Cleanup
+> ℹ️ **Note:** Keep deployment names handy for troubleshooting. They follow the pattern `fabric-poc-YYYYMMDD-HHMMSS`.
+
+---
+
+## 🗑️ Cleanup
 
 ### Remove All Resources
 
@@ -337,22 +556,41 @@ az deployment sub delete --name "<deployment-name>"
 az lock delete --name "CanNotDelete" --resource-group "rg-fabric-poc-dev"
 ```
 
-## Cost Optimization
+> ⚠️ **Warning:** Resource deletion is irreversible. Ensure backups exist before cleanup.
+
+---
+
+## 💰 Cost Optimization
+
+For detailed cost estimates and optimization strategies, see the comprehensive [Cost Estimation Guide](COST_ESTIMATION.md).
+
+### Quick Cost Reference
+
+| Environment | Fabric SKU | Monthly Estimate |
+|-------------|------------|------------------|
+| Development | F4 | $450 - $650 |
+| Staging | F16 | $1,800 - $2,500 |
+| Production POC | F64 | $9,500 - $12,500 |
 
 ### Development Environment
 
-- Use F2 or F4 SKU for development
-- Enable auto-pause (suspend when idle)
-- Schedule capacity pause overnight
+| Strategy | Implementation |
+|----------|----------------|
+| Use smaller SKU | F2 or F4 for development |
+| Enable auto-pause | Suspend when idle |
+| Schedule pause | Stop overnight/weekends |
 
 ### Production Environment
 
-- Use reserved capacity for predictable costs
-- Monitor CU consumption via Log Analytics
-- Set up cost alerts
+| Strategy | Implementation |
+|----------|----------------|
+| Reserved capacity | For predictable costs |
+| Monitor consumption | Via Log Analytics |
+| Set up alerts | Before budget exceeded |
+
+### Create Cost Alert
 
 ```bash
-# Create cost alert
 az monitor metrics alert create \
   --name "fabric-cost-alert" \
   --resource-group "rg-fabric-poc-prod" \
@@ -362,10 +600,38 @@ az monitor metrics alert create \
   --action "<action-group-id>"
 ```
 
-## Next Steps
+### Related Cost Resources
 
-After successful deployment:
+- [Cost Estimation Guide](COST_ESTIMATION.md) - Detailed cost breakdown and scenarios
+- [Azure Pricing Calculator](https://azure.microsoft.com/pricing/calculator/) - Current pricing
 
-1. [Tutorial 00: Environment Setup](../tutorials/00-environment-setup/README.md)
-2. [Tutorial 01: Bronze Layer](../tutorials/01-bronze-layer/README.md)
-3. [Generate Sample Data](../data-generation/README.md)
+---
+
+## 📚 Next Steps
+
+After successful deployment, proceed with these guides:
+
+| Step | Guide | Description |
+|------|-------|-------------|
+| 1 | [Tutorial 00: Environment Setup](../tutorials/00-environment-setup/README.md) | Configure your workspace |
+| 2 | [Tutorial 01: Bronze Layer](../tutorials/01-bronze-layer/README.md) | Build ingestion pipelines |
+| 3 | [Generate Sample Data](../data-generation/README.md) | Create test datasets |
+
+---
+
+## 📚 Related Documentation
+
+| Document | Description |
+|----------|-------------|
+| [🏗️ Architecture](ARCHITECTURE.md) | System architecture and design |
+| [🔐 Security Guide](SECURITY.md) | Security controls and compliance |
+| [📋 Prerequisites](PREREQUISITES.md) | Setup requirements |
+
+---
+
+[⬆️ Back to top](#-deployment-guide)
+
+---
+
+> 📖 **Documentation maintained by:** Microsoft Fabric POC Team
+> 🔗 **Repository:** [Suppercharge_Microsoft_Fabric](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric)

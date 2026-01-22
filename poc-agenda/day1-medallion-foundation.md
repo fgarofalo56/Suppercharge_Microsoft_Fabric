@@ -1,24 +1,84 @@
-# Day 1: Medallion Architecture Foundation
+# 📅 Day 1: Medallion Foundation
 
-## Overview
+> 🏠 Home > 📆 POC Agenda > 🏗️ Day 1
 
-**Duration:** 8 hours
+---
+
+**Date:** `[INSERT DATE]`
+**Duration:** 8 hours (9:00 AM - 5:00 PM)
 **Focus:** Environment setup and Bronze layer implementation
 **Audience:** Data Architects (4 participants)
 
 ---
 
-## Morning Session 1: Environment Setup (9:00 - 10:30)
+## 📊 Day 1 Progress Tracker
 
-### Objectives
+```
+Day 1 Progress: ░░░░░░░░░░ 0% Complete
+────────────────────────────────────────────
+🌅 Morning Session 1:   ░░░░░░░░░░  Environment Setup
+🌅 Morning Session 2:   ░░░░░░░░░░  Bronze Layer Part 1
+☀️ Afternoon Session 3: ░░░░░░░░░░  Bronze Layer Part 2
+☀️ Afternoon Session 4: ░░░░░░░░░░  Silver Layer Start
+```
 
-- Create Fabric workspace with proper capacity settings
-- Configure Lakehouse architecture for Bronze/Silver/Gold layers
-- Generate and stage sample casino data
+---
 
-### Activities
+## 📋 Materials Checklist
 
-#### 1.1 Workspace Configuration (30 min)
+Before starting, ensure the following are ready:
+
+### Environment
+- [ ] Azure account with Fabric access confirmed
+- [ ] F64 capacity available
+- [ ] All participants have workspace access
+
+### Data & Code
+- [ ] Sample data generated and staged
+- [ ] Notebooks ready for distribution
+- [ ] Data generation scripts tested
+
+### Logistics
+- [ ] Projector/display working
+- [ ] All participants present
+- [ ] WiFi credentials shared
+
+---
+
+## 🗓️ Daily Schedule At-a-Glance
+
+| Time | Duration | Session | Type |
+|:----:|:--------:|---------|:----:|
+| 9:00-10:30 | 1.5 hr | 🌅 Environment Setup | 👥 Hands-on |
+| 10:30-10:45 | 15 min | ☕ Break | - |
+| 10:45-12:30 | 1.75 hr | 🌅 Bronze Layer Part 1 | 👥 Hands-on |
+| 12:30-13:30 | 1 hr | 🍽️ Lunch | - |
+| 13:30-15:00 | 1.5 hr | ☀️ Bronze Layer Part 2 | 👥 Hands-on |
+| 15:00-15:15 | 15 min | ☕ Break | - |
+| 15:15-16:45 | 1.5 hr | ☀️ Silver Layer Start | 👥 Hands-on |
+| 16:45-17:00 | 15 min | 💬 Day 1 Wrap-up | Discussion |
+
+---
+
+## 🌅 Morning Session 1: Environment Setup (9:00 - 10:30)
+
+### 🎯 Session Objectives
+
+| Objective | Duration | Status |
+|-----------|:--------:|:------:|
+| Create Fabric workspace with proper capacity settings | 30 min | ⬜ |
+| Configure Lakehouse architecture for Bronze/Silver/Gold layers | 30 min | ⬜ |
+| Generate and stage sample casino data | 30 min | ⬜ |
+
+---
+
+### 📝 Activity 1.1: Workspace Configuration (30 min)
+
+<table>
+<tr>
+<td width="60%">
+
+**Steps:**
 
 ```
 1. Navigate to app.fabric.microsoft.com
@@ -31,28 +91,41 @@
    - Real-Time Intelligence
 ```
 
+</td>
+<td width="40%">
+
 **Validation Checkpoint:**
+
 - [ ] Workspace created and accessible
 - [ ] F64 capacity assigned
 - [ ] All workload types available
 
-#### 1.2 Lakehouse Creation (30 min)
+</td>
+</tr>
+</table>
+
+---
+
+### 📝 Activity 1.2: Lakehouse Creation (30 min)
 
 Create three Lakehouses for medallion architecture:
 
-| Lakehouse | Purpose | Schema |
-|-----------|---------|--------|
-| `lh_bronze` | Raw data ingestion | Append-only, schema-on-read |
-| `lh_silver` | Cleansed/validated | Schema enforced, partitioned |
-| `lh_gold` | Business-ready | Star schema, optimized |
+| Lakehouse | Purpose | Schema | Status |
+|-----------|---------|--------|:------:|
+| `lh_bronze` | Raw data ingestion | Append-only, schema-on-read | ⬜ |
+| `lh_silver` | Cleansed/validated | Schema enforced, partitioned | ⬜ |
+| `lh_gold` | Business-ready | Star schema, optimized | ⬜ |
 
 **Steps:**
+
 1. In workspace, click **+ New** > **Lakehouse**
 2. Create `lh_bronze` first
 3. Repeat for `lh_silver` and `lh_gold`
 4. Verify SQL endpoints are created
 
-#### 1.3 Generate Sample Data (30 min)
+---
+
+### 📝 Activity 1.3: Generate Sample Data (30 min)
 
 Use the data generators to create realistic casino data:
 
@@ -74,25 +147,33 @@ python generate.py compliance --records 5000 --days 30 --output ../sample-data/
 ```
 
 **Data Files Created:**
-- `slot_telemetry_YYYYMMDD.parquet`
-- `player_profiles.parquet`
-- `table_games_YYYYMMDD.parquet`
-- `financial_transactions_YYYYMMDD.parquet`
-- `compliance_events.parquet`
+
+| File | Description | Status |
+|------|-------------|:------:|
+| `slot_telemetry_YYYYMMDD.parquet` | Slot machine events | ⬜ |
+| `player_profiles.parquet` | Player demographics | ⬜ |
+| `table_games_YYYYMMDD.parquet` | Table game data | ⬜ |
+| `financial_transactions_YYYYMMDD.parquet` | Cage operations | ⬜ |
+| `compliance_events.parquet` | Regulatory filings | ⬜ |
 
 ---
 
-## Morning Session 2: Bronze Layer Part 1 (10:45 - 12:30)
+## 🌅 Morning Session 2: Bronze Layer Part 1 (10:45 - 12:30)
 
-### Objectives
+### 🎯 Session Objectives
 
-- Understand Bronze layer principles
-- Implement slot telemetry ingestion
-- Implement table games ingestion
+| Objective | Duration | Status |
+|-----------|:--------:|:------:|
+| Understand Bronze layer principles | 15 min | ⬜ |
+| Upload sample data to landing zone | 15 min | ⬜ |
+| Implement slot telemetry ingestion | 45 min | ⬜ |
+| Implement table games ingestion | 45 min | ⬜ |
 
-### 2.1 Bronze Layer Principles (15 min)
+---
 
-**Key Concepts:**
+### 📝 Activity 2.1: Bronze Layer Principles (15 min)
+
+> 💡 **Key Concepts**
 
 ```
 Bronze Layer Rules:
@@ -104,17 +185,20 @@ Bronze Layer Rules:
 ```
 
 **Table Naming Convention:**
-- `bronze_{source}_{entity}`
+- Pattern: `bronze_{source}_{entity}`
 - Example: `bronze_sas_slot_telemetry`
 
-### 2.2 Upload Sample Data (15 min)
+---
+
+### 📝 Activity 2.2: Upload Sample Data (15 min)
 
 1. Open `lh_bronze` Lakehouse
 2. Click **Get data** > **Upload files**
 3. Navigate to `sample-data/` folder
 4. Upload all generated Parquet files to `Files/landing/`
 
-**Folder Structure:**
+**Target Folder Structure:**
+
 ```
 lh_bronze/
 ├── Files/
@@ -127,7 +211,9 @@ lh_bronze/
 └── Tables/
 ```
 
-### 2.3 Bronze Notebook: Slot Telemetry (45 min)
+---
+
+### 📝 Activity 2.3: Bronze Notebook - Slot Telemetry (45 min)
 
 Create notebook `01_bronze_slot_telemetry`:
 
@@ -164,7 +250,9 @@ df_bronze.write \
 spark.sql("SELECT COUNT(*) as total FROM bronze_slot_telemetry").show()
 ```
 
-### 2.4 Bronze Notebook: Table Games (45 min)
+---
+
+### 📝 Activity 2.4: Bronze Notebook - Table Games (45 min)
 
 Create notebook `02_bronze_table_games`:
 
@@ -185,20 +273,24 @@ df_bronze.write \
     .saveAsTable("bronze_table_games")
 ```
 
-**Hands-On Exercise (30 min):**
-Participants implement table games notebook independently, then review together.
+> 👥 **Hands-On Exercise (30 min):**
+> Participants implement table games notebook independently, then review together.
 
 ---
 
-## Afternoon Session 3: Bronze Layer Part 2 (13:30 - 15:00)
+## ☀️ Afternoon Session 3: Bronze Layer Part 2 (13:30 - 15:00)
 
-### Objectives
+### 🎯 Session Objectives
 
-- Implement player profile ingestion
-- Implement financial transaction ingestion
-- Implement compliance data ingestion
+| Objective | Duration | Status |
+|-----------|:--------:|:------:|
+| Implement player profile ingestion | 30 min | ⬜ |
+| Implement financial transaction ingestion | 30 min | ⬜ |
+| Implement compliance data ingestion | 30 min | ⬜ |
 
-### 3.1 Player Profile Ingestion (30 min)
+---
+
+### 📝 Activity 3.1: Player Profile Ingestion (30 min)
 
 Create notebook `03_bronze_player_profile`:
 
@@ -219,7 +311,11 @@ df_bronze.write \
     .saveAsTable("bronze_player_profile")
 ```
 
-### 3.2 Financial Transaction Ingestion (30 min)
+> ⚠️ **Important:** SSN is hashed at ingestion for compliance. Original values are never stored.
+
+---
+
+### 📝 Activity 3.2: Financial Transaction Ingestion (30 min)
 
 Create notebook `04_bronze_financial_txn`:
 
@@ -240,7 +336,11 @@ df_bronze.write \
     .saveAsTable("bronze_financial_txn")
 ```
 
-### 3.3 Compliance Data Ingestion (30 min)
+> 💰 **CTR Threshold:** $10,000 triggers Currency Transaction Report requirements
+
+---
+
+### 📝 Activity 3.3: Compliance Data Ingestion (30 min)
 
 Create notebook `05_bronze_compliance`:
 
@@ -265,17 +365,21 @@ df_bronze.write \
 
 ---
 
-## Afternoon Session 4: Silver Layer Introduction (15:15 - 17:00)
+## ☀️ Afternoon Session 4: Silver Layer Introduction (15:15 - 17:00)
 
-### Objectives
+### 🎯 Session Objectives
 
-- Understand Silver layer principles
-- Begin slot data cleansing
-- Implement data quality checks
+| Objective | Duration | Status |
+|-----------|:--------:|:------:|
+| Understand Silver layer principles | 20 min | ⬜ |
+| Begin slot data cleansing | 50 min | ⬜ |
+| Implement data quality checks | 30 min | ⬜ |
 
-### 4.1 Silver Layer Principles (20 min)
+---
 
-**Key Concepts:**
+### 📝 Activity 4.1: Silver Layer Principles (20 min)
+
+> 💡 **Key Concepts**
 
 ```
 Silver Layer Rules:
@@ -288,12 +392,17 @@ Silver Layer Rules:
 ```
 
 **Transformation Patterns:**
-- NULL handling
-- Date standardization
-- Code mapping (machine types, zones)
-- Outlier flagging
 
-### 4.2 Silver Notebook: Slot Cleansing (50 min)
+| Pattern | Description |
+|---------|-------------|
+| NULL handling | Replace with defaults or flag |
+| Date standardization | Convert to consistent format |
+| Code mapping | Map machine types, zones |
+| Outlier flagging | Identify anomalous values |
+
+---
+
+### 📝 Activity 4.2: Silver Notebook - Slot Cleansing (50 min)
 
 Create notebook `01_silver_slot_cleansed`:
 
@@ -339,7 +448,9 @@ df_silver.write \
     .saveAsTable("lh_silver.silver_slot_cleansed")
 ```
 
-### 4.3 Data Quality Dashboard (30 min)
+---
+
+### 📝 Activity 4.3: Data Quality Dashboard (30 min)
 
 Create validation queries:
 
@@ -364,34 +475,50 @@ ORDER BY avg_quality DESC;
 
 ---
 
-## Day 1 Validation Checklist
+## ✅ Day 1 Validation Checklist
 
 ### Environment
-- [ ] Workspace `casino-fabric-poc` created
-- [ ] F64 capacity assigned
-- [ ] Three Lakehouses created (bronze, silver, gold)
+
+| Checkpoint | Criteria | Status |
+|------------|----------|:------:|
+| Workspace | `casino-fabric-poc` created | ⬜ |
+| Capacity | F64 assigned | ⬜ |
+| Lakehouses | Three created (bronze, silver, gold) | ⬜ |
 
 ### Bronze Layer
-- [ ] `bronze_slot_telemetry` - 500K+ records
-- [ ] `bronze_table_games` - populated
-- [ ] `bronze_player_profile` - 10K records
-- [ ] `bronze_financial_txn` - populated
-- [ ] `bronze_compliance_filings` - populated
+
+| Table | Target | Status |
+|-------|--------|:------:|
+| `bronze_slot_telemetry` | 500K+ records | ⬜ |
+| `bronze_table_games` | Populated | ⬜ |
+| `bronze_player_profile` | 10K records | ⬜ |
+| `bronze_financial_txn` | Populated | ⬜ |
+| `bronze_compliance_filings` | Populated | ⬜ |
 
 ### Silver Layer (Started)
-- [ ] `silver_slot_cleansed` - cleansed data
-- [ ] Data quality scores calculated
-- [ ] Deduplication verified
+
+| Table | Criteria | Status |
+|-------|----------|:------:|
+| `silver_slot_cleansed` | Cleansed data | ⬜ |
+| Data quality scores | Calculated | ⬜ |
+| Deduplication | Verified | ⬜ |
 
 ---
 
-## Homework / Preparation for Day 2
+## 📚 Homework / Preparation for Day 2
+
+### Required Reading
 
 1. **Review Silver Layer Tutorial** (Tutorial 02)
+
+### Exploration Tasks
+
 2. **Explore Data:**
    - Run ad-hoc queries on Bronze tables
    - Identify data quality issues
    - Note any questions about transformation logic
+
+### Background Reading
 
 3. **Read About:**
    - SCD Type 2 patterns for player data
@@ -400,21 +527,55 @@ ORDER BY avg_quality DESC;
 
 ---
 
-## Instructor Notes
+## 📘 Instructor Notes
 
-### Common Issues
+### Common Issues & Solutions
 
-1. **Capacity Not Available**
-   - Verify F64 is assigned to workspace
-   - Check Azure portal for capacity status
+<table>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+<tr>
+<td>
 
-2. **File Upload Failures**
-   - Check file sizes (< 5GB per file recommended)
-   - Verify Parquet format is valid
+**Capacity Not Available**
 
-3. **Notebook Timeouts**
-   - Increase Spark session timeout
-   - Use smaller data samples for testing
+</td>
+<td>
+
+- Verify F64 is assigned to workspace
+- Check Azure portal for capacity status
+
+</td>
+</tr>
+<tr>
+<td>
+
+**File Upload Failures**
+
+</td>
+<td>
+
+- Check file sizes (< 5GB per file recommended)
+- Verify Parquet format is valid
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Notebook Timeouts**
+
+</td>
+<td>
+
+- Increase Spark session timeout
+- Use smaller data samples for testing
+
+</td>
+</tr>
+</table>
 
 ### Key Discussion Points
 
@@ -422,3 +583,30 @@ ORDER BY avg_quality DESC;
 - Trade-offs between schema-on-read vs schema-on-write
 - PII handling strategies at ingestion
 - CTR threshold implications ($10K)
+
+---
+
+## 🔗 Quick Links
+
+| Resource | Link |
+|----------|------|
+| Tutorial 00 | [Environment Setup](../tutorials/00-environment-setup/README.md) |
+| Tutorial 01 | [Bronze Layer](../tutorials/01-bronze-layer/README.md) |
+| Tutorial 02 | [Silver Layer](../tutorials/02-silver-layer/README.md) |
+
+---
+
+<div align="center">
+
+**Day 1 Complete!**
+
+```
+Day 1: ██████████ 100% Complete
+Overall POC: ███░░░░░░░ 33% Complete
+```
+
+---
+
+[⬅️ POC Overview](./README.md) | [Day 2: Transformations ➡️](./day2-transformations-realtime.md)
+
+</div>

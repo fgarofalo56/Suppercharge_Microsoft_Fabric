@@ -46,7 +46,10 @@ env/
 
 # IDE and editors
 .idea/
-.vscode/
+# Note: .vscode/ is tracked for shared workspace settings
+# Ignore user-specific VS Code files
+.vscode/*.code-snippets
+.vscode/.ropeproject
 *.swp
 *.swo
 *~
@@ -85,6 +88,7 @@ yarn-error.log*
 
 # Logs
 logs/
+.logs/
 *.log
 
 # Test outputs
@@ -103,10 +107,16 @@ great_expectations/uncommitted/
 
 # Generated data (large files)
 data-generation/output/
+output/
+.data/
 *.parquet
 *.csv
 !**/schemas/*.csv
 !**/config/*.csv
+!sample-data/**/*.csv
+!sample-data/**/*.parquet
+manifest.json
+deployment-outputs.json
 
 # Power BI
 *.pbix

@@ -1,40 +1,94 @@
-# Security and Compliance Guide
+# 🔐 Security and Compliance Guide
 
-This document outlines security controls, compliance requirements, and best practices for the Microsoft Fabric Casino/Gaming POC environment.
+> 🏠 [Home](../README.md) > 📚 [Docs](./) > 🔐 Security
 
-## Security Architecture
+**Last Updated:** `2025-01-21` | **Version:** 1.0.0
+
+---
+
+## 📑 Table of Contents
+
+- [🛡️ Security Architecture](#️-security-architecture)
+- [👤 Identity and Access Management](#-identity-and-access-management)
+- [🔒 Data Protection](#-data-protection)
+- [🌐 Network Security](#-network-security)
+- [📋 Compliance Requirements](#-compliance-requirements)
+- [📊 Audit and Monitoring](#-audit-and-monitoring)
+- [🚨 Incident Response](#-incident-response)
+- [✅ Security Checklists](#-security-checklists)
+- [📚 References](#-references)
+
+---
+
+## 🛡️ Security Architecture
 
 ### Defense in Depth
 
-```
-┌────────────────────────────────────────────────────────────────────┐
-│                        IDENTITY LAYER                               │
-│  Azure AD | Conditional Access | MFA | PIM | RBAC                  │
-├────────────────────────────────────────────────────────────────────┤
-│                        NETWORK LAYER                                │
-│  VNet | NSG | Private Endpoints | Firewall | DDoS Protection       │
-├────────────────────────────────────────────────────────────────────┤
-│                      APPLICATION LAYER                              │
-│  Fabric Workspace Security | Row-Level Security | Object-Level     │
-├────────────────────────────────────────────────────────────────────┤
-│                         DATA LAYER                                  │
-│  Encryption at Rest | Encryption in Transit | Key Vault | Purview  │
-├────────────────────────────────────────────────────────────────────┤
-│                       MONITORING LAYER                              │
-│  Azure Monitor | Defender for Cloud | Sentinel | Audit Logs        │
-└────────────────────────────────────────────────────────────────────┘
+Our security architecture implements multiple layers of protection:
+
+```mermaid
+flowchart TB
+    subgraph L1["🔑 IDENTITY LAYER"]
+        A1["Azure AD"]
+        A2["Conditional Access"]
+        A3["MFA"]
+        A4["PIM"]
+        A5["RBAC"]
+    end
+
+    subgraph L2["🌐 NETWORK LAYER"]
+        B1["VNet"]
+        B2["NSG"]
+        B3["Private Endpoints"]
+        B4["Firewall"]
+        B5["DDoS Protection"]
+    end
+
+    subgraph L3["📱 APPLICATION LAYER"]
+        C1["Fabric Workspace Security"]
+        C2["Row-Level Security"]
+        C3["Object-Level Security"]
+    end
+
+    subgraph L4["💾 DATA LAYER"]
+        D1["Encryption at Rest"]
+        D2["Encryption in Transit"]
+        D3["Key Vault"]
+        D4["Purview"]
+    end
+
+    subgraph L5["📡 MONITORING LAYER"]
+        E1["Azure Monitor"]
+        E2["Defender for Cloud"]
+        E3["Sentinel"]
+        E4["Audit Logs"]
+    end
+
+    L1 --> L2 --> L3 --> L4 --> L5
 ```
 
-## Identity and Access Management
+### Security Control Matrix
+
+| Layer | Controls | Tools |
+|-------|----------|-------|
+| **Identity** | Authentication, Authorization | Azure AD, MFA, PIM |
+| **Network** | Segmentation, Filtering | VNet, NSG, Private Endpoints |
+| **Application** | Access Control | Workspace Security, RLS |
+| **Data** | Encryption, Classification | Key Vault, Purview |
+| **Monitoring** | Detection, Response | Defender, Sentinel |
+
+---
+
+## 👤 Identity and Access Management
 
 ### Azure AD Integration
 
-| Feature | Configuration |
-|---------|--------------|
-| Authentication | Azure AD SSO |
-| MFA | Required for all users |
-| Conditional Access | Location + device compliance |
-| Session timeout | 8 hours (configurable) |
+| Feature | Configuration | Status |
+|---------|--------------|--------|
+| Authentication | Azure AD SSO | Required |
+| MFA | Required for all users | Required |
+| Conditional Access | Location + device compliance | Recommended |
+| Session timeout | 8 hours (configurable) | Default |
 
 ### Role-Based Access Control (RBAC)
 
@@ -42,10 +96,10 @@ This document outlines security controls, compliance requirements, and best prac
 
 | Role | Permissions | Typical Users |
 |------|-------------|---------------|
-| Admin | Full control | Workspace owners |
-| Member | Edit all items | Data engineers |
-| Contributor | Create/edit (no share) | Developers |
-| Viewer | Read-only | Business users |
+| 🔴 **Admin** | Full control | Workspace owners |
+| 🟠 **Member** | Edit all items | Data engineers |
+| 🟡 **Contributor** | Create/edit (no share) | Developers |
+| 🟢 **Viewer** | Read-only | Business users |
 
 #### Custom RBAC Example
 
@@ -79,15 +133,19 @@ This document outlines security controls, compliance requirements, and best prac
 [PropertyID] IN VALUES(UserProperties[AllowedPropertyID])
 ```
 
-## Data Protection
+> ℹ️ **Note:** RLS policies are enforced at the semantic model level and apply to all reports and dashboards.
 
-### Encryption
+---
+
+## 🔒 Data Protection
+
+### Encryption Standards
 
 | Data State | Method | Key Management |
 |------------|--------|----------------|
-| At Rest | AES-256 | Microsoft-managed or CMK |
-| In Transit | TLS 1.2+ | Azure-managed |
-| In Use | Confidential computing (optional) | Azure Key Vault |
+| 🔐 At Rest | AES-256 | Microsoft-managed or CMK |
+| 🔒 In Transit | TLS 1.2+ | Azure-managed |
+| 🛡️ In Use | Confidential computing (optional) | Azure Key Vault |
 
 ### Customer-Managed Keys (CMK)
 
@@ -119,12 +177,14 @@ resource encryptionKey 'Microsoft.KeyVault/vaults/keys@2023-07-01' = {
 
 ### Data Classification
 
-| Classification | Examples | Controls |
-|----------------|----------|----------|
-| **Highly Confidential** | SSN, Full card numbers, Bank accounts | Encrypted, masked, audit logged |
-| **Confidential** | Player PII, Win/loss records | RBAC, RLS, no export |
-| **Internal** | Operational metrics, KPIs | Standard RBAC |
-| **Public** | Aggregated reports | Open access |
+| Classification | Icon | Examples | Controls |
+|----------------|------|----------|----------|
+| **Highly Confidential** | 🔴 | SSN, Full card numbers, Bank accounts | Encrypted, masked, audit logged |
+| **Confidential** | 🟠 | Player PII, Win/loss records | RBAC, RLS, no export |
+| **Internal** | 🟡 | Operational metrics, KPIs | Standard RBAC |
+| **Public** | 🟢 | Aggregated reports | Open access |
+
+> ⚠️ **Warning:** Never store unmasked PII in the Gold layer. All sensitive data must be encrypted or hashed.
 
 ### PII Handling
 
@@ -141,29 +201,32 @@ def mask_pii(df):
         .drop("ssn", "card_number")
 ```
 
-## Network Security
+---
+
+## 🌐 Network Security
 
 ### Private Endpoint Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Corporate Network                             │
-│  ┌─────────────┐                                                │
-│  │ User/Admin  │────────► ExpressRoute/VPN ──────┐              │
-│  └─────────────┘                                 │              │
-└──────────────────────────────────────────────────│──────────────┘
-                                                   │
-┌──────────────────────────────────────────────────▼──────────────┐
-│                    Azure Virtual Network                         │
-│  ┌──────────────────┐  ┌──────────────────┐                     │
-│  │  Fabric Subnet   │  │ Private Endpoint │                     │
-│  │   10.0.1.0/24    │  │    Subnet        │                     │
-│  │                  │  │   10.0.2.0/24    │                     │
-│  │  - Fabric        │  │  - Storage PE    │                     │
-│  │  - Dataflows     │  │  - Key Vault PE  │                     │
-│  │                  │  │  - Purview PE    │                     │
-│  └──────────────────┘  └──────────────────┘                     │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Corp["🏢 Corporate Network"]
+        USER["👤 User/Admin"]
+    end
+
+    USER -->|"ExpressRoute/VPN"| VNET
+
+    subgraph VNET["🌐 Azure Virtual Network"]
+        subgraph Fabric["Fabric Subnet<br/>10.0.1.0/24"]
+            F1["Fabric Workspace"]
+            F2["Dataflows"]
+        end
+
+        subgraph PE["Private Endpoint Subnet<br/>10.0.2.0/24"]
+            P1["Storage PE"]
+            P2["Key Vault PE"]
+            P3["Purview PE"]
+        end
+    end
 ```
 
 ### Network Security Groups (NSG)
@@ -204,25 +267,29 @@ resource fabricNsg 'Microsoft.Network/networkSecurityGroups@2023-05-01' = {
 }
 ```
 
-## Compliance Requirements
+---
+
+## 📋 Compliance Requirements
 
 ### Gaming Industry (NIGC MICS)
 
-| Requirement | Implementation |
-|-------------|----------------|
-| Meter accuracy | < 0.1% variance validation |
-| Drop count verification | Daily reconciliation |
-| Jackpot verification | W-2G >= $1,200 auto-generation |
-| Access controls | Role-based + audit logging |
-| Data retention | 5 years minimum |
+| Requirement | Implementation | Status |
+|-------------|----------------|--------|
+| Meter accuracy | < 0.1% variance validation | ☐ |
+| Drop count verification | Daily reconciliation | ☐ |
+| Jackpot verification | W-2G >= $1,200 auto-generation | ☐ |
+| Access controls | Role-based + audit logging | ☐ |
+| Data retention | 5 years minimum | ☐ |
 
 ### Financial (FinCEN BSA)
 
 | Report | Threshold | Automation |
 |--------|-----------|------------|
-| CTR (Currency Transaction Report) | $10,000 | Auto-generate |
-| SAR (Suspicious Activity Report) | Pattern-based | Alert + review |
-| W-2G (Gambling Winnings) | $1,200 slots, $600 keno | Auto-generate |
+| 📄 CTR (Currency Transaction Report) | $10,000 | Auto-generate |
+| 🚨 SAR (Suspicious Activity Report) | Pattern-based | Alert + review |
+| 📋 W-2G (Gambling Winnings) | $1,200 slots, $600 keno | Auto-generate |
+
+#### CTR Detection Logic
 
 ```python
 # CTR threshold detection
@@ -246,17 +313,19 @@ def detect_structuring(df, window_hours=24):
     )
 ```
 
-### PCI-DSS
+### PCI-DSS Requirements
 
-| Requirement | Control |
-|-------------|---------|
-| 3.4 - Render PAN unreadable | Hash/encrypt card numbers |
-| 7.1 - Limit access | RBAC + need-to-know |
-| 8.2 - MFA | Azure AD Conditional Access |
-| 10.1 - Audit trails | Comprehensive logging |
-| 12.3 - Security policies | Documented procedures |
+| Requirement | Control | Implementation |
+|-------------|---------|----------------|
+| 3.4 | Render PAN unreadable | Hash/encrypt card numbers |
+| 7.1 | Limit access | RBAC + need-to-know |
+| 8.2 | MFA | Azure AD Conditional Access |
+| 10.1 | Audit trails | Comprehensive logging |
+| 12.3 | Security policies | Documented procedures |
 
-## Audit and Monitoring
+---
+
+## 📊 Audit and Monitoring
 
 ### Audit Log Configuration
 
@@ -285,11 +354,11 @@ resource fabricDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-pre
 
 | Event Category | Examples | Retention |
 |----------------|----------|-----------|
-| Authentication | Login, logout, MFA challenges | 90 days |
-| Authorization | Permission changes, access denied | 90 days |
-| Data access | Query execution, data export | 1 year |
-| Admin operations | Config changes, user management | 1 year |
-| Security events | Threats detected, policies triggered | 2 years |
+| 🔑 Authentication | Login, logout, MFA challenges | 90 days |
+| 🔐 Authorization | Permission changes, access denied | 90 days |
+| 📊 Data access | Query execution, data export | 1 year |
+| ⚙️ Admin operations | Config changes, user management | 1 year |
+| 🚨 Security events | Threats detected, policies triggered | 2 years |
 
 ### Alerting Rules
 
@@ -304,69 +373,128 @@ FabricAuditLogs
 | project TimeGenerated, UserPrincipalName, ExportCount, TotalRecords
 ```
 
-## Incident Response
+---
+
+## 🚨 Incident Response
 
 ### Security Incident Workflow
 
-```
-┌────────────┐    ┌────────────┐    ┌────────────┐    ┌────────────┐
-│  Detection │───▶│   Triage   │───▶│ Containment│───▶│ Eradication│
-└────────────┘    └────────────┘    └────────────┘    └────────────┘
-      │                 │                 │                 │
-      ▼                 ▼                 ▼                 ▼
- Azure Sentinel    Security Team     Isolate User      Remove Threat
- Defender Alerts   Assessment       Revoke Access      Patch Systems
- Custom Alerts     Severity Rating  Block Network      Update Rules
-                                                            │
-                                   ┌────────────┐    ┌──────▼─────┐
-                                   │   Review   │◀───│  Recovery  │
-                                   └────────────┘    └────────────┘
-                                         │
-                                         ▼
-                                   Update Policies
-                                   Document Lessons
+```mermaid
+flowchart LR
+    subgraph D["1️⃣ Detection"]
+        D1["Azure Sentinel"]
+        D2["Defender Alerts"]
+        D3["Custom Alerts"]
+    end
+
+    subgraph T["2️⃣ Triage"]
+        T1["Security Team Assessment"]
+        T2["Severity Rating"]
+    end
+
+    subgraph C["3️⃣ Containment"]
+        C1["Isolate User"]
+        C2["Revoke Access"]
+        C3["Block Network"]
+    end
+
+    subgraph E["4️⃣ Eradication"]
+        E1["Remove Threat"]
+        E2["Patch Systems"]
+        E3["Update Rules"]
+    end
+
+    subgraph R["5️⃣ Recovery"]
+        R1["Restore Services"]
+        R2["Verify Security"]
+    end
+
+    subgraph L["6️⃣ Lessons"]
+        L1["Update Policies"]
+        L2["Document Findings"]
+    end
+
+    D --> T --> C --> E --> R --> L
 ```
 
 ### Contact Matrix
 
-| Severity | Response Time | Escalation |
-|----------|---------------|------------|
-| Critical | 15 minutes | SOC + Leadership |
-| High | 1 hour | Security Team |
-| Medium | 4 hours | On-call engineer |
-| Low | Next business day | Ticket queue |
+| Severity | Response Time | Escalation | Team |
+|----------|---------------|------------|------|
+| 🔴 **Critical** | 15 minutes | SOC + Leadership | Security + Exec |
+| 🟠 **High** | 1 hour | Security Team | Security |
+| 🟡 **Medium** | 4 hours | On-call engineer | Operations |
+| 🟢 **Low** | Next business day | Ticket queue | IT Support |
 
-## Security Checklist
+---
 
-### Pre-Deployment
+## ✅ Security Checklists
 
-- [ ] Azure AD tenant hardened
-- [ ] Conditional Access policies configured
-- [ ] Key Vault created with proper access policies
-- [ ] Network security groups defined
-- [ ] Private endpoints planned (if required)
+### Pre-Deployment Checklist
 
-### Post-Deployment
+| Task | Status | Owner |
+|------|--------|-------|
+| Azure AD tenant hardened | ☐ | Identity Team |
+| Conditional Access policies configured | ☐ | Identity Team |
+| Key Vault created with proper access policies | ☐ | Security Team |
+| Network security groups defined | ☐ | Network Team |
+| Private endpoints planned (if required) | ☐ | Network Team |
 
-- [ ] Fabric workspace roles assigned
-- [ ] Row-level security implemented
-- [ ] Audit logging enabled
-- [ ] Alert rules configured
-- [ ] Incident response plan documented
-- [ ] Compliance controls validated
+### Post-Deployment Checklist
 
-### Ongoing Operations
+| Task | Status | Owner |
+|------|--------|-------|
+| Fabric workspace roles assigned | ☐ | Platform Team |
+| Row-level security implemented | ☐ | Data Team |
+| Audit logging enabled | ☐ | Security Team |
+| Alert rules configured | ☐ | Security Team |
+| Incident response plan documented | ☐ | Security Team |
+| Compliance controls validated | ☐ | Compliance Team |
 
-- [ ] Regular access reviews (quarterly)
-- [ ] Vulnerability assessments (monthly)
-- [ ] Penetration testing (annual)
-- [ ] Compliance audits (as required)
-- [ ] Security training (annual)
+### Ongoing Operations Checklist
 
-## References
+| Task | Frequency | Status | Owner |
+|------|-----------|--------|-------|
+| Access reviews | Quarterly | ☐ | Identity Team |
+| Vulnerability assessments | Monthly | ☐ | Security Team |
+| Penetration testing | Annual | ☐ | Security Team |
+| Compliance audits | As required | ☐ | Compliance Team |
+| Security training | Annual | ☐ | HR/Security |
 
-- [Microsoft Fabric Security Documentation](https://learn.microsoft.com/fabric/security/)
-- [Azure Security Best Practices](https://learn.microsoft.com/azure/security/fundamentals/best-practices-and-patterns)
-- [NIGC MICS Standards](https://www.nigc.gov/compliance/minimum-internal-control-standards)
-- [FinCEN BSA Regulations](https://www.fincen.gov/resources/statutes-and-regulations)
-- [PCI-DSS Requirements](https://www.pcisecuritystandards.org/)
+---
+
+## 📚 References
+
+### Official Documentation
+
+| Resource | Link |
+|----------|------|
+| Microsoft Fabric Security | [learn.microsoft.com/fabric/security](https://learn.microsoft.com/fabric/security/) |
+| Azure Security Best Practices | [learn.microsoft.com/azure/security](https://learn.microsoft.com/azure/security/fundamentals/best-practices-and-patterns) |
+
+### Compliance Standards
+
+| Standard | Link |
+|----------|------|
+| 🎰 NIGC MICS Standards | [nigc.gov/compliance](https://www.nigc.gov/compliance/minimum-internal-control-standards) |
+| 💰 FinCEN BSA Regulations | [fincen.gov/resources](https://www.fincen.gov/resources/statutes-and-regulations) |
+| 💳 PCI-DSS Requirements | [pcisecuritystandards.org](https://www.pcisecuritystandards.org/) |
+
+---
+
+## 📚 Related Documentation
+
+| Document | Description |
+|----------|-------------|
+| [🏗️ Architecture](ARCHITECTURE.md) | System architecture and design |
+| [🚀 Deployment Guide](DEPLOYMENT.md) | Infrastructure deployment |
+| [📋 Prerequisites](PREREQUISITES.md) | Setup requirements |
+
+---
+
+[⬆️ Back to top](#-security-and-compliance-guide)
+
+---
+
+> 📖 **Documentation maintained by:** Microsoft Fabric POC Team
+> 🔗 **Repository:** [Suppercharge_Microsoft_Fabric](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric)

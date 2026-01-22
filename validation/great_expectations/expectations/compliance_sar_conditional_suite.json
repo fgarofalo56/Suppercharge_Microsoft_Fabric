@@ -1,0 +1,82 @@
+{
+  "expectation_suite_name": "compliance_sar_conditional_suite",
+  "meta": {
+    "great_expectations_version": "0.18.0",
+    "notes": "Conditional validation for SAR filings - validates suspicious activity reporting",
+    "domain": "Regulatory Compliance - SAR",
+    "compliance_requirements": [
+      "Bank Secrecy Act (BSA) compliance",
+      "Suspicious Activity Report requirements",
+      "Filing within 30 days of detection"
+    ],
+    "usage_note": "Apply this suite to SAR-filtered data only"
+  },
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 0,
+        "max_value": null
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "filing_type",
+        "value_set": ["SAR"]
+      },
+      "meta": {
+        "notes": "This suite is for SAR filings only"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "suspicious_activity_type"
+      },
+      "meta": {
+        "notes": "Type of suspicious activity must be documented"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "narrative"
+      },
+      "meta": {
+        "notes": "SAR requires detailed narrative description"
+      }
+    },
+    {
+      "expectation_type": "expect_column_value_lengths_to_be_between",
+      "kwargs": {
+        "column": "narrative",
+        "min_value": 100,
+        "max_value": 10000
+      },
+      "meta": {
+        "notes": "SAR narrative should be substantive (min 100 chars)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "transaction_date"
+      },
+      "meta": {
+        "notes": "Date of suspicious activity required"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "amount",
+        "min_value": 0,
+        "max_value": null
+      },
+      "meta": {
+        "notes": "Amount involved (if any) must be non-negative"
+      }
+    }
+  ]
+}

@@ -1,0 +1,498 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/reportDefinition/1.0.0/schema.json",
+  "metadata": {
+    "name": "Slot Floor Operations",
+    "description": "Operational insights for floor managers - machine performance, utilization, and alerts",
+    "version": "1.0.0",
+    "lastModified": "2025-01-21",
+    "author": "Fabric POC Team",
+    "tags": ["operations", "slots", "floor", "machines", "utilization"]
+  },
+  "datasetBinding": {
+    "semantic_model": "Casino Analytics Model",
+    "workspace": "casino-fabric-poc",
+    "connection_mode": "Direct Lake"
+  },
+  "theme": {
+    "name": "Operations Blue",
+    "primaryColor": "#0E4D64",
+    "secondaryColor": "#1A3A5C",
+    "accentColor": "#4DB6AC",
+    "highlightColor": "#FF7043",
+    "fontFamily": "Segoe UI"
+  },
+  "pages": [
+    {
+      "name": "FloorOverview",
+      "displayName": "Floor Overview",
+      "displayOption": "FitToPage",
+      "width": 1280,
+      "height": 720,
+      "visuals": [
+        {
+          "name": "Title",
+          "type": "textbox",
+          "position": { "x": 20, "y": 10, "width": 400, "height": 40 },
+          "config": {
+            "text": "SLOT FLOOR OPERATIONS",
+            "fontSize": 22,
+            "fontWeight": "bold",
+            "fontColor": "#FFFFFF"
+          }
+        },
+        {
+          "name": "LastRefresh",
+          "type": "card",
+          "position": { "x": 1100, "y": 10, "width": 160, "height": 40 },
+          "config": {
+            "measure": "MAX(fact_slot_performance[_gold_timestamp])",
+            "title": "Last Updated",
+            "fontSize": 12
+          }
+        },
+        {
+          "name": "DateSlicer",
+          "type": "slicer",
+          "position": { "x": 450, "y": 10, "width": 300, "height": 40 },
+          "config": {
+            "field": "dim_date[Date]",
+            "selectionType": "between",
+            "orientation": "horizontal"
+          }
+        },
+        {
+          "name": "ZoneSlicer",
+          "type": "slicer",
+          "position": { "x": 760, "y": 10, "width": 150, "height": 40 },
+          "config": {
+            "field": "fact_slot_performance[zone]",
+            "selectionType": "dropdown"
+          }
+        },
+        {
+          "name": "DenomSlicer",
+          "type": "slicer",
+          "position": { "x": 920, "y": 10, "width": 150, "height": 40 },
+          "config": {
+            "field": "fact_slot_performance[denomination]",
+            "selectionType": "dropdown"
+          }
+        },
+        {
+          "name": "KPI_ActiveMachines",
+          "type": "card",
+          "position": { "x": 20, "y": 60, "width": 150, "height": 80 },
+          "config": {
+            "measure": "[Active Machines]",
+            "title": "Active Machines",
+            "fontSize": 28,
+            "fontColor": "#4DB6AC"
+          }
+        },
+        {
+          "name": "KPI_WPUPD",
+          "type": "card",
+          "position": { "x": 180, "y": 60, "width": 150, "height": 80 },
+          "config": {
+            "measure": "[WPUPD]",
+            "title": "Win/Unit/Day",
+            "fontSize": 28,
+            "format": "$#,##0",
+            "fontColor": "#00D26A"
+          }
+        },
+        {
+          "name": "KPI_HighPerformers",
+          "type": "card",
+          "position": { "x": 340, "y": 60, "width": 150, "height": 80 },
+          "config": {
+            "measure": "[High Performers]",
+            "title": "High Performers",
+            "fontSize": 28,
+            "fontColor": "#4DB6AC"
+          }
+        },
+        {
+          "name": "KPI_Underperformers",
+          "type": "card",
+          "position": { "x": 500, "y": 60, "width": 150, "height": 80 },
+          "config": {
+            "measure": "[Underperformers]",
+            "title": "Underperformers",
+            "fontSize": 28,
+            "fontColor": "#FF7043",
+            "conditionalFormatting": {
+              "rules": [
+                { "condition": "value > 10", "color": "#FF5252" },
+                { "condition": "value > 5", "color": "#FF7043" },
+                { "condition": "value <= 5", "color": "#4DB6AC" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "KPI_LowActivity",
+          "type": "card",
+          "position": { "x": 660, "y": 60, "width": 150, "height": 80 },
+          "config": {
+            "measure": "[Low Activity]",
+            "title": "Low Activity",
+            "fontSize": 28,
+            "fontColor": "#FFB74D"
+          }
+        },
+        {
+          "name": "KPI_JackpotCount",
+          "type": "card",
+          "position": { "x": 820, "y": 60, "width": 150, "height": 80 },
+          "config": {
+            "measure": "[Jackpot Count]",
+            "title": "Jackpots",
+            "fontSize": 28,
+            "fontColor": "#E91E63"
+          }
+        },
+        {
+          "name": "KPI_AvgHold",
+          "type": "card",
+          "position": { "x": 980, "y": 60, "width": 150, "height": 80 },
+          "config": {
+            "measure": "[Hold %]",
+            "title": "Avg Hold %",
+            "fontSize": 28,
+            "format": "0.0%",
+            "targetValue": 8.0,
+            "fontColor": "#4DB6AC"
+          }
+        },
+        {
+          "name": "AlertIndicator",
+          "type": "card",
+          "position": { "x": 1140, "y": 60, "width": 120, "height": 80 },
+          "config": {
+            "measure": "[Underperformers] + [Low Activity]",
+            "title": "Alerts",
+            "fontSize": 28,
+            "conditionalFormatting": {
+              "rules": [
+                { "condition": "value > 20", "backgroundColor": "#FF5252", "fontColor": "#FFFFFF" },
+                { "condition": "value > 10", "backgroundColor": "#FF7043", "fontColor": "#FFFFFF" },
+                { "condition": "value <= 10", "backgroundColor": "#4DB6AC", "fontColor": "#FFFFFF" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "MachinePerformanceMatrix",
+          "type": "matrix",
+          "position": { "x": 20, "y": 150, "width": 620, "height": 350 },
+          "config": {
+            "title": "Machine Performance Matrix",
+            "rows": [
+              { "field": "fact_slot_performance[zone]", "expandCollapse": true },
+              { "field": "fact_slot_performance[denomination]" }
+            ],
+            "columns": [],
+            "values": [
+              { "measure": "[Total Coin In]", "format": "$#,##0", "width": 90 },
+              { "measure": "[Net Win]", "format": "$#,##0", "width": 80 },
+              { "measure": "[Hold %]", "format": "0.0%", "width": 60 },
+              { "measure": "[Total Games]", "format": "#,##0", "width": 80 },
+              { "measure": "[Active Machines]", "format": "#,##0", "width": 60 }
+            ],
+            "subtotals": {
+              "rowSubtotals": true,
+              "rowGrandTotals": true
+            },
+            "conditionalFormatting": {
+              "[Hold %]": {
+                "backgroundScale": {
+                  "min": "#FFCDD2",
+                  "mid": "#FFF9C4",
+                  "max": "#C8E6C9",
+                  "minValue": 4,
+                  "midValue": 8,
+                  "maxValue": 12
+                }
+              },
+              "[Net Win]": {
+                "dataBar": {
+                  "positive": "#4DB6AC",
+                  "negative": "#FF7043"
+                }
+              }
+            },
+            "style": {
+              "fontFamily": "Segoe UI",
+              "rowHeaders": {
+                "fontWeight": "semibold",
+                "backgroundColor": "#1A3A5C",
+                "fontColor": "#FFFFFF"
+              }
+            }
+          }
+        },
+        {
+          "name": "HoldVarianceScatter",
+          "type": "scatterChart",
+          "position": { "x": 650, "y": 150, "width": 350, "height": 350 },
+          "config": {
+            "title": "Hold Variance Analysis",
+            "xAxis": {
+              "field": "[Theoretical Win]",
+              "title": "Theoretical Win ($)"
+            },
+            "yAxis": {
+              "field": "[Net Win]",
+              "title": "Actual Net Win ($)"
+            },
+            "size": {
+              "field": "[Total Games]"
+            },
+            "color": {
+              "field": "fact_slot_performance[performance_status]",
+              "colors": {
+                "HIGH_PERFORMER": "#4DB6AC",
+                "NORMAL": "#78909C",
+                "UNDERPERFORMER": "#FF7043",
+                "LOW_ACTIVITY": "#FFB74D"
+              }
+            },
+            "details": {
+              "field": "fact_slot_performance[machine_id]"
+            },
+            "referenceLine": {
+              "type": "diagonal",
+              "label": "Expected (1:1)",
+              "style": "dashed",
+              "color": "#FFFFFF"
+            }
+          }
+        },
+        {
+          "name": "AlertsTable",
+          "type": "table",
+          "position": { "x": 1010, "y": 150, "width": 250, "height": 350 },
+          "config": {
+            "title": "Machines Requiring Attention",
+            "columns": [
+              { "field": "fact_slot_performance[machine_id]", "width": 80, "title": "Machine" },
+              { "field": "fact_slot_performance[zone]", "width": 60, "title": "Zone" },
+              { "field": "fact_slot_performance[performance_status]", "width": 80, "title": "Status" }
+            ],
+            "filter": {
+              "field": "fact_slot_performance[performance_status]",
+              "values": ["UNDERPERFORMER", "LOW_ACTIVITY"]
+            },
+            "sort": {
+              "field": "[Net Win]",
+              "direction": "ascending"
+            },
+            "topN": 20,
+            "conditionalFormatting": {
+              "fact_slot_performance[performance_status]": {
+                "rules": [
+                  { "value": "UNDERPERFORMER", "backgroundColor": "#FFCDD2", "fontColor": "#C62828" },
+                  { "value": "LOW_ACTIVITY", "backgroundColor": "#FFF3E0", "fontColor": "#E65100" }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "name": "JackpotTable",
+          "type": "table",
+          "position": { "x": 20, "y": 510, "width": 500, "height": 190 },
+          "config": {
+            "title": "Recent Jackpots",
+            "columns": [
+              { "field": "dim_date[Date]", "width": 90, "title": "Date", "format": "Short Date" },
+              { "field": "fact_slot_performance[machine_id]", "width": 80, "title": "Machine" },
+              { "field": "fact_slot_performance[zone]", "width": 80, "title": "Zone" },
+              { "field": "fact_slot_performance[jackpot_payouts]", "width": 100, "title": "Amount", "format": "$#,##0" },
+              { "field": "fact_slot_performance[denomination]", "width": 70, "title": "Denom" }
+            ],
+            "filter": {
+              "field": "fact_slot_performance[jackpot_count]",
+              "condition": "greaterThan",
+              "value": 0
+            },
+            "sort": {
+              "field": "dim_date[Date]",
+              "direction": "descending"
+            },
+            "topN": 10,
+            "totals": {
+              "show": true,
+              "measures": ["fact_slot_performance[jackpot_payouts]"]
+            }
+          }
+        },
+        {
+          "name": "ManufacturerPerformance",
+          "type": "clusteredBarChart",
+          "position": { "x": 530, "y": 510, "width": 370, "height": 190 },
+          "config": {
+            "title": "Performance by Manufacturer",
+            "yAxis": {
+              "field": "fact_slot_performance[manufacturer]",
+              "sort": "descending",
+              "sortBy": "[WPUPD]"
+            },
+            "xAxis": {
+              "field": "[WPUPD]",
+              "title": "Win Per Unit Per Day ($)"
+            },
+            "dataLabels": {
+              "show": true,
+              "format": "$#,##0"
+            },
+            "colorSaturation": {
+              "measure": "[Hold %]"
+            }
+          }
+        },
+        {
+          "name": "DenominationPie",
+          "type": "pieChart",
+          "position": { "x": 910, "y": 510, "width": 170, "height": 190 },
+          "config": {
+            "title": "Coin In by Denom",
+            "legend": {
+              "field": "fact_slot_performance[denomination]"
+            },
+            "values": {
+              "measure": "[Total Coin In]"
+            },
+            "detailLabels": {
+              "show": true,
+              "labelStyle": "percent"
+            }
+          }
+        },
+        {
+          "name": "MachineTypeBreakdown",
+          "type": "donutChart",
+          "position": { "x": 1090, "y": 510, "width": 170, "height": 190 },
+          "config": {
+            "title": "By Machine Type",
+            "legend": {
+              "field": "fact_slot_performance[machine_type]"
+            },
+            "values": {
+              "measure": "[Net Win]"
+            },
+            "innerRadius": 40
+          }
+        }
+      ],
+      "filters": [
+        {
+          "type": "page",
+          "field": "dim_date[Date]",
+          "filterType": "relativeDateRange",
+          "relativeDateRange": {
+            "timeUnitCount": 7,
+            "timeUnit": "days"
+          }
+        }
+      ]
+    },
+    {
+      "name": "HourlyActivity",
+      "displayName": "Hourly Activity",
+      "displayOption": "FitToPage",
+      "width": 1280,
+      "height": 720,
+      "visuals": [
+        {
+          "name": "Title",
+          "type": "textbox",
+          "position": { "x": 20, "y": 10, "width": 400, "height": 40 },
+          "config": {
+            "text": "HOURLY ACTIVITY ANALYSIS",
+            "fontSize": 22,
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "name": "HourlyHeatmap",
+          "type": "matrix",
+          "position": { "x": 20, "y": 60, "width": 900, "height": 400 },
+          "config": {
+            "title": "Activity Heatmap by Hour and Day",
+            "rows": "dim_date[Day Name]",
+            "columns": "dim_time[Hour Label]",
+            "values": [
+              { "measure": "[Total Coin In]" }
+            ],
+            "conditionalFormatting": {
+              "[Total Coin In]": {
+                "backgroundScale": {
+                  "min": "#E3F2FD",
+                  "mid": "#64B5F6",
+                  "max": "#1565C0"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "ShiftPerformance",
+          "type": "clusteredColumnChart",
+          "position": { "x": 930, "y": 60, "width": 330, "height": 400 },
+          "config": {
+            "title": "Performance by Shift",
+            "xAxis": {
+              "field": "dim_time[Shift]"
+            },
+            "yAxis": [
+              { "measure": "[Net Win]", "axis": "primary" },
+              { "measure": "[Total Games]", "axis": "secondary" }
+            ],
+            "dataLabels": true
+          }
+        },
+        {
+          "name": "HourlyTrend",
+          "type": "areaChart",
+          "position": { "x": 20, "y": 470, "width": 1240, "height": 230 },
+          "config": {
+            "title": "Hourly Coin In Trend",
+            "xAxis": {
+              "field": "dim_time[Hour Label]"
+            },
+            "yAxis": {
+              "field": "[Total Coin In]"
+            },
+            "legend": {
+              "field": "fact_slot_performance[zone]"
+            },
+            "markers": true
+          }
+        }
+      ]
+    }
+  ],
+  "drillthrough": [
+    {
+      "name": "MachineDetail",
+      "targetPage": "Machine Drillthrough",
+      "fields": ["fact_slot_performance[machine_id]"],
+      "keepAllFilters": true
+    }
+  ],
+  "subscriptions": [
+    {
+      "name": "Morning Ops Report",
+      "schedule": {
+        "frequency": "daily",
+        "time": "06:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "recipients": ["floor-managers@casino.com"],
+      "format": "email",
+      "pages": ["FloorOverview"]
+    }
+  ]
+}

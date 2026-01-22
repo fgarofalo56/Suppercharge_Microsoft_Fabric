@@ -1,0 +1,95 @@
+# All Domains Validation Checkpoint
+# Comprehensive validation across all data domains
+# Use this checkpoint for full data quality assessment
+
+name: all_domains_checkpoint
+config_version: 1.0
+template_name:
+module_name: great_expectations.checkpoint
+class_name: Checkpoint
+
+# Execution behavior
+run_name_template: "%Y%m%d-%H%M%S-all-domains-validation"
+
+# Action list
+action_list:
+  - name: store_validation_result
+    action:
+      class_name: StoreValidationResultAction
+  - name: store_evaluation_params
+    action:
+      class_name: StoreEvaluationParametersAction
+  - name: update_data_docs
+    action:
+      class_name: UpdateDataDocsAction
+      site_names:
+        - local_site
+
+# Batch request configuration
+batch_request: {}
+
+# Evaluation parameters
+evaluation_parameters: {}
+
+# Runtime configuration
+runtime_configuration:
+  result_format:
+    result_format: SUMMARY
+    include_unexpected_rows: false
+    partial_unexpected_count: 10
+
+# Validations list - all domains
+validations:
+  # Slot Machine Data
+  - batch_request:
+      datasource_name: casino_bronze
+      data_connector_name: runtime_data_connector
+      data_asset_name: slot_telemetry
+      batch_identifiers:
+        default_identifier_name: bronze_slot_data
+    expectation_suite_name: slot_machine_suite
+
+  # Player Data
+  - batch_request:
+      datasource_name: casino_bronze
+      data_connector_name: runtime_data_connector
+      data_asset_name: player_profiles
+      batch_identifiers:
+        default_identifier_name: bronze_player_data
+    expectation_suite_name: player_suite
+
+  # Compliance Data
+  - batch_request:
+      datasource_name: casino_bronze
+      data_connector_name: runtime_data_connector
+      data_asset_name: compliance_filings
+      batch_identifiers:
+        default_identifier_name: bronze_compliance_data
+    expectation_suite_name: compliance_suite
+
+  # Financial Data
+  - batch_request:
+      datasource_name: casino_bronze
+      data_connector_name: runtime_data_connector
+      data_asset_name: financial_transactions
+      batch_identifiers:
+        default_identifier_name: bronze_financial_data
+    expectation_suite_name: financial_suite
+
+  # Security Data
+  - batch_request:
+      datasource_name: casino_bronze
+      data_connector_name: runtime_data_connector
+      data_asset_name: security_events
+      batch_identifiers:
+        default_identifier_name: bronze_security_data
+    expectation_suite_name: security_suite
+
+  # Table Games Data
+  - batch_request:
+      datasource_name: casino_bronze
+      data_connector_name: runtime_data_connector
+      data_asset_name: table_games_events
+      batch_identifiers:
+        default_identifier_name: bronze_table_games_data
+    expectation_suite_name: table_games_suite

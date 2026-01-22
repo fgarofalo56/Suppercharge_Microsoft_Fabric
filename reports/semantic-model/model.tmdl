@@ -1,0 +1,140 @@
+/// =============================================================================
+/// Casino Analytics Semantic Model
+/// Microsoft Fabric Direct Lake Configuration
+/// =============================================================================
+///
+/// Model: Casino Analytics Model
+/// Version: 1.0.0
+/// Last Updated: 2025-01-21
+///
+/// Description:
+/// This semantic model provides Direct Lake connectivity to the Gold layer tables
+/// in the lh_gold lakehouse for casino analytics reporting.
+///
+/// Tables:
+///   - Fact Tables: slot_performance, table_performance, player_activity, compliance
+///   - Dimension Tables: date, time, machine, player, table
+///
+/// Storage Mode: Direct Lake
+/// =============================================================================
+
+model Model
+    culture: en-US
+    defaultPowerBIDataSourceVersion: powerBI_V3
+    sourceQueryCulture: en-US
+
+    /// Model-level annotations
+    annotation PBI_QueryOrder = ["dim_date", "dim_time", "dim_machine", "dim_player", "dim_table", "fact_slot_performance", "fact_table_performance", "fact_player_activity", "fact_compliance"]
+
+    annotation __PBI_TimeIntelligenceEnabled = true
+
+/// =============================================================================
+/// DATA SOURCE CONFIGURATION
+/// =============================================================================
+
+dataSource 'DirectLake'
+    connectionString: "Data Source=powerbi://api.powerbi.com/v1.0/myorg/[workspace-name];Initial Catalog=lh_gold"
+    type: sql
+
+/// =============================================================================
+/// QUERY GROUPS (For organization in Power BI)
+/// =============================================================================
+
+queryGroup 'Dimensions'
+    annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Facts'
+    annotation PBI_QueryGroupOrder = 1
+
+queryGroup 'Measures'
+    annotation PBI_QueryGroupOrder = 2
+
+/// =============================================================================
+/// ROLES (Row-Level Security)
+/// =============================================================================
+
+role 'Zone Access'
+    modelPermission: read
+
+    tablePermission 'fact_slot_performance'
+        filterExpression:
+            ```
+            [zone] IN {"Main Floor", "High Limit", "VIP Room"}
+            ```
+
+    tablePermission 'fact_table_performance'
+        filterExpression:
+            ```
+            [zone] IN {"Main Floor", "High Limit", "VIP Room"}
+            ```
+
+role 'Compliance Only'
+    modelPermission: read
+
+    tablePermission 'fact_compliance'
+        filterExpression: TRUE()
+
+    tablePermission 'fact_slot_performance'
+        filterExpression: FALSE()
+
+    tablePermission 'fact_table_performance'
+        filterExpression: FALSE()
+
+    tablePermission 'fact_player_activity'
+        filterExpression: FALSE()
+
+role 'Executive'
+    modelPermission: read
+
+    /// Full access to all tables - no filters
+
+/// =============================================================================
+/// PERSPECTIVES (Optional - for simplified views)
+/// =============================================================================
+
+perspective 'Slot Operations'
+    perspectiveTable 'fact_slot_performance'
+    perspectiveTable 'dim_date'
+    perspectiveTable 'dim_time'
+    perspectiveTable 'dim_machine'
+    perspectiveTable '_Casino KPIs'
+
+perspective 'Player Analytics'
+    perspectiveTable 'fact_player_activity'
+    perspectiveTable 'dim_date'
+    perspectiveTable 'dim_player'
+    perspectiveTable '_Player Analytics'
+
+perspective 'Compliance'
+    perspectiveTable 'fact_compliance'
+    perspectiveTable 'dim_date'
+    perspectiveTable '_Compliance Metrics'
+
+/// =============================================================================
+/// MODEL CONFIGURATION NOTES
+/// =============================================================================
+///
+/// Direct Lake Requirements:
+/// 1. All tables must be Delta tables in OneLake
+/// 2. Tables should be optimized with Z-ORDER for common filter columns
+/// 3. Referential integrity must be maintained for optimal performance
+/// 4. Avoid unsupported DAX functions that cause DirectQuery fallback
+///
+/// Supported DAX for Direct Lake:
+/// - All standard aggregation functions (SUM, COUNT, MIN, MAX, AVG)
+/// - Time intelligence functions with proper date tables
+/// - CALCULATE with simple filters
+/// - Most iterator functions (SUMX, AVERAGEX, etc.)
+///
+/// May cause fallback:
+/// - Complex calculated columns
+/// - PATH functions
+/// - Some string manipulation functions
+/// - Certain FILTER expressions
+///
+/// Best Practices:
+/// 1. Pre-aggregate in Gold layer when possible
+/// 2. Use measures instead of calculated columns
+/// 3. Limit columns imported to only those needed
+/// 4. Test with realistic data volumes
+/// =============================================================================

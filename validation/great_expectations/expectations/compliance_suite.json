@@ -1,0 +1,197 @@
+{
+  "expectation_suite_name": "compliance_suite",
+  "meta": {
+    "great_expectations_version": "0.18.0",
+    "notes": "Comprehensive data quality expectations for regulatory compliance filings",
+    "domain": "Regulatory Compliance",
+    "compliance_requirements": [
+      "Bank Secrecy Act (BSA) compliance",
+      "Currency Transaction Report (CTR) - $10,000+ threshold",
+      "Suspicious Activity Report (SAR) filing",
+      "W-2G Gaming Winnings - $600+ threshold",
+      "FinCEN reporting accuracy"
+    ]
+  },
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 0,
+        "max_value": null
+      },
+      "meta": {
+        "notes": "Table may be empty if no filings required"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "filing_id"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "filing_type"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "filing_timestamp"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "amount"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "transaction_date"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "filing_status"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "filing_id"
+      },
+      "meta": {
+        "notes": "Filing ID is required - primary identifier"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "filing_type"
+      },
+      "meta": {
+        "notes": "Filing type is required for classification"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "filing_timestamp"
+      },
+      "meta": {
+        "notes": "Filing timestamp is required for audit trail"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "amount"
+      },
+      "meta": {
+        "notes": "Amount is required for all filings"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "transaction_date"
+      },
+      "meta": {
+        "notes": "Transaction date is required for regulatory timeline"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_unique",
+      "kwargs": {
+        "column": "filing_id"
+      },
+      "meta": {
+        "notes": "Filing ID must be unique"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "filing_type",
+        "value_set": ["CTR", "SAR", "W2G"]
+      },
+      "meta": {
+        "notes": "Valid regulatory filing types: CTR (Currency Transaction Report), SAR (Suspicious Activity Report), W2G (Gambling Winnings)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "filing_status",
+        "value_set": ["PENDING", "SUBMITTED", "ACCEPTED", "REJECTED"]
+      },
+      "meta": {
+        "notes": "Valid filing status values"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "amount",
+        "min_value": 0,
+        "max_value": null
+      },
+      "meta": {
+        "notes": "Amount must be non-negative"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "filing_timestamp"
+      },
+      "meta": {
+        "notes": "Filing timestamp must be parseable"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "transaction_date"
+      },
+      "meta": {
+        "notes": "Transaction date must be parseable"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "gaming_day",
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Gaming day must be parseable when present"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "due_date",
+        "mostly": 0.95
+      },
+      "meta": {
+        "notes": "Due date must be parseable when present"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "player_id",
+        "regex": "^P[0-9]+$",
+        "mostly": 0.90
+      },
+      "meta": {
+        "notes": "Player ID format when present"
+      }
+    }
+  ]
+}

@@ -1,0 +1,367 @@
+/// =============================================================================
+/// Measure Group: Time Intelligence
+/// =============================================================================
+///
+/// Period-over-period comparisons, running totals, and time calculations
+/// Requires a proper date table (dim_date) marked as date table
+///
+/// =============================================================================
+
+table '_Time Intelligence'
+    lineageTag: measures-time
+    description: "Time intelligence calculations"
+
+    column _placeholder
+        dataType: string
+        isHidden: true
+        lineageTag: measures-time-ph
+        sourceColumn: none
+        expression: "Measures Table"
+
+    /// ==========================================================================
+    /// MONTH-TO-DATE (MTD)
+    /// ==========================================================================
+
+    measure 'Coin In MTD' =
+        TOTALMTD(
+            SUM(fact_slot_performance[total_coin_in]),
+            dim_date[Date]
+        )
+        formatString: \$#,##0
+        lineageTag: m-coinin-mtd
+        displayFolder: "MTD"
+        description: "Coin In month to date"
+
+    measure 'Net Win MTD' =
+        TOTALMTD(
+            SUM(fact_slot_performance[total_coin_in]) - SUM(fact_slot_performance[total_coin_out]),
+            dim_date[Date]
+        )
+        formatString: \$#,##0
+        lineageTag: m-netwin-mtd
+        displayFolder: "MTD"
+        description: "Net Win month to date"
+
+    measure 'Games MTD' =
+        TOTALMTD(
+            SUM(fact_slot_performance[total_games]),
+            dim_date[Date]
+        )
+        formatString: #,##0
+        lineageTag: m-games-mtd
+        displayFolder: "MTD"
+        description: "Games played month to date"
+
+    measure 'CTR MTD' =
+        TOTALMTD(
+            SUM(fact_compliance[ctr_count]),
+            dim_date[Date]
+        )
+        formatString: #,##0
+        lineageTag: m-ctr-mtd
+        displayFolder: "MTD"
+        description: "CTR filings month to date"
+
+    /// ==========================================================================
+    /// YEAR-TO-DATE (YTD)
+    /// ==========================================================================
+
+    measure 'Coin In YTD' =
+        TOTALYTD(
+            SUM(fact_slot_performance[total_coin_in]),
+            dim_date[Date]
+        )
+        formatString: \$#,##0
+        lineageTag: m-coinin-ytd
+        displayFolder: "YTD"
+        description: "Coin In year to date"
+
+    measure 'Net Win YTD' =
+        TOTALYTD(
+            SUM(fact_slot_performance[total_coin_in]) - SUM(fact_slot_performance[total_coin_out]),
+            dim_date[Date]
+        )
+        formatString: \$#,##0
+        lineageTag: m-netwin-ytd
+        displayFolder: "YTD"
+        description: "Net Win year to date"
+
+    measure 'Games YTD' =
+        TOTALYTD(
+            SUM(fact_slot_performance[total_games]),
+            dim_date[Date]
+        )
+        formatString: #,##0
+        lineageTag: m-games-ytd
+        displayFolder: "YTD"
+        description: "Games played year to date"
+
+    measure 'CTR YTD' =
+        TOTALYTD(
+            SUM(fact_compliance[ctr_count]),
+            dim_date[Date]
+        )
+        formatString: #,##0
+        lineageTag: m-ctr-ytd
+        displayFolder: "YTD"
+        description: "CTR filings year to date"
+
+    measure 'Total Filings YTD' =
+        TOTALYTD(
+            SUM(fact_compliance[ctr_count]) +
+            SUM(fact_compliance[sar_count]) +
+            SUM(fact_compliance[w2g_count]),
+            dim_date[Date]
+        )
+        formatString: #,##0
+        lineageTag: m-filings-ytd
+        displayFolder: "YTD"
+        description: "Total regulatory filings year to date"
+
+    /// ==========================================================================
+    /// PRIOR PERIOD COMPARISONS
+    /// ==========================================================================
+
+    measure 'Net Win PM' =
+        CALCULATE(
+            SUM(fact_slot_performance[total_coin_in]) - SUM(fact_slot_performance[total_coin_out]),
+            DATEADD(dim_date[Date], -1, MONTH)
+        )
+        formatString: \$#,##0
+        lineageTag: m-netwin-pm
+        displayFolder: "Prior Period"
+        description: "Net Win previous month"
+
+    measure 'Net Win PY' =
+        CALCULATE(
+            SUM(fact_slot_performance[total_coin_in]) - SUM(fact_slot_performance[total_coin_out]),
+            DATEADD(dim_date[Date], -1, YEAR)
+        )
+        formatString: \$#,##0
+        lineageTag: m-netwin-py
+        displayFolder: "Prior Period"
+        description: "Net Win previous year"
+
+    measure 'Coin In PM' =
+        CALCULATE(
+            SUM(fact_slot_performance[total_coin_in]),
+            DATEADD(dim_date[Date], -1, MONTH)
+        )
+        formatString: \$#,##0
+        lineageTag: m-coinin-pm
+        displayFolder: "Prior Period"
+        description: "Coin In previous month"
+
+    measure 'Coin In PY' =
+        CALCULATE(
+            SUM(fact_slot_performance[total_coin_in]),
+            DATEADD(dim_date[Date], -1, YEAR)
+        )
+        formatString: \$#,##0
+        lineageTag: m-coinin-py
+        displayFolder: "Prior Period"
+        description: "Coin In previous year"
+
+    /// ==========================================================================
+    /// GROWTH CALCULATIONS
+    /// ==========================================================================
+
+    measure 'Net Win MoM Growth' =
+        VAR CurrentPeriod = SUM(fact_slot_performance[total_coin_in]) - SUM(fact_slot_performance[total_coin_out])
+        VAR PriorPeriod = [Net Win PM]
+        RETURN
+        DIVIDE(CurrentPeriod - PriorPeriod, ABS(PriorPeriod), 0) * 100
+        formatString: 0.0"%"
+        lineageTag: m-netwin-mom
+        displayFolder: "Growth"
+        description: "Net Win month-over-month growth"
+
+    measure 'Net Win YoY Growth' =
+        VAR CurrentPeriod = SUM(fact_slot_performance[total_coin_in]) - SUM(fact_slot_performance[total_coin_out])
+        VAR PriorPeriod = [Net Win PY]
+        RETURN
+        DIVIDE(CurrentPeriod - PriorPeriod, ABS(PriorPeriod), 0) * 100
+        formatString: 0.0"%"
+        lineageTag: m-netwin-yoy
+        displayFolder: "Growth"
+        description: "Net Win year-over-year growth"
+
+    measure 'Coin In MoM Growth' =
+        VAR CurrentPeriod = SUM(fact_slot_performance[total_coin_in])
+        VAR PriorPeriod = [Coin In PM]
+        RETURN
+        DIVIDE(CurrentPeriod - PriorPeriod, ABS(PriorPeriod), 0) * 100
+        formatString: 0.0"%"
+        lineageTag: m-coinin-mom
+        displayFolder: "Growth"
+        description: "Coin In month-over-month growth"
+
+    measure 'Growth Display' =
+        VAR Growth = [Net Win MoM Growth]
+        RETURN
+        IF(
+            Growth > 0,
+            "+" & FORMAT(Growth, "0.0") & "%",
+            FORMAT(Growth, "0.0") & "%"
+        )
+        formatString: @
+        lineageTag: m-growth-display
+        displayFolder: "Growth"
+        description: "Formatted growth with sign"
+
+    measure 'Trend Icon' =
+        VAR Growth = [Net Win MoM Growth]
+        RETURN
+        SWITCH(
+            TRUE(),
+            Growth > 5, UNICHAR(9650),   // Up arrow
+            Growth < -5, UNICHAR(9660),  // Down arrow
+            UNICHAR(9644)                // Dash
+        )
+        formatString: @
+        lineageTag: m-trend-icon
+        displayFolder: "Growth"
+        description: "Trend direction icon"
+
+    /// ==========================================================================
+    /// ROLLING AVERAGES
+    /// ==========================================================================
+
+    measure 'Coin In 7D Avg' =
+        AVERAGEX(
+            DATESINPERIOD(dim_date[Date], MAX(dim_date[Date]), -7, DAY),
+            CALCULATE(SUM(fact_slot_performance[total_coin_in]))
+        )
+        formatString: \$#,##0
+        lineageTag: m-coinin-7d
+        displayFolder: "Rolling"
+        description: "7-day rolling average Coin In"
+
+    measure 'Net Win 7D Avg' =
+        AVERAGEX(
+            DATESINPERIOD(dim_date[Date], MAX(dim_date[Date]), -7, DAY),
+            CALCULATE(
+                SUM(fact_slot_performance[total_coin_in]) -
+                SUM(fact_slot_performance[total_coin_out])
+            )
+        )
+        formatString: \$#,##0
+        lineageTag: m-netwin-7d
+        displayFolder: "Rolling"
+        description: "7-day rolling average Net Win"
+
+    measure 'Net Win 30D Avg' =
+        AVERAGEX(
+            DATESINPERIOD(dim_date[Date], MAX(dim_date[Date]), -30, DAY),
+            CALCULATE(
+                SUM(fact_slot_performance[total_coin_in]) -
+                SUM(fact_slot_performance[total_coin_out])
+            )
+        )
+        formatString: \$#,##0
+        lineageTag: m-netwin-30d
+        displayFolder: "Rolling"
+        description: "30-day rolling average Net Win"
+
+    measure 'Games 7D Avg' =
+        AVERAGEX(
+            DATESINPERIOD(dim_date[Date], MAX(dim_date[Date]), -7, DAY),
+            CALCULATE(SUM(fact_slot_performance[total_games]))
+        )
+        formatString: #,##0
+        lineageTag: m-games-7d
+        displayFolder: "Rolling"
+        description: "7-day rolling average games"
+
+    /// ==========================================================================
+    /// PERIOD CONTEXT
+    /// ==========================================================================
+
+    measure 'Days Selected' =
+        DISTINCTCOUNT(dim_date[Date])
+        formatString: #,##0
+        lineageTag: m-days-selected
+        displayFolder: "Context"
+        description: "Number of days in current selection"
+
+    measure 'First Date' =
+        MIN(dim_date[Date])
+        formatString: Short Date
+        lineageTag: m-first-date
+        displayFolder: "Context"
+        description: "First date in selection"
+
+    measure 'Last Date' =
+        MAX(dim_date[Date])
+        formatString: Short Date
+        lineageTag: m-last-date
+        displayFolder: "Context"
+        description: "Last date in selection"
+
+    measure 'Period Label' =
+        VAR FirstDt = MIN(dim_date[Date])
+        VAR LastDt = MAX(dim_date[Date])
+        RETURN
+        FORMAT(FirstDt, "MMM D") & " - " & FORMAT(LastDt, "MMM D, YYYY")
+        formatString: @
+        lineageTag: m-period-label
+        displayFolder: "Context"
+        description: "Formatted period label"
+
+    /// ==========================================================================
+    /// RUNNING TOTALS
+    /// ==========================================================================
+
+    measure 'Running Net Win' =
+        CALCULATE(
+            SUM(fact_slot_performance[total_coin_in]) -
+            SUM(fact_slot_performance[total_coin_out]),
+            FILTER(
+                ALL(dim_date[Date]),
+                dim_date[Date] <= MAX(dim_date[Date])
+            )
+        )
+        formatString: \$#,##0
+        lineageTag: m-running-netwin
+        displayFolder: "Running"
+        description: "Cumulative net win"
+
+    measure 'Running Coin In' =
+        CALCULATE(
+            SUM(fact_slot_performance[total_coin_in]),
+            FILTER(
+                ALL(dim_date[Date]),
+                dim_date[Date] <= MAX(dim_date[Date])
+            )
+        )
+        formatString: \$#,##0
+        lineageTag: m-running-coinin
+        displayFolder: "Running"
+        description: "Cumulative coin in"
+
+    /// ==========================================================================
+    /// FISCAL PERIOD (if using fiscal calendar)
+    /// ==========================================================================
+
+    measure 'Net Win FYTD' =
+        TOTALYTD(
+            SUM(fact_slot_performance[total_coin_in]) -
+            SUM(fact_slot_performance[total_coin_out]),
+            dim_date[Date],
+            "9/30"  // Fiscal year end September 30
+        )
+        formatString: \$#,##0
+        lineageTag: m-netwin-fytd
+        displayFolder: "Fiscal"
+        description: "Net Win fiscal year to date"
+
+    measure 'Coin In FYTD' =
+        TOTALYTD(
+            SUM(fact_slot_performance[total_coin_in]),
+            dim_date[Date],
+            "9/30"
+        )
+        formatString: \$#,##0
+        lineageTag: m-coinin-fytd
+        displayFolder: "Fiscal"
+        description: "Coin In fiscal year to date"

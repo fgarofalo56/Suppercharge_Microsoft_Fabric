@@ -1,10 +1,16 @@
 # Great Expectations Configuration
-# Casino Fabric POC - Data Quality Validation
+# Casino Fabric POC - Comprehensive Data Quality Validation
+# Version: 0.18+
 
 config_version: 3.0
 
-# Data sources
+# =============================================================================
+# Data Sources Configuration
+# =============================================================================
+# Supports multiple data source types for the medallion architecture
+
 datasources:
+  # Bronze layer - Raw data ingestion validation
   casino_bronze:
     class_name: Datasource
     module_name: great_expectations.datasource
@@ -14,12 +20,57 @@ datasources:
     data_connectors:
       default_inferred_data_connector_name:
         class_name: InferredAssetFilesystemDataConnector
-        base_directory: ../sample-data/
+        base_directory: ../sample-data/bronze/
         default_regex:
           group_names:
             - data_asset_name
           pattern: (.*)\.parquet
+      runtime_data_connector:
+        class_name: RuntimeDataConnector
+        batch_identifiers:
+          - default_identifier_name
 
+  # Silver layer - Cleansed data validation
+  casino_silver:
+    class_name: Datasource
+    module_name: great_expectations.datasource
+    execution_engine:
+      class_name: SparkDFExecutionEngine
+      module_name: great_expectations.execution_engine
+    data_connectors:
+      default_inferred_data_connector_name:
+        class_name: InferredAssetFilesystemDataConnector
+        base_directory: ../sample-data/silver/
+        default_regex:
+          group_names:
+            - data_asset_name
+          pattern: (.*)\.parquet
+      runtime_data_connector:
+        class_name: RuntimeDataConnector
+        batch_identifiers:
+          - default_identifier_name
+
+  # Gold layer - Aggregated/curated data validation
+  casino_gold:
+    class_name: Datasource
+    module_name: great_expectations.datasource
+    execution_engine:
+      class_name: SparkDFExecutionEngine
+      module_name: great_expectations.execution_engine
+    data_connectors:
+      default_inferred_data_connector_name:
+        class_name: InferredAssetFilesystemDataConnector
+        base_directory: ../sample-data/gold/
+        default_regex:
+          group_names:
+            - data_asset_name
+          pattern: (.*)\.parquet
+      runtime_data_connector:
+        class_name: RuntimeDataConnector
+        batch_identifiers:
+          - default_identifier_name
+
+  # Delta Lake source for Fabric Lakehouse
   casino_delta:
     class_name: Datasource
     module_name: great_expectations.datasource
@@ -29,8 +80,38 @@ datasources:
       spark_config:
         spark.sql.extensions: io.delta.sql.DeltaSparkSessionExtension
         spark.sql.catalog.spark_catalog: org.apache.spark.sql.delta.catalog.DeltaCatalog
+    data_connectors:
+      runtime_data_connector:
+        class_name: RuntimeDataConnector
+        batch_identifiers:
+          - default_identifier_name
+          - table_name
+          - layer
 
-# Stores for expectations, validations, and checkpoints
+  # Pandas source for local testing
+  casino_pandas:
+    class_name: Datasource
+    module_name: great_expectations.datasource
+    execution_engine:
+      class_name: PandasExecutionEngine
+      module_name: great_expectations.execution_engine
+    data_connectors:
+      default_inferred_data_connector_name:
+        class_name: InferredAssetFilesystemDataConnector
+        base_directory: ../sample-data/
+        default_regex:
+          group_names:
+            - data_asset_name
+          pattern: (.*)\.csv
+      runtime_data_connector:
+        class_name: RuntimeDataConnector
+        batch_identifiers:
+          - default_identifier_name
+
+# =============================================================================
+# Stores Configuration
+# =============================================================================
+
 stores:
   expectations_store:
     class_name: ExpectationsStore
@@ -53,7 +134,26 @@ stores:
       class_name: TupleFilesystemStoreBackend
       base_directory: checkpoints/
 
-# Data Docs for reporting
+  profiler_store:
+    class_name: ProfilerStore
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      base_directory: profilers/
+
+# =============================================================================
+# Expectation Suites
+# =============================================================================
+# Available suites organized by data domain
+
+expectations_store_name: expectations_store
+validations_store_name: validations_store
+evaluation_parameter_store_name: evaluation_parameter_store
+checkpoint_store_name: checkpoint_store
+
+# =============================================================================
+# Data Docs Configuration
+# =============================================================================
+
 data_docs_sites:
   local_site:
     class_name: SiteBuilder
@@ -64,6 +164,34 @@ data_docs_sites:
     site_index_builder:
       class_name: DefaultSiteIndexBuilder
 
-# Anonymized usage statistics
+  # Azure Blob Storage for shared Data Docs (uncomment when deployed)
+  # azure_site:
+  #   class_name: SiteBuilder
+  #   show_how_to_buttons: false
+  #   store_backend:
+  #     class_name: TupleAzureBlobStoreBackend
+  #     container: data-docs
+  #     connection_string: ${AZURE_STORAGE_CONNECTION_STRING}
+  #   site_index_builder:
+  #     class_name: DefaultSiteIndexBuilder
+
+# =============================================================================
+# Plugins Configuration
+# =============================================================================
+
+plugins_directory: plugins/
+
+# =============================================================================
+# Anonymous Usage Statistics
+# =============================================================================
+
 anonymous_usage_statistics:
   enabled: false
+  data_context_id: casino-fabric-poc
+
+# =============================================================================
+# Fluent API Configuration (GX 0.18+)
+# =============================================================================
+# Additional configuration for the fluent API
+
+fluent_datasources: {}

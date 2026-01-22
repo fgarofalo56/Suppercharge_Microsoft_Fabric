@@ -1,0 +1,169 @@
+/// =============================================================================
+/// Dimension: Table (Table Games)
+/// =============================================================================
+///
+/// Purpose: Table games attributes for performance analysis
+/// Grain: One row per unique gaming table
+/// Source: Derived from gold_table_analytics or dedicated table master
+/// Update Pattern: SCD Type 1 (overwrite)
+///
+/// =============================================================================
+
+table dim_table
+    lineageTag: dim-table-001
+
+    /// ==========================================================================
+    /// COLUMNS
+    /// ==========================================================================
+
+    column table_id
+        dataType: string
+        isKey: true
+        lineageTag: dim-table-id
+        summarizeBy: none
+        sourceColumn: table_id
+        description: "Unique table identifier"
+
+    column table_name
+        dataType: string
+        lineageTag: dim-table-name
+        summarizeBy: none
+        sourceColumn: table_name
+        description: "Display name of the table"
+
+    column zone
+        dataType: string
+        lineageTag: dim-table-zone
+        summarizeBy: none
+        sourceColumn: zone
+        description: "Floor zone location"
+
+    column pit
+        dataType: string
+        lineageTag: dim-table-pit
+        summarizeBy: none
+        sourceColumn: pit
+        description: "Pit area identifier"
+
+    column game_type
+        dataType: string
+        lineageTag: dim-table-gametype
+        summarizeBy: none
+        sourceColumn: game_type
+        description: "Type of game (Blackjack, Roulette, Craps, Baccarat, Poker)"
+
+    column game_category
+        dataType: string
+        lineageTag: dim-table-category
+        summarizeBy: none
+        sourceColumn: game_category
+        description: "Game category (Card Games, Dice Games, Wheel Games)"
+
+    column game_variant
+        dataType: string
+        lineageTag: dim-table-variant
+        summarizeBy: none
+        sourceColumn: game_variant
+        description: "Specific game variant (e.g., Single Deck Blackjack)"
+
+    column min_bet
+        dataType: decimal
+        formatString: \$#,0
+        lineageTag: dim-table-minbet
+        summarizeBy: none
+        sourceColumn: min_bet
+        description: "Minimum table bet"
+
+    column max_bet
+        dataType: decimal
+        formatString: \$#,0
+        lineageTag: dim-table-maxbet
+        summarizeBy: none
+        sourceColumn: max_bet
+        description: "Maximum table bet"
+
+    column 'Bet Range'
+        dataType: string
+        lineageTag: dim-table-betrange
+        summarizeBy: none
+        sourceColumn: bet_range
+        description: "Formatted bet range (e.g., $25-$5,000)"
+        sortByColumn: min_bet
+
+    column positions
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-table-pos
+        summarizeBy: none
+        sourceColumn: positions
+        description: "Number of player positions at table"
+
+    column expected_hold_pct
+        dataType: decimal
+        formatString: 0.00%
+        lineageTag: dim-table-hold
+        summarizeBy: average
+        sourceColumn: expected_hold_pct
+        description: "Expected hold percentage for game type"
+
+    column is_high_limit
+        dataType: boolean
+        lineageTag: dim-table-highlimit
+        summarizeBy: none
+        sourceColumn: is_high_limit
+        description: "Is high limit table"
+
+    column is_vip
+        dataType: boolean
+        lineageTag: dim-table-vip
+        summarizeBy: none
+        sourceColumn: is_vip
+        description: "Is VIP/private table"
+
+    column status
+        dataType: string
+        lineageTag: dim-table-status
+        summarizeBy: none
+        sourceColumn: status
+        description: "Current status (Open, Closed, Reserved)"
+
+    column is_active
+        dataType: boolean
+        lineageTag: dim-table-active
+        summarizeBy: none
+        sourceColumn: is_active
+        description: "Table is currently active in rotation"
+
+    /// ==========================================================================
+    /// HIERARCHIES
+    /// ==========================================================================
+
+    hierarchy 'Table Location'
+        lineageTag: dim-table-loc-hier
+
+        level Zone
+            column: zone
+            lineageTag: dim-table-hier-zone
+
+        level Pit
+            column: pit
+            lineageTag: dim-table-hier-pit
+
+        level Table
+            column: table_id
+            lineageTag: dim-table-hier-id
+
+    hierarchy 'Game Type'
+        lineageTag: dim-table-game-hier
+
+        level Category
+            column: game_category
+            lineageTag: dim-table-hier-cat
+
+        level 'Game Type'
+            column: game_type
+            lineageTag: dim-table-hier-type
+
+        level Variant
+            column: game_variant
+            lineageTag: dim-table-hier-var

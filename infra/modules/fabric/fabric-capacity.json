@@ -1,0 +1,108 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.39.26.7824",
+      "templateHash": "220470787627683794"
+    }
+  },
+  "parameters": {
+    "capacityName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Fabric capacity"
+      }
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Azure region for deployment"
+      }
+    },
+    "skuName": {
+      "type": "string",
+      "defaultValue": "F64",
+      "allowedValues": [
+        "F2",
+        "F4",
+        "F8",
+        "F16",
+        "F32",
+        "F64",
+        "F128",
+        "F256",
+        "F512",
+        "F1024",
+        "F2048"
+      ],
+      "metadata": {
+        "description": "Fabric capacity SKU"
+      }
+    },
+    "adminEmail": {
+      "type": "string",
+      "metadata": {
+        "description": "Admin email address for the capacity"
+      }
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "Tags to apply to resources"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Fabric/capacities",
+      "apiVersion": "2023-11-01",
+      "name": "[parameters('capacityName')]",
+      "location": "[parameters('location')]",
+      "tags": "[parameters('tags')]",
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "tier": "Fabric"
+      },
+      "properties": {
+        "administration": {
+          "members": [
+            "[parameters('adminEmail')]"
+          ]
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "capacityName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Fabric capacity"
+      },
+      "value": "[parameters('capacityName')]"
+    },
+    "capacityId": {
+      "type": "string",
+      "metadata": {
+        "description": "The resource ID of the Fabric capacity"
+      },
+      "value": "[resourceId('Microsoft.Fabric/capacities', parameters('capacityName'))]"
+    },
+    "capacitySku": {
+      "type": "string",
+      "metadata": {
+        "description": "The SKU of the Fabric capacity"
+      },
+      "value": "[reference(resourceId('Microsoft.Fabric/capacities', parameters('capacityName')), '2023-11-01', 'full').sku.name]"
+    },
+    "provisioningState": {
+      "type": "string",
+      "metadata": {
+        "description": "The provisioning state of the capacity"
+      },
+      "value": "[reference(resourceId('Microsoft.Fabric/capacities', parameters('capacityName')), '2023-11-01').provisioningState]"
+    }
+  }
+}

@@ -1,51 +1,71 @@
-# Instructor Guide - Casino Fabric POC
+# 📘 Instructor Guide - Casino Fabric POC
 
-## Overview
-
-This guide provides instructors with everything needed to deliver the 3-day Microsoft Fabric POC for casino/gaming analytics.
+> 🏠 Home > 📆 POC Agenda > 📘 Instructor Guide
 
 ---
 
-## Pre-POC Preparation
+**Version:** 1.0
+**Last Updated:** 2026-01-21
+**Audience:** Workshop Facilitators and Technical Leads
+
+---
+
+## 📋 Quick Reference
+
+| Day | Icon | Focus | Key Sessions |
+|:---:|:----:|-------|--------------|
+| 1 | 🏗️ | Foundation | Environment Setup, Bronze Layer |
+| 2 | ⚡ | Transformation | Silver/Gold Layers, Real-Time |
+| 3 | 📊 | Analytics | Power BI, Purview, Mirroring |
+
+---
+
+## 📅 Pre-POC Preparation
 
 ### 2 Weeks Before
 
-- [ ] Verify Azure subscription has sufficient credits/budget
-- [ ] Confirm F64 capacity is available
-- [ ] Test data generator scripts work correctly
-- [ ] Validate all notebooks execute without errors
-- [ ] Prepare participant list and roles
-- [ ] Send pre-reading materials to participants
+| Task | Owner | Status |
+|------|-------|:------:|
+| Verify Azure subscription has sufficient credits/budget | Lead | ⬜ |
+| Confirm F64 capacity is available | Lead | ⬜ |
+| Test data generator scripts work correctly | Tech Lead | ⬜ |
+| Validate all notebooks execute without errors | Tech Lead | ⬜ |
+| Prepare participant list and roles | Coordinator | ⬜ |
+| Send pre-reading materials to participants | Coordinator | ⬜ |
 
 ### 1 Week Before
 
-- [ ] Generate sample data (run all generators)
-- [ ] Upload sample data to OneLake
-- [ ] Create backup of working notebooks
-- [ ] Test Purview connectivity
-- [ ] Prepare SQL Server source for mirroring demo (if available)
-- [ ] Set up communication channels (Teams, email)
+| Task | Owner | Status |
+|------|-------|:------:|
+| Generate sample data (run all generators) | Tech Lead | ⬜ |
+| Upload sample data to OneLake | Tech Lead | ⬜ |
+| Create backup of working notebooks | Tech Lead | ⬜ |
+| Test Purview connectivity | Tech Lead | ⬜ |
+| Prepare SQL Server source for mirroring demo | Tech Lead | ⬜ |
+| Set up communication channels (Teams, email) | Coordinator | ⬜ |
 
 ### Day Before
 
-- [ ] Verify workspace is accessible
-- [ ] Test all Power BI reports render
-- [ ] Prepare demo environment
-- [ ] Print handouts (if needed)
-- [ ] Test projector/screen sharing
+| Task | Owner | Status |
+|------|-------|:------:|
+| Verify workspace is accessible | Tech Lead | ⬜ |
+| Test all Power BI reports render | Tech Lead | ⬜ |
+| Prepare demo environment | Tech Lead | ⬜ |
+| Print handouts (if needed) | Coordinator | ⬜ |
+| Test projector/screen sharing | Coordinator | ⬜ |
 
 ---
 
-## Environment Setup Checklist
+## 🖥️ Environment Setup Checklist
 
 ### Azure Resources Required
 
-| Resource | SKU | Purpose |
-|----------|-----|---------|
-| Fabric Capacity | F64 | POC workload |
-| Purview Account | Standard | Data governance |
-| SQL Server (optional) | Standard | Mirroring demo |
-| Storage Account | Standard LRS | Landing zone |
+| Resource | SKU | Purpose | Status |
+|----------|-----|---------|:------:|
+| Fabric Capacity | F64 | POC workload | ⬜ |
+| Purview Account | Standard | Data governance | ⬜ |
+| SQL Server (optional) | Standard | Mirroring demo | ⬜ |
+| Storage Account | Standard LRS | Landing zone | ⬜ |
 
 ### Fabric Workspace Configuration
 
@@ -62,16 +82,16 @@ Workloads:
 
 ### Lakehouses
 
-| Lakehouse | Purpose | Tables |
-|-----------|---------|--------|
-| lh_bronze | Raw data | 6 tables |
-| lh_silver | Cleansed | 6 tables |
-| lh_gold | Business-ready | 3+ tables |
-| lh_mirrored | Mirrored data | Varies |
+| Lakehouse | Purpose | Expected Tables | Status |
+|-----------|---------|-----------------|:------:|
+| lh_bronze | Raw data | 6 tables | ⬜ |
+| lh_silver | Cleansed | 6 tables | ⬜ |
+| lh_gold | Business-ready | 3+ tables | ⬜ |
+| lh_mirrored | Mirrored data | Varies | ⬜ |
 
 ---
 
-## Data Generation Instructions
+## 📊 Data Generation Instructions
 
 ### Generate All Data
 
@@ -141,115 +161,198 @@ for dir_name in data_dirs:
 
 ---
 
-## Session Facilitation Guide
-
-### Day 1: Medallion Foundation
-
-#### Morning Sessions (9:00 - 12:30)
-
-**Key Teaching Points:**
-1. Why medallion architecture?
-   - Separation of concerns
-   - Data quality progression
-   - Auditability
-
-2. Bronze layer principles:
-   - Immutable storage
-   - Append-only pattern
-   - Source fidelity
-
-**Common Participant Questions:**
-
-Q: "Why not transform data immediately at ingestion?"
-A: Bronze preserves the original data for auditing, debugging, and reprocessing. You can always rebuild Silver/Gold from Bronze.
-
-Q: "How do we handle schema changes in source systems?"
-A: Bronze uses schema-on-read with `mergeSchema` option. Discuss evolution strategies.
-
-Q: "What about real-time data?"
-A: Preview Day 2's Eventhouse content. Bronze can receive streaming data too.
-
-**Hands-On Exercises:**
-- Exercise 1: Create Bronze table for slot telemetry (guided)
-- Exercise 2: Create Bronze table for table games (independent)
-- Exercise 3: Add custom metadata columns
-
-#### Afternoon Sessions (13:30 - 17:00)
-
-**Key Teaching Points:**
-1. Player profile PII handling
-   - Hash SSN at Bronze layer
-   - Never store clear-text sensitive data
-
-2. Financial data patterns
-   - CTR threshold ($10,000)
-   - Near-CTR flagging ($8,000-$9,999)
-
-3. Silver layer introduction
-   - Schema enforcement
-   - Data quality rules
-
-**Hands-On Exercises:**
-- Exercise 4: Implement PII hashing
-- Exercise 5: Add CTR flags to financial data
-- Exercise 6: Write first Silver transformation
+## 📚 Session Facilitation Guide
 
 ---
 
-### Day 2: Transformations & Real-Time
+## 🏗️ Day 1: Medallion Foundation
 
-#### Morning Sessions (9:00 - 12:30)
+### 🌅 Morning Sessions (9:00 - 12:30)
 
-**Key Teaching Points:**
-1. SCD Type 2 pattern
-   - Why track history?
-   - Effective dating
-   - Current record flag
+#### 💡 Key Teaching Points
 
-2. Financial reconciliation
-   - Variance detection
-   - Risk flagging
+<table>
+<tr>
+<td width="50%">
 
-3. Gold layer KPIs
-   - Theo calculation
-   - Hold percentage
-   - Player value score
+**1. Why Medallion Architecture?**
 
-**Common Participant Questions:**
+- Separation of concerns
+- Data quality progression
+- Auditability
+- Reprocessing capability
 
-Q: "When should we use SCD Type 1 vs Type 2?"
-A: Type 1 for attributes that don't need history (e.g., email preference). Type 2 for business-critical attributes (e.g., loyalty tier, address for compliance).
+</td>
+<td width="50%">
 
-Q: "How often should Gold tables refresh?"
-A: Depends on use case. Daily for reports, more frequently for operational dashboards. Direct Lake enables near-real-time.
+**2. Bronze Layer Principles**
 
-**Hands-On Exercises:**
-- Exercise 7: Implement SCD Type 2 merge
-- Exercise 8: Create reconciliation status
-- Exercise 9: Calculate slot KPIs
+- Immutable storage
+- Append-only pattern
+- Source fidelity
+- Metadata tracking
 
-#### Afternoon Sessions (13:30 - 17:00)
+</td>
+</tr>
+</table>
 
-**Key Teaching Points:**
-1. Eventhouse vs Lakehouse
-   - When to use each
-   - Query performance trade-offs
+#### ❓ Common Participant Questions
 
-2. KQL basics
-   - Time-series analysis
-   - Aggregations
-   - Alerts
+> **Q: "Why not transform data immediately at ingestion?"**
+>
+> **A:** Bronze preserves the original data for auditing, debugging, and reprocessing. You can always rebuild Silver/Gold from Bronze. This is critical for compliance and troubleshooting.
 
-3. Real-time dashboards
-   - Auto-refresh
-   - Tile configuration
+> **Q: "How do we handle schema changes in source systems?"**
+>
+> **A:** Bronze uses schema-on-read with `mergeSchema` option. Discuss evolution strategies and how Delta Lake handles this automatically.
 
-**Demo Script - Streaming Producer:**
+> **Q: "What about real-time data?"**
+>
+> **A:** Preview Day 2's Eventhouse content. Bronze can receive streaming data too, but Eventhouse is optimized for real-time queries.
+
+#### 👥 Hands-On Exercises
+
+| Exercise | Duration | Type |
+|----------|:--------:|------|
+| 1. Create Bronze table for slot telemetry | 30 min | Guided |
+| 2. Create Bronze table for table games | 30 min | Independent |
+| 3. Add custom metadata columns | 15 min | Discussion |
+
+### ☀️ Afternoon Sessions (13:30 - 17:00)
+
+#### 💡 Key Teaching Points
+
+<table>
+<tr>
+<td width="50%">
+
+**1. Player Profile PII Handling**
+
+- Hash SSN at Bronze layer
+- Never store clear-text sensitive data
+- Compliance requirements (GDPR, CCPA)
+
+</td>
+<td width="50%">
+
+**2. Financial Data Patterns**
+
+- CTR threshold ($10,000)
+- Near-CTR flagging ($8,000-$9,999)
+- Structuring detection patterns
+
+</td>
+</tr>
+</table>
+
+#### 👥 Hands-On Exercises
+
+| Exercise | Duration | Type |
+|----------|:--------:|------|
+| 4. Implement PII hashing | 20 min | Guided |
+| 5. Add CTR flags to financial data | 20 min | Guided |
+| 6. Write first Silver transformation | 30 min | Independent |
+
+---
+
+## ⚡ Day 2: Transformations & Real-Time
+
+### 🌅 Morning Sessions (9:00 - 12:30)
+
+#### 💡 Key Teaching Points
+
+<table>
+<tr>
+<td width="33%">
+
+**1. SCD Type 2 Pattern**
+
+- Why track history?
+- Effective dating
+- Current record flag
+- Merge operations
+
+</td>
+<td width="34%">
+
+**2. Financial Reconciliation**
+
+- Variance detection
+- Risk flagging
+- Audit requirements
+
+</td>
+<td width="33%">
+
+**3. Gold Layer KPIs**
+
+- Theoretical win calculation
+- Hold percentage
+- Player value scoring
+
+</td>
+</tr>
+</table>
+
+#### ❓ Common Participant Questions
+
+> **Q: "When should we use SCD Type 1 vs Type 2?"**
+>
+> **A:** Type 1 for attributes that don't need history (e.g., email preference). Type 2 for business-critical attributes (e.g., loyalty tier, address for compliance).
+
+> **Q: "How often should Gold tables refresh?"**
+>
+> **A:** Depends on use case. Daily for reports, more frequently for operational dashboards. Direct Lake enables near-real-time without scheduled refresh.
+
+#### 👥 Hands-On Exercises
+
+| Exercise | Duration | Type |
+|----------|:--------:|------|
+| 7. Implement SCD Type 2 merge | 30 min | Guided |
+| 8. Create reconciliation status | 25 min | Guided |
+| 9. Calculate slot KPIs | 30 min | Independent |
+
+### ☀️ Afternoon Sessions (13:30 - 17:00)
+
+#### 💡 Key Teaching Points
+
+<table>
+<tr>
+<td width="33%">
+
+**1. Eventhouse vs Lakehouse**
+
+- When to use each
+- Query performance trade-offs
+- Storage patterns
+
+</td>
+<td width="34%">
+
+**2. KQL Basics**
+
+- Time-series analysis
+- Aggregations
+- Real-time alerting
+
+</td>
+<td width="33%">
+
+**3. Real-Time Dashboards**
+
+- Auto-refresh configuration
+- Tile design
+- Alert integration
+
+</td>
+</tr>
+</table>
+
+#### 🎬 Demo Script - Streaming Producer
+
+Run this in a separate terminal to simulate real-time data. Show participants how data flows through Eventstream to KQL.
 
 ```python
-# Run this in a separate terminal to simulate real-time data
-# Show participants how data flows through Eventstream to KQL
-
 import json
 import time
 import random
@@ -268,217 +371,354 @@ while True:
     time.sleep(0.5)
 ```
 
-**Hands-On Exercises:**
-- Exercise 10: Create Eventhouse and database
-- Exercise 11: Write KQL monitoring query
-- Exercise 12: Build real-time dashboard tile
+#### 👥 Hands-On Exercises
+
+| Exercise | Duration | Type |
+|----------|:--------:|------|
+| 10. Create Eventhouse and database | 20 min | Guided |
+| 11. Write KQL monitoring query | 20 min | Guided |
+| 12. Build real-time dashboard tile | 30 min | Independent |
 
 ---
 
-### Day 3: BI, Governance & Mirroring
+## 📊 Day 3: BI, Governance & Mirroring
 
-#### Morning Sessions (9:00 - 12:30)
+### 🌅 Morning Sessions (9:00 - 12:30)
 
-**Key Teaching Points:**
-1. Direct Lake benefits
-   - No data import
-   - Sub-second queries
-   - Automatic refresh
+> 👥 **Audience Expansion:** Day 3 morning adds BI developers (2) to the architects (4).
 
-2. DAX best practices
-   - Measures vs calculated columns
-   - Time intelligence
+#### 💡 Key Teaching Points
 
-3. Report design
-   - Executive vs operational views
-   - Drill-through patterns
+<table>
+<tr>
+<td width="33%">
 
-**Expanded Audience:**
-Day 3 morning adds BI developers (2) to the architects (4).
+**1. Direct Lake Benefits**
 
-**Common Participant Questions:**
+- No data import
+- Sub-second queries
+- Automatic refresh
+- Live connection to Delta
 
-Q: "What happens if Direct Lake falls back to DirectQuery?"
-A: Discuss fallback triggers and how to avoid them (table size, unsupported DAX).
+</td>
+<td width="34%">
 
-Q: "Can we use Import mode instead?"
-A: Yes, but you lose automatic refresh. Discuss trade-offs.
+**2. DAX Best Practices**
 
-**Hands-On Exercises:**
-- Exercise 13: Create semantic model
-- Exercise 14: Write DAX measures
-- Exercise 15: Build executive dashboard
+- Measures vs calculated columns
+- Time intelligence patterns
+- Performance optimization
 
-#### Afternoon Sessions (13:30 - 17:00)
+</td>
+<td width="33%">
 
-**Key Teaching Points:**
-1. Purview value proposition
-   - Data discovery
-   - Compliance
-   - Lineage
+**3. Report Design**
 
-2. Classifications
-   - Automatic vs manual
-   - Gaming-specific patterns
+- Executive vs operational views
+- Drill-through patterns
+- Mobile optimization
 
-3. Database Mirroring
-   - Use cases
-   - Limitations
-   - Hybrid patterns
+</td>
+</tr>
+</table>
 
-**Expanded Audience:**
-Day 3 afternoon includes all teams (10+).
+#### ❓ Common Participant Questions
 
-**Demo Script - Mirroring:**
-If SQL Server source is available:
+> **Q: "What happens if Direct Lake falls back to DirectQuery?"**
+>
+> **A:** Discuss fallback triggers and how to avoid them (table size limits, unsupported DAX patterns, complex calculations).
+
+> **Q: "Can we use Import mode instead?"**
+>
+> **A:** Yes, but you lose automatic refresh. Discuss trade-offs: Import is faster for complex DAX but requires scheduled refresh.
+
+#### 👥 Hands-On Exercises
+
+| Exercise | Duration | Type |
+|----------|:--------:|------|
+| 13. Create semantic model | 25 min | Guided |
+| 14. Write DAX measures | 35 min | Guided |
+| 15. Build executive dashboard | 45 min | Independent |
+
+### ☀️ Afternoon Sessions (13:30 - 17:00)
+
+> 👥 **Audience Expansion:** Day 3 afternoon includes all teams (10+).
+
+#### 💡 Key Teaching Points
+
+<table>
+<tr>
+<td width="33%">
+
+**1. Purview Value**
+
+- Data discovery
+- Compliance tracking
+- Lineage visualization
+
+</td>
+<td width="34%">
+
+**2. Classifications**
+
+- Automatic vs manual
+- Gaming-specific patterns
+- PII detection
+
+</td>
+<td width="33%">
+
+**3. Database Mirroring**
+
+- Use cases
+- Limitations
+- Hybrid patterns
+
+</td>
+</tr>
+</table>
+
+#### 🎬 Demo Script - Mirroring
+
+**If SQL Server source is available:**
+
 1. Show CDC configuration
-2. Create mirrored database
-3. Query mirrored data
-4. Show replication lag
+2. Create mirrored database in Fabric
+3. Query mirrored data alongside Gold tables
+4. Show replication lag metrics
 
-If no source available:
-1. Walk through UI steps
+**If no source available:**
+
+1. Walk through UI steps with screenshots
 2. Discuss architecture patterns
-3. Show documentation
+3. Show Microsoft documentation
 
-**Hands-On Exercises:**
-- Exercise 16: Connect Purview to Fabric
-- Exercise 17: Create glossary terms
-- Exercise 18: View lineage
+#### 👥 Hands-On Exercises
 
----
-
-## Troubleshooting Guide
-
-### Common Issues
-
-#### Workspace Access
-**Symptom:** Participants can't access workspace
-**Solution:**
-1. Check workspace permissions
-2. Verify capacity assignment
-3. Clear browser cache
-
-#### Notebook Failures
-**Symptom:** Notebook times out or fails
-**Solution:**
-1. Check Spark session state
-2. Reduce data volume for testing
-3. Verify Lakehouse attachment
-
-#### Eventstream Not Flowing
-**Symptom:** No data appearing in KQL
-**Solution:**
-1. Check source connection
-2. Verify JSON mapping
-3. Review ingestion errors
-
-#### Direct Lake Fallback
-**Symptom:** Reports show DirectQuery instead of Direct Lake
-**Solution:**
-1. Check table size limits
-2. Review measure complexity
-3. Verify relationships
-
-#### Purview Scan Fails
-**Symptom:** Scan shows errors
-**Solution:**
-1. Verify integration runtime
-2. Check credentials
-3. Review firewall rules
+| Exercise | Duration | Type |
+|----------|:--------:|------|
+| 16. Connect Purview to Fabric | 15 min | Guided |
+| 17. Create glossary terms | 20 min | Guided |
+| 18. View lineage | 15 min | Discussion |
 
 ---
 
-## Assessment Checkpoints
+## 🔧 Troubleshooting Guide
+
+### Common Issues & Solutions
+
+<table>
+<tr>
+<th width="30%">Issue</th>
+<th width="70%">Solution</th>
+</tr>
+<tr>
+<td>
+
+**Workspace Access**
+
+Participants can't access workspace
+
+</td>
+<td>
+
+1. Check workspace permissions in Fabric admin
+2. Verify capacity assignment (F64 must be active)
+3. Clear browser cache and cookies
+4. Try incognito/private browsing mode
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Notebook Failures**
+
+Notebook times out or fails
+
+</td>
+<td>
+
+1. Check Spark session state (restart if needed)
+2. Reduce data volume for testing (use LIMIT)
+3. Verify Lakehouse is properly attached
+4. Check for syntax errors in cell output
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Eventstream Not Flowing**
+
+No data appearing in KQL
+
+</td>
+<td>
+
+1. Verify source connection is active
+2. Check JSON mapping matches source schema
+3. Review ingestion errors in Eventstream monitor
+4. Ensure destination table exists
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Direct Lake Fallback**
+
+Reports show DirectQuery instead of Direct Lake
+
+</td>
+<td>
+
+1. Check table size limits (< 10GB recommended)
+2. Review measure complexity (avoid complex filters)
+3. Verify relationships are correct
+4. Check for unsupported DAX functions
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Purview Scan Fails**
+
+Scan shows errors
+
+</td>
+<td>
+
+1. Verify integration runtime is running
+2. Check service account credentials
+3. Review firewall rules for Purview access
+4. Ensure Fabric workspace permissions include Purview
+
+</td>
+</tr>
+</table>
+
+---
+
+## 📋 Assessment Checkpoints
 
 ### Day 1 End
 
-| Checkpoint | Criteria | Pass/Fail |
-|------------|----------|-----------|
-| Environment | 3 Lakehouses created | |
-| Bronze Slot | 500K+ records | |
-| Bronze Player | 10K records, SSN hashed | |
-| Bronze Financial | CTR flags added | |
-| Silver Started | At least 1 Silver table | |
+| Checkpoint | Criteria | Pass | Fail |
+|------------|----------|:----:|:----:|
+| Environment | 3 Lakehouses created | ⬜ | ⬜ |
+| Bronze Slot | 500K+ records | ⬜ | ⬜ |
+| Bronze Player | 10K records, SSN hashed | ⬜ | ⬜ |
+| Bronze Financial | CTR flags added | ⬜ | ⬜ |
+| Silver Started | At least 1 Silver table | ⬜ | ⬜ |
 
 ### Day 2 End
 
-| Checkpoint | Criteria | Pass/Fail |
-|------------|----------|-----------|
-| SCD Type 2 | Player history tracking | |
-| Gold KPIs | Hold %, Net Win calculating | |
-| Eventhouse | Database created | |
-| KQL Queries | 3+ monitoring queries | |
-| Real-Time Dashboard | 4+ tiles | |
+| Checkpoint | Criteria | Pass | Fail |
+|------------|----------|:----:|:----:|
+| SCD Type 2 | Player history tracking | ⬜ | ⬜ |
+| Gold KPIs | Hold %, Net Win calculating | ⬜ | ⬜ |
+| Eventhouse | Database created | ⬜ | ⬜ |
+| KQL Queries | 3+ monitoring queries | ⬜ | ⬜ |
+| Real-Time Dashboard | 4+ tiles | ⬜ | ⬜ |
 
 ### Day 3 End
 
-| Checkpoint | Criteria | Pass/Fail |
-|------------|----------|-----------|
-| Semantic Model | Direct Lake mode | |
-| DAX Measures | 10+ measures | |
-| Reports | 3 reports complete | |
-| Purview | Scan complete, terms added | |
-| Lineage | Visible for Gold tables | |
+| Checkpoint | Criteria | Pass | Fail |
+|------------|----------|:----:|:----:|
+| Semantic Model | Direct Lake mode | ⬜ | ⬜ |
+| DAX Measures | 10+ measures | ⬜ | ⬜ |
+| Reports | 3 reports complete | ⬜ | ⬜ |
+| Purview | Scan complete, terms added | ⬜ | ⬜ |
+| Lineage | Visible for Gold tables | ⬜ | ⬜ |
 
 ---
 
-## Participant Materials
+## 📚 Participant Materials
 
-### Pre-Reading
+### Pre-Reading (Send 1 Week Before)
 
-1. [Microsoft Fabric Overview](https://learn.microsoft.com/fabric/get-started/microsoft-fabric-overview)
-2. [Medallion Architecture](https://learn.microsoft.com/fabric/data-engineering/lakehouse-medallion-architecture)
-3. [Direct Lake Mode](https://learn.microsoft.com/fabric/data-warehouse/direct-lake-mode)
+| Resource | Link |
+|----------|------|
+| Microsoft Fabric Overview | [learn.microsoft.com/fabric](https://learn.microsoft.com/fabric/get-started/microsoft-fabric-overview) |
+| Medallion Architecture | [Lakehouse Medallion](https://learn.microsoft.com/fabric/data-engineering/lakehouse-medallion-architecture) |
+| Direct Lake Mode | [Direct Lake Docs](https://learn.microsoft.com/fabric/data-warehouse/direct-lake-mode) |
 
-### Reference Cards
+### Reference Cards (Print/PDF)
 
-Provide printed/PDF reference cards for:
-- Delta Lake commands
-- Common KQL queries
-- DAX formula patterns
-- Keyboard shortcuts
+Provide printed or PDF reference cards for:
+
+- [ ] Delta Lake commands cheat sheet
+- [ ] Common KQL queries
+- [ ] DAX formula patterns
+- [ ] Keyboard shortcuts for Fabric
 
 ### Post-POC Resources
 
-- Full tutorial documentation (this repo)
-- Microsoft Learn paths
-- Community forums
-- Support contacts
+| Resource | Description |
+|----------|-------------|
+| This Repository | Full tutorial documentation |
+| Microsoft Learn | Self-paced learning paths |
+| Community Forums | Q&A and discussion |
+| Support Contacts | Escalation path |
 
 ---
 
-## Feedback Collection
+## 📝 Feedback Collection
 
-### Daily Feedback
+### Daily Feedback (End of Each Day)
 
-At end of each day, collect:
-1. What worked well?
+Collect the following:
+
+1. What worked well today?
 2. What could be improved?
-3. Pace rating (1-5)
-4. Content clarity (1-5)
+3. Pace rating (1-5): `[ ] 1  [ ] 2  [ ] 3  [ ] 4  [ ] 5`
+4. Content clarity (1-5): `[ ] 1  [ ] 2  [ ] 3  [ ] 4  [ ] 5`
+5. Any blockers for tomorrow?
 
-### Post-POC Survey
+### Post-POC Survey (Send Within 1 Week)
 
-Send within 1 week:
-1. Overall satisfaction
-2. Most valuable content
-3. Least valuable content
-4. Recommendations for future
-5. Production readiness assessment
-
----
-
-## Contact Information
-
-**POC Lead:** [Name] - [Email]
-**Microsoft Contact:** [Name] - [Email]
-**Technical Support:** [Email/Teams channel]
+| Question | Response Type |
+|----------|---------------|
+| Overall satisfaction | 1-10 scale |
+| Most valuable content | Open text |
+| Least valuable content | Open text |
+| Recommendations for future | Open text |
+| Production readiness assessment | Multiple choice |
 
 ---
 
-## Version History
+## 📞 Contact Information
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0 | 2026-01-21 | Initial release |
+| Role | Name | Email | Phone |
+|------|------|-------|-------|
+| POC Lead | `[Name]` | `[Email]` | `[Phone]` |
+| Microsoft Contact | `[Name]` | `[Email]` | `[Phone]` |
+| Technical Support | - | `[Email/Teams]` | - |
+
+---
+
+## 📋 Version History
+
+| Version | Date | Changes | Author |
+|---------|------|---------|--------|
+| 1.0 | 2026-01-21 | Initial release | POC Team |
+
+---
+
+<div align="center">
+
+**Instructor Guide Quick Reference**
+
+| Day | Start Time | Key Prep |
+|:---:|:----------:|----------|
+| 1 | 9:00 AM | Data generated, workspace ready |
+| 2 | 9:00 AM | Bronze complete, streaming ready |
+| 3 | 9:00 AM | Gold complete, Purview configured |
+
+---
+
+[⬅️ POC Overview](../README.md) | [Day 1 Guide ➡️](../day1-medallion-foundation.md)
+
+</div>

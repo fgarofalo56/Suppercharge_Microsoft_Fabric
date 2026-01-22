@@ -1,16 +1,36 @@
-# Prerequisites Guide
+# 📋 Prerequisites Guide
 
-Complete this checklist before deploying the Microsoft Fabric Casino/Gaming POC environment.
+> 🏠 [Home](../README.md) > 📚 [Docs](./) > 📋 Prerequisites
 
-## Azure Requirements
+**Last Updated:** `2025-01-21` | **Version:** 1.0.0
+
+---
+
+## 📑 Table of Contents
+
+- [☁️ Azure Requirements](#️-azure-requirements)
+- [💻 Local Development Environment](#-local-development-environment)
+- [🔑 Azure AD Configuration](#-azure-ad-configuration)
+- [🌐 Network Requirements](#-network-requirements)
+- [✅ Pre-Deployment Checklist](#-pre-deployment-checklist)
+- [📝 Environment Variables Reference](#-environment-variables-reference)
+- [🧪 Validation Script](#-validation-script)
+- [🔧 Troubleshooting](#-troubleshooting)
+- [📚 Next Steps](#-next-steps)
+
+---
+
+## ☁️ Azure Requirements
 
 ### Subscription Access
 
 | Requirement | Minimum | Recommended |
 |-------------|---------|-------------|
-| Role | Contributor | Owner |
-| Scope | Resource Group | Subscription |
-| Quota | Sufficient for F64 | 2x capacity |
+| **Role** | Contributor | Owner |
+| **Scope** | Resource Group | Subscription |
+| **Quota** | Sufficient for F64 | 2x capacity |
+
+> ℹ️ **Note:** Owner role is recommended for initial setup to configure RBAC and resource providers.
 
 ### Resource Provider Registration
 
@@ -30,19 +50,33 @@ az provider register --namespace Microsoft.ManagedIdentity
 az provider list --query "[?namespace=='Microsoft.Fabric'].registrationState" -o tsv
 ```
 
+### Required Resource Providers
+
+| Provider | Purpose | Required |
+|----------|---------|----------|
+| `Microsoft.Fabric` | Fabric capacities and workspaces | Yes |
+| `Microsoft.Purview` | Data governance and catalog | Yes |
+| `Microsoft.Storage` | ADLS Gen2 storage | Yes |
+| `Microsoft.KeyVault` | Secrets management | Yes |
+| `Microsoft.Network` | VNet and private endpoints | Yes |
+| `Microsoft.OperationalInsights` | Log Analytics | Yes |
+| `Microsoft.ManagedIdentity` | Managed identities | Yes |
+
 ### Microsoft Fabric Requirements
 
 | Requirement | Details |
 |-------------|---------|
-| Fabric enabled | Must be enabled in Azure AD tenant |
-| Capacity available | F64 SKU recommended for POC |
-| Region support | Check [region availability](https://learn.microsoft.com/fabric/enterprise/region-availability) |
+| **Fabric enabled** | Must be enabled in Azure AD tenant |
+| **Capacity available** | F64 SKU recommended for POC |
+| **Region support** | Check [region availability](https://learn.microsoft.com/fabric/enterprise/region-availability) |
 
 #### Enable Fabric in Tenant
 
 1. Go to [Azure Portal](https://portal.azure.com) > Microsoft Fabric
 2. Or [Fabric Admin Portal](https://app.fabric.microsoft.com/admin-portal)
 3. Ensure Fabric is enabled for your organization
+
+> ⚠️ **Warning:** Enabling Fabric requires Azure AD Global Administrator or Fabric Administrator permissions.
 
 ### Quota Verification
 
@@ -53,18 +87,58 @@ az quota show \
   --resource-name "F64"
 ```
 
-## Local Development Environment
+---
+
+## 💻 Local Development Environment
 
 ### Required Tools
 
-| Tool | Version | Installation |
-|------|---------|--------------|
-| Azure CLI | 2.50+ | `winget install -e --id Microsoft.AzureCLI` |
-| Bicep | 0.22+ | `az bicep install && az bicep upgrade` |
-| Git | 2.40+ | `winget install -e --id Git.Git` |
-| PowerShell | 7.0+ | `winget install -e --id Microsoft.PowerShell` |
-| Python | 3.10+ | `winget install -e --id Python.Python.3.11` |
-| VS Code | Latest | `winget install -e --id Microsoft.VisualStudioCode` |
+| Tool | Version | Installation Command | Purpose |
+|------|---------|---------------------|---------|
+| Azure CLI | 2.50+ | `winget install -e --id Microsoft.AzureCLI` | Azure management |
+| Bicep | 0.22+ | `az bicep install && az bicep upgrade` | Infrastructure as Code |
+| Git | 2.40+ | `winget install -e --id Git.Git` | Version control |
+| PowerShell | 7.0+ | `winget install -e --id Microsoft.PowerShell` | Scripting |
+| Python | 3.10+ | `winget install -e --id Python.Python.3.11` | Data tools |
+| VS Code | Latest | `winget install -e --id Microsoft.VisualStudioCode` | IDE |
+
+### Optional Tools (Recommended)
+
+| Tool | Version | Installation Command | Purpose |
+|------|---------|---------------------|---------|
+| Docker Desktop | Latest | `winget install -e --id Docker.DockerDesktop` | Container-based data generation |
+| Docker Compose | V2+ | Included with Docker Desktop | Multi-service orchestration |
+
+### Installation Commands
+
+#### Windows (using winget)
+
+```powershell
+# Install all required tools
+winget install -e --id Microsoft.AzureCLI
+winget install -e --id Git.Git
+winget install -e --id Microsoft.PowerShell
+winget install -e --id Python.Python.3.11
+winget install -e --id Microsoft.VisualStudioCode
+
+# Install Bicep via Azure CLI
+az bicep install
+az bicep upgrade
+```
+
+#### macOS (using Homebrew)
+
+```bash
+# Install all required tools
+brew install azure-cli
+brew install git
+brew install powershell/tap/powershell
+brew install python@3.11
+
+# Install Bicep
+az bicep install
+az bicep upgrade
+```
 
 ### VS Code Extensions
 
@@ -75,7 +149,41 @@ code --install-extension ms-vscode.azure-account
 code --install-extension ms-python.python
 code --install-extension ms-toolsai.jupyter
 code --install-extension GitHub.copilot
+code --install-extension ms-vscode-remote.remote-containers
+code --install-extension ms-azuretools.vscode-docker
 ```
+
+| Extension | ID | Purpose |
+|-----------|-----|---------|
+| Bicep | `ms-azuretools.vscode-bicep` | IaC authoring |
+| Azure Account | `ms-vscode.azure-account` | Azure authentication |
+| Python | `ms-python.python` | Python development |
+| Jupyter | `ms-toolsai.jupyter` | Notebook support |
+| GitHub Copilot | `GitHub.copilot` | AI assistance |
+| **Dev Containers** | `ms-vscode-remote.remote-containers` | **One-click dev environment** |
+| **Docker** | `ms-azuretools.vscode-docker` | **Container management** |
+
+> **Tip:** The Dev Containers extension enables one-click development environment setup. Open the repository and click "Reopen in Container" when prompted.
+
+### Dev Container Setup (Alternative to Local Installation)
+
+If you prefer using Dev Containers, you only need:
+
+1. **Docker Desktop** (with WSL 2 backend on Windows)
+2. **VS Code** with Dev Containers extension
+3. **Git** (to clone the repository)
+
+All other tools (Python, Azure CLI, Bicep, etc.) are pre-installed in the container.
+
+```bash
+# Quick start with Dev Container
+git clone https://github.com/frgarofa/Suppercharge_Microsoft_Fabric.git
+code Suppercharge_Microsoft_Fabric
+# Then click "Reopen in Container" when prompted
+```
+
+**GitHub Codespaces Alternative:**
+No local installation required. Click "Code" > "Codespaces" > "Create codespace" on the GitHub repository.
 
 ### Python Environment Setup
 
@@ -83,8 +191,11 @@ code --install-extension GitHub.copilot
 # Create virtual environment
 python -m venv .venv
 
-# Activate (Windows)
-.\.venv\Scripts\Activate
+# Activate (Windows PowerShell)
+.\.venv\Scripts\Activate.ps1
+
+# Activate (Windows CMD)
+.\.venv\Scripts\activate.bat
 
 # Activate (Linux/Mac)
 source .venv/bin/activate
@@ -104,15 +215,27 @@ echo "PowerShell: $(pwsh --version)"
 echo "Python: $(python --version)"
 ```
 
-## Azure AD Configuration
+**Expected Output:**
+
+```
+Azure CLI: azure-cli 2.55.0
+Bicep: Bicep CLI version 0.24.24
+Git: git version 2.43.0
+PowerShell: PowerShell 7.4.1
+Python: Python 3.11.7
+```
+
+---
+
+## 🔑 Azure AD Configuration
 
 ### Required Permissions
 
 | Permission | Scope | Purpose |
 |------------|-------|---------|
-| User.Read | Delegated | Read user profile |
-| Directory.Read.All | Application | Read directory data |
-| Fabric.Read.All | Delegated | Read Fabric resources |
+| `User.Read` | Delegated | Read user profile |
+| `Directory.Read.All` | Application | Read directory data |
+| `Fabric.Read.All` | Delegated | Read Fabric resources |
 
 ### Service Principal Setup (for CI/CD)
 
@@ -126,6 +249,8 @@ az ad sp create-for-rbac \
 
 # Save output for GitHub secrets
 ```
+
+> ⚠️ **Warning:** Store the service principal credentials securely. Never commit them to source control.
 
 ### Configure OIDC for GitHub Actions
 
@@ -144,20 +269,22 @@ az ad app federated-credential create \
   }'
 ```
 
-## Network Requirements
+---
+
+## 🌐 Network Requirements
 
 ### Outbound Connectivity
 
-Ensure these endpoints are accessible:
+Ensure these endpoints are accessible from your deployment environment:
 
-| Service | Endpoints |
-|---------|-----------|
-| Azure Management | `management.azure.com` |
-| Azure AD | `login.microsoftonline.com` |
-| Fabric | `*.fabric.microsoft.com` |
-| Power BI | `*.powerbi.com` |
-| Storage | `*.blob.core.windows.net` |
-| Key Vault | `*.vault.azure.net` |
+| Service | Endpoints | Ports |
+|---------|-----------|-------|
+| Azure Management | `management.azure.com` | 443 |
+| Azure AD | `login.microsoftonline.com` | 443 |
+| Fabric | `*.fabric.microsoft.com` | 443 |
+| Power BI | `*.powerbi.com` | 443 |
+| Storage | `*.blob.core.windows.net` | 443 |
+| Key Vault | `*.vault.azure.net` | 443 |
 
 ### Firewall Rules (if applicable)
 
@@ -167,55 +294,88 @@ AzureCloud.EastUS2
 AzureCloud.WestUS2
 ```
 
-## Pre-Deployment Checklist
+> ℹ️ **Note:** If using a corporate firewall, work with your network team to whitelist these endpoints.
+
+---
+
+## ✅ Pre-Deployment Checklist
 
 ### Azure Subscription
 
-- [ ] Subscription with sufficient quota
-- [ ] Owner or Contributor access
-- [ ] Resource providers registered
-- [ ] Fabric enabled in tenant
+| Task | Status | Notes |
+|------|--------|-------|
+| Subscription with sufficient quota | ☐ | Check F64 availability |
+| Owner or Contributor access | ☐ | Verify role assignment |
+| Resource providers registered | ☐ | Run registration commands |
+| Fabric enabled in tenant | ☐ | Check admin portal |
 
 ### Local Environment
 
-- [ ] Azure CLI installed and logged in
-- [ ] Bicep extension installed
-- [ ] Git configured
-- [ ] Python environment ready
+| Task | Status | Notes |
+|------|--------|-------|
+| Azure CLI installed and logged in | ☐ | `az login` |
+| Bicep extension installed | ☐ | `az bicep install` |
+| Git configured | ☐ | Clone repository |
+| Python environment ready | ☐ | Create virtual environment |
 
 ### Configuration Files
 
-- [ ] `.env` file created from `.env.sample`
-- [ ] All required values populated
-- [ ] Unique names for globally unique resources
+| Task | Status | Notes |
+|------|--------|-------|
+| `.env` file created from `.env.sample` | ☐ | Copy and edit |
+| All required values populated | ☐ | No empty required fields |
+| Unique names for globally unique resources | ☐ | Purview, Storage |
 
 ### Security
 
-- [ ] Service principal created (for CI/CD)
-- [ ] GitHub secrets configured
-- [ ] Key Vault access policies planned
+| Task | Status | Notes |
+|------|--------|-------|
+| Service principal created (for CI/CD) | ☐ | Store credentials securely |
+| GitHub secrets configured | ☐ | Add to repository |
+| Key Vault access policies planned | ☐ | Define who needs access |
 
-## Environment Variables Reference
+---
+
+## 📝 Environment Variables Reference
+
+Create a `.env` file from `.env.sample` with the following values:
+
+### Required Variables
 
 ```bash
-# Required variables in .env
+# Azure Configuration
 AZURE_SUBSCRIPTION_ID=        # Your Azure subscription ID
 AZURE_TENANT_ID=              # Your Azure AD tenant ID
 AZURE_LOCATION=eastus2        # Deployment region
 ENVIRONMENT=dev               # dev, staging, or prod
 PROJECT_PREFIX=fabricpoc      # 3-10 char prefix for naming
 
-# Fabric settings
-FABRIC_CAPACITY_SKU=F64       # Capacity SKU
+# Fabric Settings
+FABRIC_CAPACITY_SKU=F64       # Capacity SKU (F2, F4, F16, F32, F64)
 FABRIC_ADMIN_EMAIL=           # Admin notification email
 
-# Resource names (must be globally unique)
-PURVIEW_ACCOUNT_NAME=         # Purview account
-STORAGE_ACCOUNT_NAME=         # ADLS Gen2 storage
-KEY_VAULT_NAME=               # Key Vault
+# Resource Names (must be globally unique)
+PURVIEW_ACCOUNT_NAME=         # Purview account (globally unique)
+STORAGE_ACCOUNT_NAME=         # ADLS Gen2 storage (globally unique)
+KEY_VAULT_NAME=               # Key Vault (globally unique)
 ```
 
-## Validation Script
+### Variable Requirements
+
+| Variable | Required | Format | Example |
+|----------|----------|--------|---------|
+| `AZURE_SUBSCRIPTION_ID` | Yes | GUID | `12345678-1234-1234-1234-123456789012` |
+| `AZURE_TENANT_ID` | Yes | GUID | `12345678-1234-1234-1234-123456789012` |
+| `AZURE_LOCATION` | Yes | Region code | `eastus2`, `westus2` |
+| `ENVIRONMENT` | Yes | String | `dev`, `staging`, `prod` |
+| `PROJECT_PREFIX` | Yes | 3-10 chars | `fabricpoc` |
+| `FABRIC_CAPACITY_SKU` | Yes | SKU name | `F2`, `F4`, `F64` |
+| `PURVIEW_ACCOUNT_NAME` | Yes | Globally unique | `pv-fabricpoc-dev-001` |
+| `STORAGE_ACCOUNT_NAME` | Yes | Globally unique | `stfabricpocdev001` |
+
+---
+
+## 🧪 Validation Script
 
 Save and run this script to verify prerequisites:
 
@@ -224,6 +384,7 @@ Save and run this script to verify prerequisites:
 # verify-prerequisites.sh
 
 echo "=== Verifying Prerequisites ==="
+echo ""
 
 # Check Azure CLI
 if ! command -v az &> /dev/null; then
@@ -249,6 +410,20 @@ else
     echo "✅ Bicep: $(az bicep version)"
 fi
 
+# Check Git
+if ! command -v git &> /dev/null; then
+    echo "❌ Git not installed"
+else
+    echo "✅ Git: $(git --version)"
+fi
+
+# Check Python
+if ! command -v python &> /dev/null; then
+    echo "❌ Python not installed"
+else
+    echo "✅ Python: $(python --version)"
+fi
+
 # Check Fabric provider
 FABRIC_STATE=$(az provider show --namespace Microsoft.Fabric --query registrationState -o tsv 2>/dev/null)
 if [ "$FABRIC_STATE" != "Registered" ]; then
@@ -264,10 +439,23 @@ else
     echo "✅ .env file exists"
 fi
 
+echo ""
 echo "=== Verification Complete ==="
 ```
 
-## Troubleshooting
+### Running the Script
+
+```bash
+# Make script executable (Linux/Mac)
+chmod +x verify-prerequisites.sh
+
+# Run verification
+./verify-prerequisites.sh
+```
+
+---
+
+## 🔧 Troubleshooting
 
 ### Azure CLI Login Issues
 
@@ -294,12 +482,47 @@ rm -rf ~/.bicep
 # Force re-registration
 az provider unregister --namespace Microsoft.Fabric
 az provider register --namespace Microsoft.Fabric
+
+# Check status
+az provider show --namespace Microsoft.Fabric --query "registrationState"
 ```
 
-## Next Steps
+### Common Error Messages
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `AuthorizationFailed` | Insufficient permissions | Request Owner/Contributor role |
+| `ResourceProviderNotRegistered` | Provider not enabled | Run registration command |
+| `QuotaExceeded` | Insufficient quota | Request quota increase |
+| `NameNotAvailable` | Resource name taken | Choose a different name |
+
+---
+
+## 📚 Next Steps
 
 After completing prerequisites:
 
-1. Review [ARCHITECTURE.md](ARCHITECTURE.md) for system design
-2. Follow [DEPLOYMENT.md](DEPLOYMENT.md) for deployment steps
-3. Start [Tutorial 00](../tutorials/00-environment-setup/README.md) for hands-on setup
+| Step | Document | Description |
+|------|----------|-------------|
+| 1 | [🏗️ Architecture](ARCHITECTURE.md) | Review system design |
+| 2 | [🚀 Deployment](DEPLOYMENT.md) | Deploy infrastructure |
+| 3 | [Tutorial 00](../tutorials/00-environment-setup/README.md) | Hands-on setup |
+
+---
+
+## 📚 Related Documentation
+
+| Document | Description |
+|----------|-------------|
+| [🏗️ Architecture](ARCHITECTURE.md) | System architecture and design |
+| [🚀 Deployment Guide](DEPLOYMENT.md) | Infrastructure deployment |
+| [🔐 Security Guide](SECURITY.md) | Security controls and compliance |
+
+---
+
+[⬆️ Back to top](#-prerequisites-guide)
+
+---
+
+> 📖 **Documentation maintained by:** Microsoft Fabric POC Team
+> 🔗 **Repository:** [Suppercharge_Microsoft_Fabric](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric)

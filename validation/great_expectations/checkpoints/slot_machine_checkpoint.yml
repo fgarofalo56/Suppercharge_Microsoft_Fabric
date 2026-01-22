@@ -1,0 +1,55 @@
+# Slot Machine Data Validation Checkpoint
+# Validates slot machine telemetry data across all medallion layers
+
+name: slot_machine_checkpoint
+config_version: 1.0
+template_name:
+module_name: great_expectations.checkpoint
+class_name: Checkpoint
+
+# Execution behavior
+run_name_template: "%Y%m%d-%H%M%S-slot-machine-validation"
+
+# Expectation suites to validate
+expectation_suite_name: slot_machine_suite
+
+# Action list defines what happens after validation
+action_list:
+  - name: store_validation_result
+    action:
+      class_name: StoreValidationResultAction
+  - name: store_evaluation_params
+    action:
+      class_name: StoreEvaluationParametersAction
+  - name: update_data_docs
+    action:
+      class_name: UpdateDataDocsAction
+      site_names:
+        - local_site
+
+# Batch request configuration
+# This will be overridden at runtime with actual data
+batch_request: {}
+
+# Evaluation parameters for cross-suite validation
+evaluation_parameters: {}
+
+# Runtime configuration
+runtime_configuration:
+  result_format:
+    result_format: COMPLETE
+    include_unexpected_rows: true
+    partial_unexpected_count: 20
+
+# Profilers (optional - for data profiling)
+profilers: []
+
+# Validations list for batch processing
+validations:
+  - batch_request:
+      datasource_name: casino_bronze
+      data_connector_name: runtime_data_connector
+      data_asset_name: slot_telemetry
+      batch_identifiers:
+        default_identifier_name: bronze_slot_data
+    expectation_suite_name: slot_machine_suite

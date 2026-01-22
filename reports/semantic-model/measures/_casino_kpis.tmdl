@@ -1,0 +1,369 @@
+/// =============================================================================
+/// Measure Group: Casino KPIs
+/// =============================================================================
+///
+/// Core casino revenue and performance metrics
+/// These are the primary KPIs for executive dashboards
+///
+/// =============================================================================
+
+table '_Casino KPIs'
+    lineageTag: measures-casino
+    description: "Core casino performance metrics"
+
+    /// Placeholder row for measures table
+    column _placeholder
+        dataType: string
+        isHidden: true
+        lineageTag: measures-casino-ph
+        sourceColumn: none
+        expression: "Measures Table"
+
+    /// ==========================================================================
+    /// REVENUE MEASURES
+    /// ==========================================================================
+
+    measure 'Total Coin In' =
+        SUM(fact_slot_performance[total_coin_in])
+        formatString: \$#,##0
+        lineageTag: m-total-coinin
+        displayFolder: "Revenue"
+        description: "Total amount wagered across all slot machines"
+
+    measure 'Total Coin Out' =
+        SUM(fact_slot_performance[total_coin_out])
+        formatString: \$#,##0
+        lineageTag: m-total-coinout
+        displayFolder: "Revenue"
+        description: "Total amount paid out to players"
+
+    measure 'Net Win' =
+        [Total Coin In] - [Total Coin Out]
+        formatString: \$#,##0
+        lineageTag: m-net-win
+        displayFolder: "Revenue"
+        description: "Casino revenue from gaming (Coin In - Coin Out)"
+
+    measure 'Net Win Currency' =
+        VAR Value = [Net Win]
+        RETURN
+        IF(
+            Value >= 1000000,
+            FORMAT(Value / 1000000, "\$#,##0.0") & "M",
+            IF(
+                Value >= 1000,
+                FORMAT(Value / 1000, "\$#,##0.0") & "K",
+                FORMAT(Value, "\$#,##0")
+            )
+        )
+        formatString: @
+        lineageTag: m-net-win-fmt
+        displayFolder: "Revenue"
+        description: "Net Win formatted with K/M suffix"
+
+    /// ==========================================================================
+    /// HOLD PERCENTAGE MEASURES
+    /// ==========================================================================
+
+    measure 'Hold %' =
+        DIVIDE([Net Win], [Total Coin In], 0) * 100
+        formatString: 0.00"%"
+        lineageTag: m-hold-pct
+        displayFolder: "Hold"
+        description: "Percentage of wagers retained by casino"
+
+    measure 'Theoretical Win' =
+        SUMX(
+            fact_slot_performance,
+            fact_slot_performance[total_coin_in] *
+            COALESCE(fact_slot_performance[_theoretical_hold_used], 0.08)
+        )
+        formatString: \$#,##0
+        lineageTag: m-theo-win
+        displayFolder: "Hold"
+        description: "Expected revenue based on house edge"
+
+    measure 'Theo Win 8%' =
+        [Total Coin In] * 0.08
+        formatString: \$#,##0
+        lineageTag: m-theo-win-8
+        displayFolder: "Hold"
+        description: "Theoretical win at standard 8% hold"
+
+    measure 'Hold Variance' =
+        [Net Win] - [Theoretical Win]
+        formatString: \$#,##0
+        lineageTag: m-hold-variance
+        displayFolder: "Hold"
+        description: "Actual vs expected revenue variance"
+
+    measure 'Hold Variance %' =
+        DIVIDE([Hold Variance], [Theoretical Win], 0) * 100
+        formatString: 0.00"%"
+        lineageTag: m-hold-var-pct
+        displayFolder: "Hold"
+        description: "Variance as percentage of theoretical"
+
+    measure 'Variance Status' =
+        SWITCH(
+            TRUE(),
+            [Hold Variance %] > 20, "Outperforming",
+            [Hold Variance %] > 5, "Above Expected",
+            [Hold Variance %] >= -5, "Normal",
+            [Hold Variance %] >= -20, "Below Expected",
+            "Underperforming"
+        )
+        formatString: @
+        lineageTag: m-var-status
+        displayFolder: "Hold"
+        description: "Performance status indicator"
+
+    /// ==========================================================================
+    /// VOLUME MEASURES
+    /// ==========================================================================
+
+    measure 'Total Games' =
+        SUM(fact_slot_performance[total_games])
+        formatString: #,##0
+        lineageTag: m-total-games
+        displayFolder: "Volume"
+        description: "Total games played across all machines"
+
+    measure 'Total Events' =
+        SUM(fact_slot_performance[total_events])
+        formatString: #,##0
+        lineageTag: m-total-events
+        displayFolder: "Volume"
+        description: "Total transaction events"
+
+    measure 'Total Sessions' =
+        SUM(fact_slot_performance[unique_sessions])
+        formatString: #,##0
+        lineageTag: m-total-sessions
+        displayFolder: "Volume"
+        description: "Total gaming sessions"
+
+    measure 'Unique Players' =
+        SUM(fact_slot_performance[unique_players])
+        formatString: #,##0
+        lineageTag: m-unique-players
+        displayFolder: "Volume"
+        description: "Distinct players"
+
+    /// ==========================================================================
+    /// MACHINE PRODUCTIVITY
+    /// ==========================================================================
+
+    measure 'Active Machines' =
+        DISTINCTCOUNT(fact_slot_performance[machine_id])
+        formatString: #,##0
+        lineageTag: m-active-machines
+        displayFolder: "Productivity"
+        description: "Count of machines with activity"
+
+    measure 'WPUPD' =
+        DIVIDE([Net Win], [Active Machines], 0)
+        formatString: \$#,##0.00
+        lineageTag: m-wpupd
+        displayFolder: "Productivity"
+        description: "Win Per Unit Per Day"
+
+    measure 'Coin In Per Machine' =
+        DIVIDE([Total Coin In], [Active Machines], 0)
+        formatString: \$#,##0
+        lineageTag: m-coinin-machine
+        displayFolder: "Productivity"
+        description: "Average coin in per machine"
+
+    measure 'Games Per Machine' =
+        DIVIDE([Total Games], [Active Machines], 0)
+        formatString: #,##0
+        lineageTag: m-games-machine
+        displayFolder: "Productivity"
+        description: "Average games per machine"
+
+    measure 'Avg Bet' =
+        DIVIDE([Total Coin In], [Total Games], 0)
+        formatString: \$#,##0.00
+        lineageTag: m-avg-bet
+        displayFolder: "Productivity"
+        description: "Average bet size"
+
+    measure 'Games Per Player' =
+        DIVIDE([Total Games], [Unique Players], 0)
+        formatString: #,##0.0
+        lineageTag: m-games-player
+        displayFolder: "Productivity"
+        description: "Average games per player (engagement)"
+
+    /// ==========================================================================
+    /// JACKPOT MEASURES
+    /// ==========================================================================
+
+    measure 'Total Jackpots' =
+        SUM(fact_slot_performance[jackpot_payouts])
+        formatString: \$#,##0
+        lineageTag: m-total-jackpots
+        displayFolder: "Jackpots"
+        description: "Total jackpot amounts paid"
+
+    measure 'Jackpot Count' =
+        SUM(fact_slot_performance[jackpot_count])
+        formatString: #,##0
+        lineageTag: m-jackpot-count
+        displayFolder: "Jackpots"
+        description: "Number of jackpots hit"
+
+    measure 'Avg Jackpot' =
+        DIVIDE([Total Jackpots], [Jackpot Count], 0)
+        formatString: \$#,##0.00
+        lineageTag: m-avg-jackpot
+        displayFolder: "Jackpots"
+        description: "Average jackpot amount"
+
+    measure 'Jackpot Ratio' =
+        DIVIDE([Total Jackpots], [Total Coin In], 0) * 100
+        formatString: 0.00"%"
+        lineageTag: m-jackpot-ratio
+        displayFolder: "Jackpots"
+        description: "Jackpots as percentage of coin in"
+
+    /// ==========================================================================
+    /// PERFORMANCE INDICATORS
+    /// ==========================================================================
+
+    measure 'High Performers' =
+        CALCULATE(
+            DISTINCTCOUNT(fact_slot_performance[machine_id]),
+            fact_slot_performance[performance_status] = "HIGH_PERFORMER"
+        )
+        formatString: #,##0
+        lineageTag: m-high-perf
+        displayFolder: "Performance"
+        description: "Count of high performing machines"
+
+    measure 'Underperformers' =
+        CALCULATE(
+            DISTINCTCOUNT(fact_slot_performance[machine_id]),
+            fact_slot_performance[performance_status] = "UNDERPERFORMER"
+        )
+        formatString: #,##0
+        lineageTag: m-underperf
+        displayFolder: "Performance"
+        description: "Count of underperforming machines"
+
+    measure 'Low Activity' =
+        CALCULATE(
+            DISTINCTCOUNT(fact_slot_performance[machine_id]),
+            fact_slot_performance[performance_status] = "LOW_ACTIVITY"
+        )
+        formatString: #,##0
+        lineageTag: m-low-activity
+        displayFolder: "Performance"
+        description: "Count of low activity machines"
+
+    measure 'Performance Rate' =
+        DIVIDE([High Performers], [Active Machines], 0) * 100
+        formatString: 0.0"%"
+        lineageTag: m-perf-rate
+        displayFolder: "Performance"
+        description: "Percentage of high performers"
+
+    /// ==========================================================================
+    /// ZONE ANALYSIS
+    /// ==========================================================================
+
+    measure 'Zone Net Win' =
+        CALCULATE([Net Win])
+        formatString: \$#,##0
+        lineageTag: m-zone-netwin
+        displayFolder: "Zone"
+        description: "Net win for current zone context"
+
+    measure 'Zone Contribution %' =
+        DIVIDE(
+            [Net Win],
+            CALCULATE([Net Win], ALL(fact_slot_performance[zone])),
+            0
+        ) * 100
+        formatString: 0.0"%"
+        lineageTag: m-zone-contrib
+        displayFolder: "Zone"
+        description: "Zone's contribution to total net win"
+
+    measure 'Zone Rank' =
+        RANKX(
+            ALL(fact_slot_performance[zone]),
+            [Net Win],
+            ,
+            DESC,
+            Dense
+        )
+        formatString: 0
+        lineageTag: m-zone-rank
+        displayFolder: "Zone"
+        description: "Zone ranking by net win"
+
+    /// ==========================================================================
+    /// TABLE GAMES MEASURES
+    /// ==========================================================================
+
+    measure 'Total Drop' =
+        SUM(fact_table_performance[total_drop])
+        formatString: \$#,##0
+        lineageTag: m-total-drop
+        displayFolder: "Table Games"
+        description: "Total table games drop (buy-ins)"
+
+    measure 'Table Win' =
+        SUM(fact_table_performance[table_win])
+        formatString: \$#,##0
+        lineageTag: m-table-win
+        displayFolder: "Table Games"
+        description: "Casino win from table games"
+
+    measure 'Table Hold %' =
+        DIVIDE([Table Win], [Total Drop], 0) * 100
+        formatString: 0.00"%"
+        lineageTag: m-table-hold
+        displayFolder: "Table Games"
+        description: "Table games hold percentage"
+
+    measure 'Total Hands' =
+        SUM(fact_table_performance[total_hands])
+        formatString: #,##0
+        lineageTag: m-total-hands
+        displayFolder: "Table Games"
+        description: "Total hands/rounds played at tables"
+
+    measure 'Active Tables' =
+        SUM(fact_table_performance[active_tables])
+        formatString: #,##0
+        lineageTag: m-active-tables
+        displayFolder: "Table Games"
+        description: "Number of active table games"
+
+    /// ==========================================================================
+    /// COMBINED GAMING REVENUE
+    /// ==========================================================================
+
+    measure 'Total Gaming Revenue' =
+        [Net Win] + [Table Win]
+        formatString: \$#,##0
+        lineageTag: m-total-revenue
+        displayFolder: "Combined"
+        description: "Combined slot and table revenue"
+
+    measure 'Slot Revenue %' =
+        DIVIDE([Net Win], [Total Gaming Revenue], 0) * 100
+        formatString: 0.0"%"
+        lineageTag: m-slot-pct
+        displayFolder: "Combined"
+        description: "Slots percentage of total revenue"
+
+    measure 'Table Revenue %' =
+        DIVIDE([Table Win], [Total Gaming Revenue], 0) * 100
+        formatString: 0.0"%"
+        lineageTag: m-table-pct
+        displayFolder: "Combined"
+        description: "Tables percentage of total revenue"

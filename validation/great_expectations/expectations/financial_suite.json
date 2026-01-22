@@ -1,0 +1,228 @@
+{
+  "expectation_suite_name": "financial_suite",
+  "meta": {
+    "great_expectations_version": "0.18.0",
+    "notes": "Comprehensive data quality expectations for casino cage financial transactions",
+    "domain": "Financial Operations",
+    "compliance_requirements": [
+      "Currency Transaction Report (CTR) threshold tracking",
+      "Transaction reconciliation accuracy",
+      "Audit trail completeness",
+      "Anti-Money Laundering (AML) compliance"
+    ]
+  },
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 1,
+        "max_value": null
+      },
+      "meta": {
+        "notes": "Table should have at least 1 record"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "transaction_id"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "transaction_type"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "amount"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "transaction_timestamp"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "ctr_required"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "transaction_id"
+      },
+      "meta": {
+        "notes": "Transaction ID is required - primary identifier"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "transaction_type"
+      },
+      "meta": {
+        "notes": "Transaction type is required for classification"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "amount"
+      },
+      "meta": {
+        "notes": "Amount is required for all transactions"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "transaction_timestamp"
+      },
+      "meta": {
+        "notes": "Timestamp is required for audit trail"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_unique",
+      "kwargs": {
+        "column": "transaction_id"
+      },
+      "meta": {
+        "notes": "Transaction ID must be unique"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "transaction_id",
+        "regex": "^TXN-[A-Z0-9]{8,16}$|^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+        "mostly": 0.95
+      },
+      "meta": {
+        "notes": "Transaction ID format: TXN-XXXXXXXX or UUID format"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "transaction_type",
+        "value_set": [
+          "CASH_IN",
+          "CASH_OUT",
+          "MARKER",
+          "MARKER_PAYMENT",
+          "CHIP_PURCHASE",
+          "CHIP_REDEMPTION",
+          "TICKET_IN",
+          "TICKET_OUT",
+          "WIRE_TRANSFER",
+          "CHECK"
+        ]
+      },
+      "meta": {
+        "notes": "Valid cage transaction types"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "amount",
+        "min_value": 0.01,
+        "max_value": null
+      },
+      "meta": {
+        "notes": "Amount must be positive (minimum $0.01)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "transaction_timestamp"
+      },
+      "meta": {
+        "notes": "Transaction timestamp must be parseable"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "column": "ctr_required",
+        "type_": "BOOLEAN"
+      },
+      "meta": {
+        "notes": "CTR required flag must be boolean"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "column": "ctr_filed",
+        "type_": "BOOLEAN"
+      },
+      "meta": {
+        "notes": "CTR filed flag must be boolean"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "currency",
+        "value_set": ["USD", "CAD", "MXN", null]
+      },
+      "meta": {
+        "notes": "Valid currency codes"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "payment_method",
+        "value_set": ["CASH", "CHECK", "WIRE", "CHIP", "TICKET", null]
+      },
+      "meta": {
+        "notes": "Valid payment methods"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "player_id",
+        "regex": "^P[0-9]+$",
+        "mostly": 0.90
+      },
+      "meta": {
+        "notes": "Player ID format when present"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "source_amount",
+        "min_value": 0,
+        "max_value": null,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Source amount must be non-negative when present"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "destination_amount",
+        "min_value": 0,
+        "max_value": null,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Destination amount must be non-negative when present"
+      }
+    }
+  ]
+}

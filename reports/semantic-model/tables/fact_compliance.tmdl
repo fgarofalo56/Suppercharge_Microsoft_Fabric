@@ -1,0 +1,217 @@
+/// =============================================================================
+/// Fact: Compliance Reporting
+/// =============================================================================
+///
+/// Purpose: Daily regulatory compliance metrics
+/// Grain: One row per report date
+/// Source: lh_gold.gold_compliance_reporting
+/// Update Pattern: Daily append
+///
+/// Note: This data is used for regulatory compliance tracking and audit
+/// Ensure proper access controls are in place
+///
+/// =============================================================================
+
+table fact_compliance
+    lineageTag: fact-compliance-001
+
+    /// ==========================================================================
+    /// DATE DIMENSION
+    /// ==========================================================================
+
+    column report_date
+        dataType: dateTime
+        formatString: Short Date
+        isKey: true
+        lineageTag: fact-compliance-date
+        summarizeBy: none
+        sourceColumn: report_date
+        description: "Reporting date (foreign key to dim_date)"
+
+    /// ==========================================================================
+    /// CTR (Currency Transaction Report) METRICS
+    /// ==========================================================================
+
+    column ctr_count
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-compliance-ctrcnt
+        summarizeBy: sum
+        sourceColumn: ctr_count
+        description: "Number of CTR filings"
+
+    column ctr_total_amount
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-compliance-ctramt
+        summarizeBy: sum
+        sourceColumn: ctr_total_amount
+        description: "Total amount of CTR transactions"
+
+    /// ==========================================================================
+    /// SAR (Suspicious Activity Report) METRICS
+    /// ==========================================================================
+
+    column sar_count
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-compliance-sarcnt
+        summarizeBy: sum
+        sourceColumn: sar_count
+        description: "Number of SAR filings"
+
+    column sar_total_amount
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-compliance-saramt
+        summarizeBy: sum
+        sourceColumn: sar_total_amount
+        description: "Total amount in SAR filings"
+
+    /// ==========================================================================
+    /// W-2G (Jackpot Tax) METRICS
+    /// ==========================================================================
+
+    column w2g_count
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-compliance-w2gcnt
+        summarizeBy: sum
+        sourceColumn: w2g_count
+        description: "Number of W-2G forms filed"
+
+    column w2g_total_amount
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-compliance-w2gamt
+        summarizeBy: sum
+        sourceColumn: w2g_total_amount
+        description: "Total jackpot amounts reported"
+
+    /// ==========================================================================
+    /// FILING STATUS METRICS
+    /// ==========================================================================
+
+    column pending_filings
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-compliance-pending
+        summarizeBy: sum
+        sourceColumn: pending_filings
+        description: "Filings not yet submitted"
+
+    column submitted_filings
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-compliance-submitted
+        summarizeBy: sum
+        sourceColumn: submitted_filings
+        description: "Filings submitted to regulators"
+
+    column total_filings
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-compliance-total
+        summarizeBy: sum
+        sourceColumn: total_filings
+        description: "Total filings for the day"
+
+    /// ==========================================================================
+    /// POTENTIAL FILINGS (UNFILED)
+    /// ==========================================================================
+
+    column potential_ctr_count
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-compliance-potctr
+        summarizeBy: sum
+        sourceColumn: potential_ctr_count
+        description: "Transactions requiring CTR but not yet filed"
+
+    column potential_ctr_amount
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-compliance-potctramt
+        summarizeBy: sum
+        sourceColumn: potential_ctr_amount
+
+    /// ==========================================================================
+    /// STRUCTURING DETECTION
+    /// ==========================================================================
+
+    column structuring_suspect_count
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-compliance-structcnt
+        summarizeBy: sum
+        sourceColumn: structuring_suspect_count
+        description: "Potential structuring incidents detected"
+
+    column structuring_suspect_amount
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-compliance-structamt
+        summarizeBy: sum
+        sourceColumn: structuring_suspect_amount
+        description: "Total amount in suspected structuring"
+
+    /// ==========================================================================
+    /// CALCULATED TOTALS
+    /// ==========================================================================
+
+    column total_regulatory_filings
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-compliance-regfilings
+        summarizeBy: sum
+        sourceColumn: total_regulatory_filings
+        description: "Sum of CTR + SAR + W-2G"
+
+    column total_regulatory_amount
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-compliance-regamt
+        summarizeBy: sum
+        sourceColumn: total_regulatory_amount
+
+    /// ==========================================================================
+    /// ALERTS
+    /// ==========================================================================
+
+    column compliance_alert_flags
+        dataType: string
+        lineageTag: fact-compliance-alerts
+        summarizeBy: none
+        sourceColumn: compliance_alert_flags
+        description: "Alert flags array (JSON)"
+        isHidden: true
+
+    /// ==========================================================================
+    /// METADATA
+    /// ==========================================================================
+
+    column _gold_timestamp
+        dataType: dateTime
+        formatString: General Date
+        lineageTag: fact-compliance-ts
+        summarizeBy: none
+        sourceColumn: _gold_timestamp
+        isHidden: true
+
+    column _batch_id
+        dataType: string
+        lineageTag: fact-compliance-batch
+        summarizeBy: none
+        sourceColumn: _batch_id
+        isHidden: true
+
+    /// ==========================================================================
+    /// PARTITION
+    /// ==========================================================================
+
+    partition 'fact_compliance-directlake' = entity
+        mode: directLake
+        source
+            entityPath: gold_compliance_reporting
+            schemaName: dbo
+            expressionSource: 'DirectLake'

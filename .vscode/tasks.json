@@ -1,0 +1,581 @@
+{
+  // ==============================================================================
+  // VS Code Tasks for Microsoft Fabric Casino/Gaming POC
+  // ==============================================================================
+  // Run tasks with: Terminal > Run Task (Ctrl+Shift+B for build task)
+  // ==============================================================================
+
+  "version": "2.0.0",
+  "tasks": [
+    // =========================================================================
+    // Data Generation Tasks
+    // =========================================================================
+    {
+      "label": "Generate: Sample Data (All Types)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "data-generation/generate.py",
+        "--type", "all",
+        "--records", "1000",
+        "--output", ".data/raw"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": [],
+      "detail": "Generate all data types with 1000 records each"
+    },
+    {
+      "label": "Generate: Slot Machine Events",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "data-generation/generate.py",
+        "--type", "slot_events",
+        "--records", "${input:recordCount}",
+        "--output", ".data/raw"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "Generate slot machine telemetry events"
+    },
+    {
+      "label": "Generate: Player Profiles",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "data-generation/generate.py",
+        "--type", "player_profiles",
+        "--records", "${input:recordCount}",
+        "--output", ".data/raw"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "Generate player profile data"
+    },
+    {
+      "label": "Generate: Financial Transactions",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "data-generation/generate.py",
+        "--type", "financial_transactions",
+        "--records", "${input:recordCount}",
+        "--output", ".data/raw"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "Generate financial transaction records"
+    },
+    {
+      "label": "Generate: Table Games Data",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "data-generation/generate.py",
+        "--type", "table_games",
+        "--records", "${input:recordCount}",
+        "--output", ".data/raw"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "Generate table games (blackjack, roulette, etc.) data"
+    },
+
+    // =========================================================================
+    // Testing Tasks
+    // =========================================================================
+    {
+      "label": "Test: Run All Tests",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m", "pytest",
+        "validation/",
+        "-v",
+        "--tb=short",
+        "-ra"
+      ],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": "$pytest",
+      "detail": "Run all pytest tests with verbose output"
+    },
+    {
+      "label": "Test: Unit Tests Only",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m", "pytest",
+        "validation/unit_tests/",
+        "-v",
+        "--tb=short"
+      ],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": "$pytest",
+      "detail": "Run unit tests only"
+    },
+    {
+      "label": "Test: Integration Tests Only",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m", "pytest",
+        "validation/integration_tests/",
+        "-v",
+        "--tb=short"
+      ],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": "$pytest",
+      "detail": "Run integration tests only"
+    },
+    {
+      "label": "Test: Deployment Tests Only",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m", "pytest",
+        "validation/deployment_tests/",
+        "-v",
+        "--tb=short"
+      ],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": "$pytest",
+      "detail": "Run deployment configuration tests"
+    },
+    {
+      "label": "Test: With Coverage Report",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m", "pytest",
+        "validation/",
+        "-v",
+        "--cov=data-generation",
+        "--cov-report=html",
+        "--cov-report=term-missing"
+      ],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": "$pytest",
+      "detail": "Run tests with HTML coverage report"
+    },
+    {
+      "label": "Test: Current File",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m", "pytest",
+        "${file}",
+        "-v",
+        "--tb=long",
+        "-s"
+      ],
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": "$pytest",
+      "detail": "Run tests in current file"
+    },
+
+    // =========================================================================
+    // Infrastructure Tasks
+    // =========================================================================
+    {
+      "label": "Bicep: Validate Main Template",
+      "type": "shell",
+      "command": "az",
+      "args": [
+        "bicep",
+        "build",
+        "--file", "infra/main.bicep"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Validate Bicep templates compile correctly"
+    },
+    {
+      "label": "Bicep: Lint All Templates",
+      "type": "shell",
+      "command": "az",
+      "args": [
+        "bicep",
+        "lint",
+        "--file", "infra/main.bicep"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Run Bicep linter on all templates"
+    },
+    {
+      "label": "Bicep: Generate ARM Template",
+      "type": "shell",
+      "command": "az",
+      "args": [
+        "bicep",
+        "build",
+        "--file", "infra/main.bicep",
+        "--outfile", "temp/main.json"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Convert Bicep to ARM JSON template"
+    },
+    {
+      "label": "Deploy: What-If (Preview)",
+      "type": "shell",
+      "command": "az",
+      "args": [
+        "deployment", "sub", "what-if",
+        "--location", "${input:azureLocation}",
+        "--template-file", "infra/main.bicep",
+        "--parameters", "environmentName=dev"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": [],
+      "detail": "Preview what resources would be deployed"
+    },
+    {
+      "label": "Deploy: Development Environment",
+      "type": "shell",
+      "command": "az",
+      "args": [
+        "deployment", "sub", "create",
+        "--location", "${input:azureLocation}",
+        "--template-file", "infra/main.bicep",
+        "--parameters", "environmentName=dev"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": [],
+      "detail": "Deploy infrastructure to development environment"
+    },
+
+    // =========================================================================
+    // Code Quality Tasks
+    // =========================================================================
+    {
+      "label": "Lint: Ruff Check",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m", "ruff",
+        "check",
+        ".",
+        "--line-length=100"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Run Ruff linter on all Python files"
+    },
+    {
+      "label": "Lint: Ruff Fix",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m", "ruff",
+        "check",
+        ".",
+        "--fix",
+        "--line-length=100"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Run Ruff and auto-fix issues"
+    },
+    {
+      "label": "Format: Black",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m", "black",
+        ".",
+        "--line-length=100"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Format all Python files with Black"
+    },
+    {
+      "label": "Format: isort",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m", "isort",
+        ".",
+        "--profile=black",
+        "--line-length=100"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Sort imports in all Python files"
+    },
+    {
+      "label": "Type Check: MyPy",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-m", "mypy",
+        "data-generation/",
+        "--ignore-missing-imports"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Run MyPy type checker"
+    },
+    {
+      "label": "Quality: Full Check (Lint + Format + Type)",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-c",
+        "import subprocess; import sys; results = [subprocess.run(['python', '-m', 'ruff', 'check', '.', '--line-length=100']).returncode, subprocess.run(['python', '-m', 'black', '.', '--check', '--line-length=100']).returncode, subprocess.run(['python', '-m', 'isort', '.', '--check', '--profile=black', '--line-length=100']).returncode]; sys.exit(sum(results))"
+      ],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "Run all quality checks"
+    },
+
+    // =========================================================================
+    // Utility Tasks
+    // =========================================================================
+    {
+      "label": "Jupyter: Start Lab Server",
+      "type": "shell",
+      "command": "jupyter",
+      "args": [
+        "lab",
+        "--no-browser",
+        "--port=8888"
+      ],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": false
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "detail": "Start Jupyter Lab server"
+    },
+    {
+      "label": "Azure: Login",
+      "type": "shell",
+      "command": "az",
+      "args": [
+        "login",
+        "--use-device-code"
+      ],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": [],
+      "detail": "Login to Azure using device code"
+    },
+    {
+      "label": "Azure: Show Account",
+      "type": "shell",
+      "command": "az",
+      "args": [
+        "account",
+        "show"
+      ],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Show current Azure account"
+    },
+    {
+      "label": "Clean: Temporary Files",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "-c",
+        "import shutil; import os; [shutil.rmtree(d, ignore_errors=True) for d in ['__pycache__', '.pytest_cache', '.mypy_cache', '.ruff_cache', 'htmlcov', '.coverage'] if os.path.exists(d)]; print('Cleaned temporary files')"
+      ],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": [],
+      "detail": "Remove cache and temporary files"
+    },
+    {
+      "label": "Deps: Install All",
+      "type": "shell",
+      "command": "pip",
+      "args": [
+        "install",
+        "-r", "requirements.txt",
+        "-r", "requirements-dev.txt"
+      ],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "Install all Python dependencies"
+    },
+    {
+      "label": "Deps: Upgrade All",
+      "type": "shell",
+      "command": "pip",
+      "args": [
+        "install",
+        "--upgrade",
+        "-r", "requirements.txt",
+        "-r", "requirements-dev.txt"
+      ],
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "detail": "Upgrade all Python dependencies"
+    }
+  ],
+
+  // Input variables for tasks
+  "inputs": [
+    {
+      "id": "recordCount",
+      "type": "pickString",
+      "description": "Select number of records to generate",
+      "options": [
+        "100",
+        "500",
+        "1000",
+        "5000",
+        "10000",
+        "50000"
+      ],
+      "default": "1000"
+    },
+    {
+      "id": "azureLocation",
+      "type": "pickString",
+      "description": "Select Azure region",
+      "options": [
+        "eastus",
+        "eastus2",
+        "westus",
+        "westus2",
+        "centralus",
+        "northeurope",
+        "westeurope",
+        "southeastasia",
+        "australiaeast"
+      ],
+      "default": "eastus"
+    },
+    {
+      "id": "environment",
+      "type": "pickString",
+      "description": "Select deployment environment",
+      "options": [
+        "dev",
+        "test",
+        "prod"
+      ],
+      "default": "dev"
+    }
+  ]
+}

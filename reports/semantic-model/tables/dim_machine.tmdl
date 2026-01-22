@@ -1,0 +1,215 @@
+/// =============================================================================
+/// Dimension: Machine (Slot Machines)
+/// =============================================================================
+///
+/// Purpose: Slot machine attributes for performance analysis
+/// Grain: One row per unique machine
+/// Source: Derived from gold_slot_performance or dedicated machine master
+/// Update Pattern: SCD Type 1 (overwrite)
+///
+/// =============================================================================
+
+table dim_machine
+    lineageTag: dim-machine-001
+
+    /// ==========================================================================
+    /// COLUMNS
+    /// ==========================================================================
+
+    column machine_id
+        dataType: string
+        isKey: true
+        lineageTag: dim-machine-id
+        summarizeBy: none
+        sourceColumn: machine_id
+        description: "Unique machine identifier"
+
+    column machine_name
+        dataType: string
+        lineageTag: dim-machine-name
+        summarizeBy: none
+        sourceColumn: machine_name
+        description: "Display name of the machine"
+
+    column zone
+        dataType: string
+        lineageTag: dim-machine-zone
+        summarizeBy: none
+        sourceColumn: zone
+        description: "Floor zone location"
+
+    column location_code
+        dataType: string
+        lineageTag: dim-machine-loc
+        summarizeBy: none
+        sourceColumn: location_code
+        description: "Physical location code on floor"
+
+    column denomination
+        dataType: decimal
+        formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+        lineageTag: dim-machine-denom
+        summarizeBy: none
+        sourceColumn: denomination
+        description: "Base denomination (0.01, 0.05, 0.25, 1.00, etc.)"
+
+    column 'Denomination Label'
+        dataType: string
+        lineageTag: dim-machine-denom-label
+        summarizeBy: none
+        sourceColumn: denomination_label
+        description: "Formatted denomination (Penny, Nickel, Quarter, Dollar, etc.)"
+        sortByColumn: denomination
+
+    column manufacturer
+        dataType: string
+        lineageTag: dim-machine-mfr
+        summarizeBy: none
+        sourceColumn: manufacturer
+        description: "Machine manufacturer (IGT, Aristocrat, etc.)"
+
+    column machine_type
+        dataType: string
+        lineageTag: dim-machine-type
+        summarizeBy: none
+        sourceColumn: machine_type
+        description: "Game type (Video Slots, Mechanical Reels, Video Poker)"
+
+    column game_theme
+        dataType: string
+        lineageTag: dim-machine-theme
+        summarizeBy: none
+        sourceColumn: game_theme
+        description: "Game theme or title"
+
+    column progressive_flag
+        dataType: boolean
+        lineageTag: dim-machine-prog
+        summarizeBy: none
+        sourceColumn: progressive_flag
+        description: "Is machine linked to progressive jackpot"
+
+    column progressive_group
+        dataType: string
+        lineageTag: dim-machine-prog-grp
+        summarizeBy: none
+        sourceColumn: progressive_group
+        description: "Progressive jackpot group name"
+
+    column house_edge
+        dataType: decimal
+        formatString: 0.00%
+        lineageTag: dim-machine-edge
+        summarizeBy: average
+        sourceColumn: house_edge
+        description: "Theoretical house edge (e.g., 0.08 for 8%)"
+
+    column 'Par %'
+        dataType: decimal
+        formatString: 0.00%
+        lineageTag: dim-machine-par
+        summarizeBy: average
+        sourceColumn: par_pct
+        description: "Par percentage (theoretical hold)"
+
+    column min_bet
+        dataType: decimal
+        formatString: \$#,0.00
+        lineageTag: dim-machine-minbet
+        summarizeBy: none
+        sourceColumn: min_bet
+        description: "Minimum bet amount"
+
+    column max_bet
+        dataType: decimal
+        formatString: \$#,0.00
+        lineageTag: dim-machine-maxbet
+        summarizeBy: none
+        sourceColumn: max_bet
+        description: "Maximum bet amount"
+
+    column install_date
+        dataType: dateTime
+        formatString: Short Date
+        lineageTag: dim-machine-install
+        summarizeBy: none
+        sourceColumn: install_date
+        description: "Date machine was installed"
+
+    column last_service_date
+        dataType: dateTime
+        formatString: Short Date
+        lineageTag: dim-machine-service
+        summarizeBy: none
+        sourceColumn: last_service_date
+        description: "Last maintenance/service date"
+
+    column status
+        dataType: string
+        lineageTag: dim-machine-status
+        summarizeBy: none
+        sourceColumn: status
+        description: "Current status (Active, Inactive, Maintenance)"
+
+    column is_active
+        dataType: boolean
+        lineageTag: dim-machine-active
+        summarizeBy: none
+        sourceColumn: is_active
+        description: "Machine is currently active"
+
+    /// ==========================================================================
+    /// HIERARCHIES
+    /// ==========================================================================
+
+    hierarchy 'Machine Location'
+        lineageTag: dim-machine-loc-hier
+
+        level Zone
+            column: zone
+            lineageTag: dim-machine-hier-zone
+
+        level 'Location'
+            column: location_code
+            lineageTag: dim-machine-hier-loc
+
+        level Machine
+            column: machine_id
+            lineageTag: dim-machine-hier-id
+
+    hierarchy 'Machine Type'
+        lineageTag: dim-machine-type-hier
+
+        level 'Machine Type'
+            column: machine_type
+            lineageTag: dim-machine-hier-type
+
+        level Manufacturer
+            column: manufacturer
+            lineageTag: dim-machine-hier-mfr
+
+        level Theme
+            column: game_theme
+            lineageTag: dim-machine-hier-theme
+
+    /// ==========================================================================
+    /// PARTITION (Direct Lake from Gold layer or derived)
+    /// ==========================================================================
+
+    /// Option 1: From dedicated dimension table
+    /// partition 'dim_machine-directlake' = entity
+    ///     source = [dbo].[dim_machine]
+
+    /// Option 2: Calculated from fact (derive unique machines)
+    /// partition 'dim_machine-calculated' = calculated
+    ///     expression:
+    ///         ```
+    ///         SUMMARIZE(
+    ///             gold_slot_performance,
+    ///             gold_slot_performance[machine_id],
+    ///             gold_slot_performance[zone],
+    ///             gold_slot_performance[denomination],
+    ///             gold_slot_performance[manufacturer],
+    ///             gold_slot_performance[machine_type]
+    ///         )
+    ///         ```

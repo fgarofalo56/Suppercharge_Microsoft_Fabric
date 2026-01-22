@@ -47,6 +47,12 @@ param logRetentionDays int = 90
 @description('Tags to apply to all resources')
 param tags object = {}
 
+@description('Cost center for billing allocation')
+param costCenter string = ''
+
+@description('Owner email or team name')
+param owner string = ''
+
 @description('Deployment timestamp (auto-generated)')
 param deployedAt string = utcNow()
 
@@ -63,9 +69,16 @@ var logAnalyticsName = 'log-${projectPrefix}-${environment}'
 var managedIdentityName = 'id-${projectPrefix}-${environment}'
 var vnetName = 'vnet-${projectPrefix}-${environment}'
 
-var defaultTags = union(tags, {
+// Cost allocation tags (using cost-tags module pattern)
+var costAllocationTags = union(
+  !empty(costCenter) ? { CostCenter: costCenter } : {},
+  !empty(owner) ? { Owner: owner } : {}
+)
+
+var defaultTags = union(tags, costAllocationTags, {
   Environment: environment
   Project: 'Microsoft Fabric POC'
+  Application: 'fabric-casino-poc'
   ManagedBy: 'Bicep'
   DeployedAt: deployedAt
 })
@@ -203,3 +216,15 @@ output logAnalyticsWorkspaceName string = monitoring.outputs.workspaceName
 output managedIdentityId string = security.outputs.managedIdentityId
 output managedIdentityPrincipalId string = security.outputs.managedIdentityPrincipalId
 output managedIdentityClientId string = security.outputs.managedIdentityClientId
+
+// Cost tracking reference
+output appliedTags object = defaultTags
+
+// =============================================================================
+// Cost Documentation Reference
+// =============================================================================
+// For detailed cost estimates and optimization strategies, see:
+// - docs/COST_ESTIMATION.md - Comprehensive cost guide
+// - docs/diagrams/cost-breakdown.md - Visual cost breakdowns
+// - infra/cost-tags.bicep - Reusable cost allocation tags module
+// =============================================================================

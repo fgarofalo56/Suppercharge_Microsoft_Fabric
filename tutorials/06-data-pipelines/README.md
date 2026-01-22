@@ -1,334 +1,571 @@
 # Tutorial 06: Data Pipelines
 
-This tutorial covers creating orchestrated data pipelines in Microsoft Fabric.
+![Tutorial 06](https://img.shields.io/badge/Tutorial-06-blue?style=for-the-badge) ![Data Pipelines](https://img.shields.io/badge/Data-Pipelines-orange?style=for-the-badge)
+
+> **[Home](../../README.md)** > **[Tutorials](../README.md)** > **Data Pipelines**
+
+---
+
+## Tutorial 06: Data Pipelines - Orchestrated ETL
+
+| | |
+|---|---|
+| **Difficulty** | Intermediate |
+| **Time** | 60-75 minutes |
+| **Focus** | Data Orchestration |
+
+---
+
+### Progress Tracker
+
+```
++--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
+|   00   |   01   |   02   |   03   |   04   |   05   |   06   |   07   |   08   |   09   |
+| SETUP  | BRONZE | SILVER |  GOLD  |  RT    |  PBI   | PIPES  |  GOV   | MIRROR |  AI/ML |
++--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+
+                                                          ^
+                                                          |
+                                                     YOU ARE HERE
+```
+
+| Navigation | |
+|---|---|
+| **Previous** | [05-Direct Lake & Power BI](../05-direct-lake-powerbi/README.md) |
+| **Next** | [07-Governance & Purview](../07-governance-purview/README.md) |
+
+---
+
+## Overview
+
+This tutorial covers creating orchestrated data pipelines in Microsoft Fabric. You will build end-to-end pipelines that automate the Bronze-Silver-Gold data flow with error handling, monitoring, and alerting.
+
+```mermaid
+flowchart LR
+    subgraph Sources["Data Sources"]
+        S1[Slot Machines]
+        S2[Player Systems]
+        S3[Financial Systems]
+    end
+
+    subgraph Pipeline["Data Factory Pipeline"]
+        B[Bronze Ingestion]
+        SV[Silver Transformation]
+        G[Gold Aggregation]
+    end
+
+    subgraph Outputs["Downstream"]
+        PBI[Power BI]
+        ML[ML Models]
+        REP[Reports]
+    end
+
+    Sources --> B --> SV --> G --> Outputs
+```
+
+---
 
 ## Learning Objectives
 
-By the end of this tutorial, you will:
+By the end of this tutorial, you will be able to:
 
-1. Create Data Factory pipelines
-2. Orchestrate notebook execution
-3. Implement incremental loading patterns
-4. Handle errors and retries
-5. Schedule pipeline runs
+- [ ] Create Data Factory pipelines in Microsoft Fabric
+- [ ] Orchestrate notebook execution across medallion layers
+- [ ] Implement incremental loading with watermark patterns
+- [ ] Handle errors with retry logic and alerting
+- [ ] Schedule automated pipeline runs
+- [ ] Monitor pipeline execution and performance
+
+---
 
 ## Prerequisites
 
-- Completed Bronze, Silver, Gold tutorials
-- Notebooks created for each layer
-- Access to Fabric workspace
+- [ ] Completed Tutorials 01-05 (Bronze, Silver, Gold, Real-Time, Power BI)
+- [ ] Notebooks created for each medallion layer
+- [ ] Access to Fabric workspace with Data Factory capability
+- [ ] Email configured for alerts (optional)
+
+> **Note:** If you haven't completed the previous tutorials, you'll need the Bronze, Silver, and Gold layer notebooks to orchestrate.
+
+---
+
+## Data Factory Pipeline Concepts
+
+Before building pipelines, understand these key concepts:
+
+| Concept | Description |
+|---------|-------------|
+| **Pipeline** | A logical grouping of activities that performs a unit of work |
+| **Activity** | A processing step within a pipeline (e.g., Copy, Notebook, Script) |
+| **Trigger** | Defines when a pipeline runs (schedule, event, manual) |
+| **Parameter** | Runtime values passed to pipelines for flexibility |
+| **Variable** | Pipeline-scoped values for storing intermediate results |
+| **Dependency** | Defines execution order (On Success, On Failure, On Completion) |
+
+---
 
 ## Step 1: Create Master Pipeline
 
-### In Fabric Portal
+### 1.1 In Fabric Portal
 
 1. Open workspace `casino-fabric-poc`
 2. Click **+ New** > **Data pipeline**
 3. Name: `pl_medallion_full_load`
+4. Click **Create**
 
-### Pipeline Design
+### 1.2 Pipeline Architecture
 
+The master pipeline orchestrates the entire medallion architecture flow:
+
+```mermaid
+flowchart TB
+    subgraph Master["pl_medallion_full_load"]
+        Start([Start]) --> Bronze
+        Bronze[pl_bronze_ingestion] -->|On Success| Silver
+        Silver[pl_silver_transformation] -->|On Success| Gold
+        Gold[pl_gold_aggregation] -->|On Success| Complete([Complete])
+
+        Bronze -->|On Failure| Alert1[Send Alert]
+        Silver -->|On Failure| Alert2[Send Alert]
+        Gold -->|On Failure| Alert3[Send Alert]
+    end
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    pl_medallion_full_load                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│   ┌──────────┐     ┌──────────┐     ┌──────────┐               │
-│   │  Bronze  │────▶│  Silver  │────▶│   Gold   │               │
-│   │ Pipeline │     │ Pipeline │     │ Pipeline │               │
-│   └──────────┘     └──────────┘     └──────────┘               │
-│        │                │                │                      │
-│        ▼                ▼                ▼                      │
-│   ┌──────────────────────────────────────────────────┐         │
-│   │              On Failure: Send Alert              │         │
-│   └──────────────────────────────────────────────────┘         │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
-```
+
+> **Tip:** Design pipelines in a modular fashion. Each layer should be its own sub-pipeline for reusability and easier debugging.
+
+---
 
 ## Step 2: Create Bronze Pipeline
 
-### Create Pipeline
+### 2.1 Create Pipeline
 
 1. **+ New** > **Data pipeline**
 2. Name: `pl_bronze_ingestion`
+3. Click **Create**
 
-### Add Activities
+### 2.2 Add Variables
 
-#### Activity 1: Set Variables
+First, define pipeline variables:
 
-1. Add **Set variable** activity
+1. Click on canvas background
+2. In **Variables** tab at bottom, add:
+   - Name: `batch_id`, Type: String
+   - Name: `process_date`, Type: String
+   - Name: `status`, Type: String
+
+### 2.3 Add Activities
+
+#### Activity 1: Set Batch ID
+
+1. From Activities pane, drag **Set variable** to canvas
 2. Name: `Set Batch ID`
-3. Variable name: `batch_id`
-4. Value: `@concat(formatDateTime(utcnow(), 'yyyyMMdd_HHmmss'))`
+3. Configure in Settings tab:
+   - **Variable name:** `batch_id`
+   - **Value:** `@concat(formatDateTime(utcnow(), 'yyyyMMdd_HHmmss'))`
 
-#### Activity 2: Execute Slot Notebook
+#### Activity 2: Execute Slot Telemetry Notebook
 
-1. Add **Notebook** activity
+1. Drag **Notebook** activity to canvas
 2. Name: `Bronze - Slot Telemetry`
-3. Settings:
-   - Notebook: `01_bronze_slot_telemetry`
-   - Lakehouse: `lh_bronze`
-   - Base parameters:
-     ```json
-     {
-       "batch_id": "@variables('batch_id')",
-       "source_path": "Files/landing/slot_telemetry/"
-     }
-     ```
+3. Connect from `Set Batch ID` (green checkmark = On Success)
+4. Configure Settings:
+   - **Notebook:** `01_bronze_slot_telemetry`
+   - **Lakehouse:** `lh_bronze`
+   - **Base parameters:**
 
-#### Activity 3-6: Additional Notebooks
-
-Add parallel notebooks for:
-- `Bronze - Player Profile`
-- `Bronze - Financial Txn`
-- `Bronze - Table Games`
-- `Bronze - Security Events`
-- `Bronze - Compliance`
-
-### Configure Parallel Execution
-
-1. Select all Bronze notebooks
-2. Connect from `Set Batch ID` with **On success**
-3. All notebooks will run in parallel
-
-### Complete Pipeline
-
+```json
+{
+  "batch_id": "@variables('batch_id')",
+  "source_path": "Files/landing/slot_telemetry/"
+}
 ```
-Set Batch ID
-     │
-     └─┬─────┬─────┬─────┬─────┬─────┐
-       │     │     │     │     │     │
-       ▼     ▼     ▼     ▼     ▼     ▼
-    Slot  Player Finance Table Security Compliance
-       │     │     │     │     │     │
-       └─────┴─────┴─────┴─────┴─────┘
-                     │
-                     ▼
-              Verify Bronze
+
+#### Activity 3-7: Additional Bronze Notebooks
+
+Add parallel notebooks for remaining Bronze tables:
+
+| Activity Name | Notebook | Description |
+|---------------|----------|-------------|
+| Bronze - Player Profile | `02_bronze_player_profile` | Player master data |
+| Bronze - Financial Txn | `03_bronze_financial_txn` | Financial transactions |
+| Bronze - Table Games | `04_bronze_table_games` | Table game data |
+| Bronze - Security Events | `05_bronze_security_events` | Security events |
+| Bronze - Compliance | `06_bronze_compliance` | Compliance records |
+
+### 2.4 Configure Parallel Execution
+
+1. Select all Bronze notebook activities
+2. Connect each from `Set Batch ID` with **On Success**
+3. All notebooks will execute in parallel
+
+### 2.5 Add Verification Activity
+
+1. Add another **Notebook** activity
+2. Name: `Verify Bronze Load`
+3. Connect from ALL Bronze notebooks (wait for all to complete)
+4. Notebook: `99_bronze_verification`
+
+### 2.6 Complete Bronze Pipeline
+
+```mermaid
+flowchart TB
+    SetBatch[Set Batch ID] --> Slot[Slot Telemetry]
+    SetBatch --> Player[Player Profile]
+    SetBatch --> Finance[Financial Txn]
+    SetBatch --> Table[Table Games]
+    SetBatch --> Security[Security Events]
+    SetBatch --> Compliance[Compliance]
+
+    Slot --> Verify[Verify Bronze]
+    Player --> Verify
+    Finance --> Verify
+    Table --> Verify
+    Security --> Verify
+    Compliance --> Verify
 ```
+
+> **Warning:** Parallel execution increases resource consumption. Monitor your Fabric capacity CUs during development.
+
+---
 
 ## Step 3: Create Silver Pipeline
 
-### Create Pipeline
+### 3.1 Create Pipeline
 
 Name: `pl_silver_transformation`
 
-### Activities
+### 3.2 Implement Watermark Pattern
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    pl_silver_transformation                      │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│   ┌──────────────┐                                              │
-│   │ Get Watermark│                                              │
-│   └──────┬───────┘                                              │
-│          │                                                       │
-│          ▼                                                       │
-│   ┌──────────────┐    ┌──────────────┐    ┌──────────────┐     │
-│   │ Silver Slot  │───▶│Silver Player │───▶│Silver Finance│     │
-│   │  (Parallel)  │    │  (SCD Type2) │    │ (Sequential) │     │
-│   └──────────────┘    └──────────────┘    └──────────────┘     │
-│          │                                       │               │
-│          └───────────────────┬───────────────────┘               │
-│                              ▼                                   │
-│                    ┌─────────────────┐                          │
-│                    │ Update Watermark │                          │
-│                    └─────────────────┘                          │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
+The watermark pattern enables incremental processing by tracking the last processed record.
+
+```mermaid
+flowchart LR
+    subgraph Incremental["Incremental Load Pattern"]
+        A[Get Last Watermark] --> B[Process New Records]
+        B --> C[Update Watermark]
+    end
 ```
 
-### Watermark Pattern
-
-#### Get Watermark Activity
+#### Activity 1: Get Last Watermark
 
 1. Add **Lookup** activity
 2. Name: `Get Last Watermark`
-3. Settings:
-   - Source: `watermark_table`
-   - Query: `SELECT MAX(last_processed) as watermark FROM watermarks WHERE table_name = 'silver_slot'`
+3. Configure:
+   - **Source dataset:** Create inline dataset pointing to watermark table
+   - **Use query:** Yes
+   - **Query:**
 
-#### Pass Watermark to Notebook
+```sql
+SELECT
+    table_name,
+    MAX(last_processed) as watermark,
+    MAX(last_batch_id) as last_batch
+FROM watermarks
+WHERE table_name = 'silver_slot'
+GROUP BY table_name
+```
+
+#### Activity 2: Silver Slot Transformation
+
+1. Add **Notebook** activity
+2. Name: `Silver - Slot Cleansed`
+3. Connect from `Get Last Watermark`
+4. **Base parameters:**
 
 ```json
 {
-  "watermark": "@activity('Get Last Watermark').output.firstRow.watermark"
+  "watermark": "@activity('Get Last Watermark').output.firstRow.watermark",
+  "batch_id": "@variables('batch_id')"
 }
 ```
 
-#### Update Watermark Activity
+#### Activity 3: Silver Player (SCD Type 2)
 
-1. Add **Stored procedure** or **Script** activity
-2. Update watermark after successful processing
+For slowly changing dimensions:
+
+1. Add **Notebook** activity
+2. Name: `Silver - Player Master (SCD2)`
+3. This notebook implements Type 2 SCD logic for player dimension
+
+#### Activity 4: Update Watermark
+
+1. Add **Script** activity
+2. Name: `Update Watermark`
+3. Connect from all Silver notebooks
+4. **Script:**
+
+```sql
+MERGE INTO watermarks AS target
+USING (SELECT 'silver_slot' as table_name,
+              CURRENT_TIMESTAMP() as last_processed,
+              '@{variables('batch_id')}' as last_batch_id) AS source
+ON target.table_name = source.table_name
+WHEN MATCHED THEN UPDATE SET
+    last_processed = source.last_processed,
+    last_batch_id = source.last_batch_id
+WHEN NOT MATCHED THEN INSERT
+    (table_name, last_processed, last_batch_id)
+    VALUES (source.table_name, source.last_processed, source.last_batch_id);
+```
+
+### 3.3 Complete Silver Pipeline
+
+```mermaid
+flowchart TB
+    subgraph Silver["pl_silver_transformation"]
+        GetWM[Get Last Watermark] --> SlotS[Silver Slot]
+        GetWM --> PlayerS[Silver Player SCD2]
+        GetWM --> FinanceS[Silver Finance]
+        GetWM --> ComplianceS[Silver Compliance]
+
+        SlotS --> UpdateWM[Update Watermark]
+        PlayerS --> UpdateWM
+        FinanceS --> UpdateWM
+        ComplianceS --> UpdateWM
+    end
+```
+
+---
 
 ## Step 4: Create Gold Pipeline
 
-### Create Pipeline
+### 4.1 Create Pipeline
 
 Name: `pl_gold_aggregation`
 
-### Activities
+### 4.2 Gold Activities Sequence
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      pl_gold_aggregation                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│   ┌──────────────┐                                              │
-│   │Slot Performance│                                            │
-│   └──────┬───────┘                                              │
-│          │                                                       │
-│          ▼                                                       │
-│   ┌──────────────┐                                              │
-│   │ Player 360   │                                              │
-│   └──────┬───────┘                                              │
-│          │                                                       │
-│          ▼                                                       │
-│   ┌──────────────┐    ┌──────────────┐                         │
-│   │ Compliance   │───▶│  Optimize    │                         │
-│   │  Reporting   │    │   Tables     │                         │
-│   └──────────────┘    └──────────────┘                         │
-│                              │                                   │
-│                              ▼                                   │
-│                    ┌─────────────────┐                          │
-│                    │ Refresh Semantic│                          │
-│                    │     Model       │                          │
-│                    └─────────────────┘                          │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
+Gold aggregations often have dependencies, so we use sequential execution:
+
+```mermaid
+flowchart TB
+    subgraph Gold["pl_gold_aggregation"]
+        SlotPerf[Slot Performance] --> Player360[Player 360]
+        Player360 --> CompRpt[Compliance Reporting]
+        CompRpt --> Optimize[Optimize Tables]
+        Optimize --> Refresh[Refresh Semantic Model]
+    end
 ```
 
-### Optimize Tables Activity
+#### Activity 1: Slot Performance Aggregation
+
+1. Add **Notebook** activity
+2. Name: `Gold - Slot Performance`
+3. Notebook: `01_gold_slot_performance`
+
+#### Activity 2: Player 360 View
+
+1. Add **Notebook** activity
+2. Name: `Gold - Player 360`
+3. Connect from Slot Performance (sequential)
+4. Notebook: `02_gold_player_360`
+
+#### Activity 3: Compliance Reporting
+
+1. Add **Notebook** activity
+2. Name: `Gold - Compliance Reporting`
+3. Notebook: `03_gold_compliance_reporting`
+
+#### Activity 4: Table Optimization
+
+1. Add **Script** activity
+2. Name: `Optimize Gold Tables`
+3. **Script:**
 
 ```sql
--- Run after Gold aggregations
-OPTIMIZE gold_slot_performance ZORDER BY (machine_id);
+-- Optimize Gold tables for query performance
+OPTIMIZE gold_slot_performance ZORDER BY (machine_id, business_date);
 OPTIMIZE gold_player_360 ZORDER BY (player_id);
+OPTIMIZE gold_compliance_reporting ZORDER BY (report_date);
+
+-- Vacuum old versions (retain 7 days = 168 hours)
 VACUUM gold_slot_performance RETAIN 168 HOURS;
+VACUUM gold_player_360 RETAIN 168 HOURS;
+VACUUM gold_compliance_reporting RETAIN 168 HOURS;
 ```
+
+> **Tip:** ZORDER improves query performance by co-locating related data. Choose columns frequently used in WHERE clauses.
+
+#### Activity 5: Refresh Semantic Model (Optional)
+
+1. Add **Web** activity (or use REST API)
+2. Name: `Refresh Semantic Model`
+3. Configure to trigger Power BI dataset refresh via API
+
+---
 
 ## Step 5: Error Handling
 
-### Add Error Handler
+### 5.1 Retry Configuration
 
-1. Add **If Condition** activity after each notebook
-2. Condition: `@equals(activity('Notebook').Status, 'Failed')`
-3. On True: Execute error handling
+For each notebook activity:
 
-### Error Logging
+1. Click on the activity
+2. Go to **Settings** tab
+3. Expand **Advanced**
+4. Configure retry:
+   - **Retry count:** 3
+   - **Retry interval (seconds):** 30
+   - **Exponential backoff:** Yes (if available)
 
-Create a logging notebook that captures:
+### 5.2 Error Logging
+
+Create an error logging notebook that captures failures:
 
 ```python
-# Error logging
-error_log = {
-    "pipeline_name": pipeline_name,
-    "activity_name": activity_name,
-    "error_message": error_message,
-    "timestamp": datetime.utcnow(),
-    "run_id": run_id
-}
+# error_logger.py - Notebook for logging pipeline errors
 
-spark.createDataFrame([error_log]).write \
-    .mode("append") \
-    .saveAsTable("pipeline_error_log")
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import current_timestamp, lit
+from datetime import datetime
+
+def log_error(pipeline_name: str, activity_name: str,
+              error_message: str, run_id: str):
+    """Log pipeline error to Delta table"""
+
+    error_record = {
+        "pipeline_name": pipeline_name,
+        "activity_name": activity_name,
+        "error_message": error_message,
+        "run_id": run_id,
+        "error_timestamp": datetime.utcnow().isoformat(),
+        "severity": "ERROR"
+    }
+
+    df = spark.createDataFrame([error_record])
+
+    df.write \
+        .format("delta") \
+        .mode("append") \
+        .saveAsTable("lh_bronze.pipeline_error_log")
+
+    return error_record
 ```
 
-### Retry Configuration
+### 5.3 Add Error Handler Activities
 
-1. Click on notebook activity
-2. Go to **Settings** > **Retry**
-3. Configure:
-   - Retry count: 3
-   - Retry interval: 30 seconds
+For critical failures, add an error handler:
 
-## Step 6: Master Orchestration
+1. Add **If Condition** activity after notebooks
+2. Name: `Check Status`
+3. **Condition:** `@equals(activity('Bronze - Slot Telemetry').Status, 'Failed')`
+4. **If True:** Execute error logging and alerting
 
-### Create Master Pipeline
+### 5.4 Send Alert on Failure
+
+1. Add **Web** activity (or **Office 365 Outlook** if available)
+2. Name: `Send Alert Email`
+3. Configure to send email/Teams notification on failure
+
+```json
+{
+  "message": {
+    "subject": "Pipeline Failure Alert: @{pipeline().Pipeline}",
+    "body": "Pipeline @{pipeline().Pipeline} failed at @{utcnow()}\n\nActivity: @{activity('Bronze - Slot Telemetry').ActivityName}\nError: @{activity('Bronze - Slot Telemetry').Error.Message}",
+    "to": ["data-team@casino.com"]
+  }
+}
+```
+
+---
+
+## Step 6: Master Orchestration Pipeline
+
+### 6.1 Create Master Pipeline
 
 Name: `pl_casino_daily_refresh`
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    pl_casino_daily_refresh                       │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│   ┌──────────────┐                                              │
-│   │    Start     │                                              │
-│   │  (Schedule)  │                                              │
-│   └──────┬───────┘                                              │
-│          │                                                       │
-│          ▼                                                       │
-│   ┌──────────────┐                                              │
-│   │    Bronze    │                                              │
-│   │   Pipeline   │─────────────┐                                │
-│   └──────┬───────┘             │                                │
-│          │ On Success          │ On Failure                     │
-│          ▼                     ▼                                 │
-│   ┌──────────────┐      ┌─────────────┐                        │
-│   │    Silver    │      │ Send Alert  │                        │
-│   │   Pipeline   │─────▶│   (Email)   │                        │
-│   └──────┬───────┘      └─────────────┘                        │
-│          │ On Success                                           │
-│          ▼                                                       │
-│   ┌──────────────┐                                              │
-│   │     Gold     │                                              │
-│   │   Pipeline   │                                              │
-│   └──────┬───────┘                                              │
-│          │ On Success                                           │
-│          ▼                                                       │
-│   ┌──────────────┐                                              │
-│   │   Complete   │                                              │
-│   │  (Success)   │                                              │
-│   └──────────────┘                                              │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
+This master pipeline orchestrates all sub-pipelines:
+
+```mermaid
+flowchart TB
+    subgraph Master["pl_casino_daily_refresh"]
+        Start([Scheduled Trigger<br/>6:00 AM UTC]) --> Bronze
+        Bronze[Execute: pl_bronze_ingestion] -->|Success| Silver
+        Silver[Execute: pl_silver_transformation] -->|Success| Gold
+        Gold[Execute: pl_gold_aggregation] -->|Success| Complete([Pipeline Complete])
+
+        Bronze -->|Failure| AlertB[Send Alert + Stop]
+        Silver -->|Failure| AlertS[Send Alert + Stop]
+        Gold -->|Failure| AlertG[Send Alert + Stop]
+    end
 ```
 
-### Add Execute Pipeline Activities
+### 6.2 Add Execute Pipeline Activities
 
-1. **Execute pipeline** activity for each sub-pipeline
-2. Configure **Wait on completion**: Yes
-3. Set **On success** and **On failure** paths
+1. Add **Execute pipeline** activity
+2. Name: `Execute Bronze Pipeline`
+3. Settings:
+   - **Invoked pipeline:** `pl_bronze_ingestion`
+   - **Wait on completion:** Yes
+4. Repeat for Silver and Gold pipelines
+
+### 6.3 Configure Dependencies
+
+Connect activities with appropriate conditions:
+- **On Success** (green): Continue to next layer
+- **On Failure** (red): Execute alert and stop
+
+---
 
 ## Step 7: Schedule Pipeline
 
-### Create Trigger
+### 7.1 Create Scheduled Trigger
 
 1. Open `pl_casino_daily_refresh`
-2. Click **Schedule**
-3. Configure:
-   - Recurrence: Daily
-   - Time: 6:00 AM UTC (after gaming day ends)
-   - Time zone: Select appropriate
-4. Click **Apply**
+2. Click **Add trigger** > **New/Edit**
+3. Click **+ New**
+4. Configure:
 
-### Monitor Runs
+| Setting | Value |
+|---------|-------|
+| **Name** | `tr_daily_refresh` |
+| **Type** | Schedule |
+| **Recurrence** | Daily |
+| **Start time** | 6:00 AM |
+| **Time zone** | UTC (or your timezone) |
 
-1. Go to **Monitor** in Fabric workspace
-2. View pipeline runs
-3. Check activity status
-4. Review error logs
+> **Tip:** Schedule after gaming day ends (typically 6 AM) when casino operations are lowest.
+
+### 7.2 Activate Trigger
+
+1. Review trigger configuration
+2. Click **OK** to save
+3. Toggle trigger to **Started**
+
+### 7.3 Monitor Pipeline Runs
+
+1. Go to **Monitor** hub in Fabric
+2. Select **Pipeline runs**
+3. Filter by pipeline name
+4. View:
+   - Run status (Succeeded, Failed, Running)
+   - Duration
+   - Activity details
+   - Error messages
+
+---
 
 ## Pipeline Parameters
 
-### Parameterize Pipelines
+### 8.1 Define Pipeline Parameters
+
+Make pipelines reusable with parameters:
+
+1. Click on pipeline canvas
+2. Go to **Parameters** tab
+3. Add parameters:
+
+| Name | Type | Default Value |
+|------|------|---------------|
+| `environment` | String | `dev` |
+| `date_override` | String | ` ` (empty) |
+| `full_refresh` | Bool | `false` |
+
+### 8.2 Use Parameters in Activities
+
+Reference parameters in notebook base parameters:
 
 ```json
-// Pipeline parameters
-{
-  "environment": "dev",
-  "date_override": "",
-  "full_refresh": false
-}
-```
-
-### Use in Activities
-
-```json
-// Notebook base parameters
 {
   "environment": "@pipeline().parameters.environment",
   "process_date": "@if(empty(pipeline().parameters.date_override), formatDateTime(utcnow(), 'yyyy-MM-dd'), pipeline().parameters.date_override)",
@@ -336,30 +573,122 @@ Name: `pl_casino_daily_refresh`
 }
 ```
 
+### 8.3 Manual Run with Parameters
+
+To run with custom parameters:
+
+1. Click **Add trigger** > **Trigger now**
+2. Enter parameter values
+3. Click **OK**
+
+---
+
 ## Validation Checklist
 
-- [ ] Bronze pipeline runs successfully
-- [ ] Silver pipeline with incremental load
-- [ ] Gold pipeline with optimizations
-- [ ] Error handling configured
-- [ ] Master pipeline orchestration
-- [ ] Schedule trigger created
-- [ ] Monitoring working
+Before moving to the next tutorial, verify:
+
+- [ ] Bronze pipeline runs successfully with parallel notebooks
+- [ ] Silver pipeline implements incremental load with watermarks
+- [ ] Gold pipeline includes optimization and semantic model refresh
+- [ ] Error handling configured with retry logic
+- [ ] Master orchestration pipeline coordinates all layers
+- [ ] Schedule trigger created and activated
+- [ ] Monitoring dashboard accessible
+- [ ] Alert notifications working
+
+---
 
 ## Best Practices
 
-1. **Fail fast** - Stop early on critical errors
-2. **Idempotent operations** - Safe to re-run
-3. **Logging** - Capture all pipeline metadata
-4. **Alerts** - Notify on failures immediately
-5. **Documentation** - Comment complex logic
+### Pipeline Design
+
+| Practice | Description |
+|----------|-------------|
+| **Modular Design** | Separate pipelines for each layer |
+| **Fail Fast** | Stop early on critical errors |
+| **Idempotent** | Safe to re-run without side effects |
+| **Parameterized** | Use parameters for flexibility |
+| **Documented** | Add descriptions to activities |
+
+### Performance
+
+| Practice | Description |
+|----------|-------------|
+| **Parallel Execution** | Run independent activities simultaneously |
+| **Incremental Load** | Process only new/changed data |
+| **Optimize Tables** | ZORDER and VACUUM regularly |
+| **Monitor CUs** | Track capacity utilization |
+
+### Operational
+
+| Practice | Description |
+|----------|-------------|
+| **Alerting** | Notify on failures immediately |
+| **Logging** | Capture all execution metadata |
+| **Retry Logic** | Handle transient failures |
+| **Testing** | Test in dev before prod |
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| Pipeline stuck | Activity timeout | Increase timeout setting |
+| Notebook fails | Missing lakehouse | Verify lakehouse connection |
+| Watermark not updating | Transaction issue | Check watermark table permissions |
+| Alert not sending | Credential issue | Verify email/webhook configuration |
+| Schedule not triggering | Trigger inactive | Check trigger status is Started |
+
+### Debugging Steps
+
+1. **Check Monitor** - Review activity-level status
+2. **View Logs** - Click on failed activity for details
+3. **Test Notebook** - Run notebook manually to reproduce
+4. **Check Parameters** - Verify parameter values passed correctly
+5. **Review Capacity** - Ensure sufficient CUs available
+
+---
+
+## Summary
+
+Congratulations! You have successfully:
+
+- Built orchestrated pipelines for the medallion architecture
+- Implemented watermark-based incremental processing
+- Configured error handling with retry logic and alerting
+- Scheduled automated daily refreshes
+- Set up monitoring for pipeline health
+
+Your data pipelines now automate the entire Bronze-Silver-Gold flow with production-ready error handling and monitoring.
+
+---
 
 ## Next Steps
 
-Continue to [Tutorial 07: Governance & Purview](../07-governance-purview/README.md).
+Continue to **[Tutorial 07: Governance & Purview](../07-governance-purview/README.md)** to implement data cataloging, lineage tracking, and compliance controls.
+
+---
 
 ## Resources
 
-- [Data Factory in Fabric](https://learn.microsoft.com/fabric/data-factory/)
-- [Pipeline Activities](https://learn.microsoft.com/fabric/data-factory/activity-overview)
-- [Orchestration Patterns](https://learn.microsoft.com/fabric/data-factory/pipeline-runs)
+| Resource | Link |
+|----------|------|
+| Data Factory in Fabric | [Microsoft Docs](https://learn.microsoft.com/fabric/data-factory/) |
+| Pipeline Activities | [Activity Overview](https://learn.microsoft.com/fabric/data-factory/activity-overview) |
+| Orchestration Patterns | [Pipeline Runs](https://learn.microsoft.com/fabric/data-factory/pipeline-runs) |
+| Monitoring | [Monitor Hub](https://learn.microsoft.com/fabric/admin/monitoring-hub) |
+
+---
+
+## Navigation
+
+| Previous | Up | Next |
+|----------|-----|------|
+| [05-Direct Lake & Power BI](../05-direct-lake-powerbi/README.md) | [Tutorials Index](../README.md) | [07-Governance & Purview](../07-governance-purview/README.md) |
+
+---
+
+> **Questions or issues?** Open an issue in the [GitHub repository](https://github.com/your-repo/issues).

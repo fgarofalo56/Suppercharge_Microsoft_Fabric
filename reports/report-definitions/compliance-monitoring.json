@@ -1,0 +1,738 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/reportDefinition/1.0.0/schema.json",
+  "metadata": {
+    "name": "Compliance Monitoring Dashboard",
+    "description": "Regulatory compliance tracking for CTR, SAR, and W-2G filings with alert indicators",
+    "version": "1.0.0",
+    "lastModified": "2025-01-21",
+    "author": "Fabric POC Team",
+    "tags": ["compliance", "regulatory", "CTR", "SAR", "W-2G", "audit"]
+  },
+  "datasetBinding": {
+    "semantic_model": "Casino Analytics Model",
+    "workspace": "casino-fabric-poc",
+    "connection_mode": "Direct Lake"
+  },
+  "theme": {
+    "name": "Compliance Professional",
+    "primaryColor": "#1B3A4B",
+    "secondaryColor": "#2D5F7C",
+    "accentColor": "#4A90A4",
+    "alertColor": "#C62828",
+    "successColor": "#2E7D32",
+    "warningColor": "#F57F17",
+    "fontFamily": "Segoe UI"
+  },
+  "pages": [
+    {
+      "name": "ComplianceOverview",
+      "displayName": "Compliance Overview",
+      "displayOption": "FitToPage",
+      "width": 1280,
+      "height": 720,
+      "visuals": [
+        {
+          "name": "Title",
+          "type": "textbox",
+          "position": { "x": 20, "y": 10, "width": 500, "height": 45 },
+          "config": {
+            "text": "COMPLIANCE MONITORING DASHBOARD",
+            "fontSize": 24,
+            "fontWeight": "bold",
+            "fontColor": "#1B3A4B"
+          }
+        },
+        {
+          "name": "ComplianceScoreGauge",
+          "type": "gauge",
+          "position": { "x": 20, "y": 65, "width": 200, "height": 150 },
+          "config": {
+            "value": "[Compliance Score]",
+            "minimum": 0,
+            "maximum": 100,
+            "target": 90,
+            "title": "Compliance Score",
+            "calloutValue": {
+              "fontSize": 36,
+              "fontWeight": "bold"
+            },
+            "colorRanges": [
+              { "min": 0, "max": 69, "color": "#C62828" },
+              { "min": 70, "max": 89, "color": "#F57F17" },
+              { "min": 90, "max": 100, "color": "#2E7D32" }
+            ],
+            "axis": {
+              "show": true,
+              "labels": [0, 50, 100]
+            }
+          }
+        },
+        {
+          "name": "ComplianceStatusCard",
+          "type": "card",
+          "position": { "x": 230, "y": 65, "width": 180, "height": 70 },
+          "config": {
+            "measure": "[Compliance Status]",
+            "title": "Status",
+            "calloutValue": {
+              "fontSize": 24,
+              "fontWeight": "bold"
+            },
+            "conditionalFormatting": {
+              "rules": [
+                { "value": "Compliant", "backgroundColor": "#E8F5E9", "fontColor": "#2E7D32" },
+                { "value": "Attention Needed", "backgroundColor": "#FFF8E1", "fontColor": "#F57F17" },
+                { "value": "At Risk", "backgroundColor": "#FFEBEE", "fontColor": "#C62828" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PendingFilingsCard",
+          "type": "card",
+          "position": { "x": 420, "y": 65, "width": 150, "height": 70 },
+          "config": {
+            "measure": "[Pending Filings]",
+            "title": "Pending Filings",
+            "calloutValue": {
+              "fontSize": 32,
+              "fontWeight": "bold"
+            },
+            "conditionalFormatting": {
+              "rules": [
+                { "condition": "value > 10", "fontColor": "#C62828", "backgroundColor": "#FFEBEE" },
+                { "condition": "value > 5", "fontColor": "#F57F17", "backgroundColor": "#FFF8E1" },
+                { "condition": "value > 0", "fontColor": "#1B3A4B", "backgroundColor": "#FFFFFF" },
+                { "condition": "value == 0", "fontColor": "#2E7D32", "backgroundColor": "#E8F5E9" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "StructuringAlertCard",
+          "type": "card",
+          "position": { "x": 580, "y": 65, "width": 150, "height": 70 },
+          "config": {
+            "measure": "[Structuring Suspects]",
+            "title": "Structuring Alerts",
+            "calloutValue": {
+              "fontSize": 32,
+              "fontWeight": "bold"
+            },
+            "conditionalFormatting": {
+              "rules": [
+                { "condition": "value > 0", "fontColor": "#FFFFFF", "backgroundColor": "#C62828" },
+                { "condition": "value == 0", "fontColor": "#2E7D32", "backgroundColor": "#E8F5E9" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "DateSlicer",
+          "type": "slicer",
+          "position": { "x": 750, "y": 65, "width": 250, "height": 50 },
+          "config": {
+            "field": "dim_date[Date]",
+            "selectionType": "between",
+            "orientation": "horizontal",
+            "title": "Date Range"
+          }
+        },
+        {
+          "name": "FilingTypeSlicer",
+          "type": "slicer",
+          "position": { "x": 1010, "y": 65, "width": 250, "height": 50 },
+          "config": {
+            "field": "FilingType",
+            "selectionType": "buttons",
+            "values": ["All", "CTR", "SAR", "W-2G"],
+            "title": "Filing Type"
+          }
+        },
+        {
+          "name": "FilingStatusCards",
+          "type": "multiRowCard",
+          "position": { "x": 230, "y": 145, "width": 500, "height": 70 },
+          "config": {
+            "measures": [
+              { "field": "[CTR Count]", "label": "CTR", "icon": "DocumentBulletList" },
+              { "field": "[SAR Count]", "label": "SAR", "icon": "Warning" },
+              { "field": "[W2G Count]", "label": "W-2G", "icon": "Money" },
+              { "field": "[Total Filings]", "label": "Total", "icon": "CheckMark" }
+            ],
+            "layout": "horizontal"
+          }
+        },
+        {
+          "name": "FilingAmountCards",
+          "type": "multiRowCard",
+          "position": { "x": 750, "y": 145, "width": 510, "height": 70 },
+          "config": {
+            "measures": [
+              { "field": "[CTR Amount]", "label": "CTR Amount", "format": "$#,##0" },
+              { "field": "[W2G Amount]", "label": "W-2G Amount", "format": "$#,##0" },
+              { "field": "[Total Filing Amount]", "label": "Total Amount", "format": "$#,##0" }
+            ],
+            "layout": "horizontal"
+          }
+        },
+        {
+          "name": "DailyFilingTrend",
+          "type": "comboChart",
+          "position": { "x": 20, "y": 225, "width": 760, "height": 280 },
+          "config": {
+            "title": "Daily Filing Trend",
+            "xAxis": {
+              "field": "dim_date[Date]",
+              "title": ""
+            },
+            "columnYAxis": [
+              { "measure": "[CTR Count]", "color": "#4A90A4" },
+              { "measure": "[SAR Count]", "color": "#C62828" },
+              { "measure": "[W2G Count]", "color": "#F57F17" }
+            ],
+            "lineYAxis": {
+              "measure": "[Total Filings]",
+              "color": "#1B3A4B",
+              "lineStyle": "solid",
+              "showMarkers": true
+            },
+            "legend": {
+              "position": "top"
+            },
+            "dataLabels": false,
+            "gridLines": {
+              "show": true
+            }
+          }
+        },
+        {
+          "name": "FilingTypeBreakdown",
+          "type": "pieChart",
+          "position": { "x": 790, "y": 225, "width": 230, "height": 280 },
+          "config": {
+            "title": "Filing Distribution",
+            "legend": {
+              "values": ["CTR", "SAR", "W-2G"],
+              "position": "bottom"
+            },
+            "values": [
+              { "name": "CTR", "measure": "[CTR Count]" },
+              { "name": "SAR", "measure": "[SAR Count]" },
+              { "name": "W-2G", "measure": "[W2G Count]" }
+            ],
+            "colors": {
+              "CTR": "#4A90A4",
+              "SAR": "#C62828",
+              "W-2G": "#F57F17"
+            },
+            "detailLabels": {
+              "show": true,
+              "labelStyle": "category, percent"
+            }
+          }
+        },
+        {
+          "name": "FilingCompletionRate",
+          "type": "gauge",
+          "position": { "x": 1030, "y": 225, "width": 230, "height": 140 },
+          "config": {
+            "value": "[Filing Completion Rate]",
+            "minimum": 0,
+            "maximum": 100,
+            "target": 100,
+            "title": "Filing Rate",
+            "suffix": "%",
+            "colorRanges": [
+              { "min": 0, "max": 79, "color": "#C62828" },
+              { "min": 80, "max": 94, "color": "#F57F17" },
+              { "min": 95, "max": 100, "color": "#2E7D32" }
+            ]
+          }
+        },
+        {
+          "name": "AlertSummary",
+          "type": "card",
+          "position": { "x": 1030, "y": 375, "width": 230, "height": 130 },
+          "config": {
+            "measure": "[Compliance Alert Count]",
+            "title": "Active Alerts",
+            "calloutValue": {
+              "fontSize": 48,
+              "fontWeight": "bold"
+            },
+            "conditionalFormatting": {
+              "rules": [
+                { "condition": "value > 2", "backgroundColor": "#C62828", "fontColor": "#FFFFFF" },
+                { "condition": "value > 0", "backgroundColor": "#F57F17", "fontColor": "#FFFFFF" },
+                { "condition": "value == 0", "backgroundColor": "#2E7D32", "fontColor": "#FFFFFF" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "ThresholdAlertsTable",
+          "type": "table",
+          "position": { "x": 20, "y": 515, "width": 500, "height": 185 },
+          "config": {
+            "title": "Transactions Approaching CTR Threshold",
+            "description": "Transactions between $8,000-$9,999 that may indicate structuring",
+            "columns": [
+              { "field": "dim_date[Date]", "width": 90, "title": "Date" },
+              { "field": "Player ID", "width": 100, "title": "Player" },
+              { "field": "Transaction Amount", "width": 100, "title": "Amount", "format": "$#,##0" },
+              { "field": "Transaction Count", "width": 80, "title": "# Txns" },
+              { "field": "Alert Status", "width": 100, "title": "Status" }
+            ],
+            "conditionalFormatting": {
+              "Alert Status": {
+                "rules": [
+                  { "value": "REVIEW", "backgroundColor": "#FFF8E1", "fontColor": "#F57F17" },
+                  { "value": "SUSPECT", "backgroundColor": "#FFEBEE", "fontColor": "#C62828" }
+                ]
+              }
+            },
+            "note": "Based on gold_compliance_reporting[structuring_suspect_count]"
+          }
+        },
+        {
+          "name": "CTRBacklogTrend",
+          "type": "areaChart",
+          "position": { "x": 530, "y": 515, "width": 370, "height": 185 },
+          "config": {
+            "title": "CTR Filing Backlog Trend",
+            "xAxis": {
+              "field": "dim_date[Date]"
+            },
+            "yAxis": {
+              "field": "[Pending Filings]",
+              "title": "Pending"
+            },
+            "referenceLine": {
+              "value": 5,
+              "label": "Target",
+              "style": "dashed",
+              "color": "#F57F17"
+            },
+            "color": "#4A90A4"
+          }
+        },
+        {
+          "name": "AuditTrailTable",
+          "type": "table",
+          "position": { "x": 910, "y": 515, "width": 350, "height": 185 },
+          "config": {
+            "title": "Recent Compliance Activity",
+            "columns": [
+              { "field": "dim_date[Date]", "width": 80, "title": "Date" },
+              { "field": "Filing Type", "width": 60, "title": "Type" },
+              { "field": "Count", "width": 50, "title": "Count" },
+              { "field": "Amount", "width": 80, "title": "Amount", "format": "$#,##0" },
+              { "field": "Status", "width": 70, "title": "Status" }
+            ],
+            "sort": {
+              "field": "dim_date[Date]",
+              "direction": "descending"
+            },
+            "topN": 10
+          }
+        }
+      ],
+      "filters": [
+        {
+          "type": "page",
+          "field": "dim_date[Date]",
+          "filterType": "relativeDateRange",
+          "relativeDateRange": {
+            "timeUnitCount": 30,
+            "timeUnit": "days"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CTRDetails",
+      "displayName": "CTR Details",
+      "displayOption": "FitToPage",
+      "width": 1280,
+      "height": 720,
+      "visuals": [
+        {
+          "name": "Title",
+          "type": "textbox",
+          "position": { "x": 20, "y": 10, "width": 500, "height": 40 },
+          "config": {
+            "text": "CTR FILING DETAILS",
+            "fontSize": 22,
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "name": "CTRSummaryCards",
+          "type": "multiRowCard",
+          "position": { "x": 20, "y": 60, "width": 600, "height": 80 },
+          "config": {
+            "measures": [
+              { "field": "[CTR Count]", "label": "Total CTRs" },
+              { "field": "[CTR Amount]", "label": "Total Amount", "format": "$#,##0" },
+              { "field": "[Avg CTR Amount]", "label": "Avg Amount", "format": "$#,##0" },
+              { "field": "[Potential CTR Count]", "label": "Unfiled" }
+            ]
+          }
+        },
+        {
+          "name": "CTRTrend",
+          "type": "lineChart",
+          "position": { "x": 20, "y": 150, "width": 800, "height": 300 },
+          "config": {
+            "title": "Daily CTR Filing Trend",
+            "xAxis": {
+              "field": "dim_date[Date]"
+            },
+            "yAxis": [
+              { "measure": "[CTR Count]", "title": "Count" }
+            ],
+            "secondaryYAxis": {
+              "measure": "[CTR Amount]",
+              "title": "Amount ($)"
+            }
+          }
+        },
+        {
+          "name": "CTRAmountDistribution",
+          "type": "histogram",
+          "position": { "x": 830, "y": 150, "width": 430, "height": 300 },
+          "config": {
+            "title": "CTR Amount Distribution",
+            "field": "CTR Amount",
+            "binSize": 5000,
+            "xAxis": {
+              "title": "Amount Range ($)"
+            },
+            "yAxis": {
+              "title": "Count"
+            }
+          }
+        },
+        {
+          "name": "CTRDetailTable",
+          "type": "table",
+          "position": { "x": 20, "y": 460, "width": 1240, "height": 240 },
+          "config": {
+            "title": "CTR Filing Register",
+            "columns": [
+              { "field": "Filing Date", "width": 100 },
+              { "field": "Filing ID", "width": 120 },
+              { "field": "Player ID", "width": 100 },
+              { "field": "Amount", "width": 100, "format": "$#,##0" },
+              { "field": "Transaction Type", "width": 120 },
+              { "field": "Filing Status", "width": 100 },
+              { "field": "Submitted Date", "width": 100 },
+              { "field": "Notes", "width": 200 }
+            ],
+            "sort": {
+              "field": "Filing Date",
+              "direction": "descending"
+            },
+            "pagination": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "SARAnalysis",
+      "displayName": "SAR Analysis",
+      "displayOption": "FitToPage",
+      "width": 1280,
+      "height": 720,
+      "visuals": [
+        {
+          "name": "Title",
+          "type": "textbox",
+          "position": { "x": 20, "y": 10, "width": 500, "height": 40 },
+          "config": {
+            "text": "SUSPICIOUS ACTIVITY ANALYSIS",
+            "fontSize": 22,
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "name": "SARWarning",
+          "type": "textbox",
+          "position": { "x": 20, "y": 55, "width": 1240, "height": 30 },
+          "config": {
+            "text": "CONFIDENTIAL - SAR information is restricted. Do not disclose SAR filings to subjects of reports.",
+            "fontSize": 12,
+            "fontColor": "#C62828",
+            "backgroundColor": "#FFEBEE",
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "name": "SARSummaryCards",
+          "type": "multiRowCard",
+          "position": { "x": 20, "y": 95, "width": 500, "height": 70 },
+          "config": {
+            "measures": [
+              { "field": "[SAR Count]", "label": "Total SARs" },
+              { "field": "[SAR Amount]", "label": "Total Amount", "format": "$#,##0" },
+              { "field": "[Structuring Suspects]", "label": "Structuring Alerts" }
+            ]
+          }
+        },
+        {
+          "name": "SARTrend",
+          "type": "columnChart",
+          "position": { "x": 20, "y": 175, "width": 600, "height": 260 },
+          "config": {
+            "title": "Monthly SAR Filings",
+            "xAxis": {
+              "field": "dim_date[Month Name]"
+            },
+            "yAxis": {
+              "field": "[SAR Count]"
+            },
+            "color": "#C62828"
+          }
+        },
+        {
+          "name": "StructuringIndicators",
+          "type": "table",
+          "position": { "x": 630, "y": 175, "width": 630, "height": 260 },
+          "config": {
+            "title": "Structuring Indicators",
+            "description": "Patterns that may indicate potential structuring activity",
+            "columns": [
+              { "field": "Date", "width": 90 },
+              { "field": "Player ID", "width": 100 },
+              { "field": "Transaction Count", "width": 80, "title": "# Txns" },
+              { "field": "Total Amount", "width": 100, "format": "$#,##0" },
+              { "field": "Average Amount", "width": 100, "format": "$#,##0" },
+              { "field": "Risk Score", "width": 80 },
+              { "field": "Status", "width": 80 }
+            ],
+            "conditionalFormatting": {
+              "Risk Score": {
+                "backgroundScale": {
+                  "min": "#E8F5E9",
+                  "max": "#FFEBEE"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "SARCategories",
+          "type": "pieChart",
+          "position": { "x": 20, "y": 445, "width": 300, "height": 255 },
+          "config": {
+            "title": "SAR by Category",
+            "legend": {
+              "field": "SAR Category"
+            },
+            "values": {
+              "measure": "SAR Count by Category"
+            }
+          }
+        },
+        {
+          "name": "SARTimeline",
+          "type": "table",
+          "position": { "x": 330, "y": 445, "width": 930, "height": 255 },
+          "config": {
+            "title": "SAR Filing Timeline",
+            "columns": [
+              { "field": "Detection Date", "width": 100 },
+              { "field": "SAR ID", "width": 100 },
+              { "field": "Category", "width": 120 },
+              { "field": "Amount", "width": 100, "format": "$#,##0" },
+              { "field": "Filing Deadline", "width": 100 },
+              { "field": "Days Remaining", "width": 80 },
+              { "field": "Status", "width": 100 }
+            ],
+            "conditionalFormatting": {
+              "Days Remaining": {
+                "rules": [
+                  { "condition": "value <= 0", "backgroundColor": "#FFEBEE", "fontColor": "#C62828" },
+                  { "condition": "value <= 5", "backgroundColor": "#FFF8E1", "fontColor": "#F57F17" },
+                  { "condition": "value > 5", "backgroundColor": "#E8F5E9", "fontColor": "#2E7D32" }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "DeadlineCalendar",
+      "displayName": "Filing Deadlines",
+      "displayOption": "FitToPage",
+      "width": 1280,
+      "height": 720,
+      "visuals": [
+        {
+          "name": "Title",
+          "type": "textbox",
+          "position": { "x": 20, "y": 10, "width": 400, "height": 40 },
+          "config": {
+            "text": "FILING DEADLINE CALENDAR",
+            "fontSize": 22,
+            "fontWeight": "bold"
+          }
+        },
+        {
+          "name": "UpcomingDeadlines",
+          "type": "table",
+          "position": { "x": 20, "y": 60, "width": 600, "height": 400 },
+          "config": {
+            "title": "Upcoming Filing Deadlines",
+            "columns": [
+              { "field": "Deadline Date", "width": 100 },
+              { "field": "Filing Type", "width": 80 },
+              { "field": "Reference", "width": 120 },
+              { "field": "Days Until Due", "width": 80 },
+              { "field": "Status", "width": 100 },
+              { "field": "Assigned To", "width": 100 }
+            ],
+            "sort": {
+              "field": "Deadline Date",
+              "direction": "ascending"
+            },
+            "conditionalFormatting": {
+              "Days Until Due": {
+                "rules": [
+                  { "condition": "value <= 0", "backgroundColor": "#FFEBEE", "fontColor": "#C62828", "icon": "Warning" },
+                  { "condition": "value <= 3", "backgroundColor": "#FFF8E1", "fontColor": "#F57F17", "icon": "Clock" },
+                  { "condition": "value <= 7", "backgroundColor": "#E3F2FD", "fontColor": "#1565C0" },
+                  { "condition": "value > 7", "backgroundColor": "#E8F5E9", "fontColor": "#2E7D32" }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "name": "DeadlineSummary",
+          "type": "multiRowCard",
+          "position": { "x": 630, "y": 60, "width": 630, "height": 100 },
+          "config": {
+            "measures": [
+              { "field": "Overdue Count", "label": "Overdue", "conditionalColor": "#C62828" },
+              { "field": "Due This Week", "label": "Due This Week" },
+              { "field": "Due This Month", "label": "Due This Month" },
+              { "field": "Completed MTD", "label": "Completed MTD", "conditionalColor": "#2E7D32" }
+            ]
+          }
+        },
+        {
+          "name": "FilingCalendar",
+          "type": "matrix",
+          "position": { "x": 630, "y": 170, "width": 630, "height": 290 },
+          "config": {
+            "title": "Filing Calendar View",
+            "rows": "Week",
+            "columns": "Day",
+            "values": [
+              { "measure": "Filing Count" }
+            ],
+            "conditionalFormatting": {
+              "Filing Count": {
+                "backgroundScale": {
+                  "min": "#FFFFFF",
+                  "max": "#4A90A4"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "CompletedFilings",
+          "type": "table",
+          "position": { "x": 20, "y": 470, "width": 1240, "height": 230 },
+          "config": {
+            "title": "Recently Completed Filings",
+            "columns": [
+              { "field": "Completion Date", "width": 100 },
+              { "field": "Filing Type", "width": 80 },
+              { "field": "Filing ID", "width": 120 },
+              { "field": "Amount", "width": 100, "format": "$#,##0" },
+              { "field": "Completed By", "width": 120 },
+              { "field": "Days Before Deadline", "width": 100 }
+            ],
+            "sort": {
+              "field": "Completion Date",
+              "direction": "descending"
+            },
+            "topN": 15
+          }
+        }
+      ]
+    }
+  ],
+  "subscriptions": [
+    {
+      "name": "Daily Compliance Report",
+      "schedule": {
+        "frequency": "daily",
+        "time": "08:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "recipients": ["compliance-team@casino.com"],
+      "format": "pdf",
+      "pages": ["ComplianceOverview"]
+    },
+    {
+      "name": "Weekly SAR Summary",
+      "schedule": {
+        "frequency": "weekly",
+        "dayOfWeek": "Monday",
+        "time": "09:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "recipients": ["compliance-manager@casino.com", "bsa-officer@casino.com"],
+      "format": "pdf",
+      "pages": ["ComplianceOverview", "SARAnalysis"]
+    },
+    {
+      "name": "Deadline Alert",
+      "schedule": {
+        "frequency": "daily",
+        "time": "07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "recipients": ["compliance-team@casino.com"],
+      "format": "email",
+      "pages": ["DeadlineCalendar"],
+      "condition": {
+        "measure": "Overdue Count",
+        "operator": "greaterThan",
+        "value": 0
+      }
+    }
+  ],
+  "alerts": [
+    {
+      "name": "Structuring Detection Alert",
+      "measure": "[Structuring Suspects]",
+      "condition": "greaterThan",
+      "threshold": 0,
+      "frequency": "daily",
+      "recipients": ["bsa-officer@casino.com", "compliance-manager@casino.com"]
+    },
+    {
+      "name": "CTR Backlog Alert",
+      "measure": "[Pending Filings]",
+      "condition": "greaterThan",
+      "threshold": 10,
+      "frequency": "daily",
+      "recipients": ["compliance-team@casino.com"]
+    },
+    {
+      "name": "Compliance Score Drop",
+      "measure": "[Compliance Score]",
+      "condition": "lessThan",
+      "threshold": 70,
+      "frequency": "immediately",
+      "recipients": ["compliance-manager@casino.com", "general-manager@casino.com"]
+    }
+  ]
+}

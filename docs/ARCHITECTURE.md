@@ -1,75 +1,150 @@
-# Architecture Documentation
+# 🏗️ Architecture Documentation
 
-## Overview
+> 🏠 [Home](../README.md) > 📚 [Docs](./) > 🏗️ Architecture
 
-This document describes the architecture of the Microsoft Fabric Casino/Gaming POC environment. The solution implements a modern data lakehouse architecture using the medallion pattern (Bronze/Silver/Gold) with real-time analytics capabilities.
+**Last Updated:** `2025-01-21` | **Version:** 1.0.0
 
-## High-Level Architecture
+---
 
+## 📑 Table of Contents
+
+- [🎯 Overview](#-overview)
+- [🏛️ High-Level Architecture](#️-high-level-architecture)
+- [🥉🥈🥇 Medallion Architecture](#-medallion-architecture)
+  - [🥉 Bronze Layer (Raw Data)](#-bronze-layer-raw-data)
+  - [🥈 Silver Layer (Cleansed Data)](#-silver-layer-cleansed-data)
+  - [🥇 Gold Layer (Business Ready)](#-gold-layer-business-ready)
+- [⚡ Real-Time Intelligence Architecture](#-real-time-intelligence-architecture)
+- [📊 Data Governance](#-data-governance)
+- [🔐 Security Architecture](#-security-architecture)
+- [📈 Capacity Planning](#-capacity-planning)
+- [🔄 Disaster Recovery](#-disaster-recovery)
+- [📡 Monitoring & Alerting](#-monitoring--alerting)
+- [🛠️ Technology Decisions](#️-technology-decisions)
+
+---
+
+## 🎯 Overview
+
+This document describes the architecture of the **Microsoft Fabric Casino/Gaming POC** environment. The solution implements a modern data lakehouse architecture using the **medallion pattern** (Bronze/Silver/Gold) with real-time analytics capabilities.
+
+> ℹ️ **Note:** This architecture is designed for a Proof of Concept (POC) environment. Production implementations may require additional security controls and capacity planning.
+
+---
+
+## 🏛️ High-Level Architecture
+
+```mermaid
+flowchart TB
+    subgraph Sources["🎰 Data Sources"]
+        SAS["🎰 Slot Machines<br/>SAS Protocol"]
+        TG["🃏 Table Games<br/>RFID/Terminals"]
+        LMS["👤 Loyalty System"]
+        CAGE["💰 Cage Operations"]
+        SEC["🔒 Security/Surveillance"]
+        COMP["📋 Compliance Systems"]
+    end
+
+    subgraph Ingestion["📥 Ingestion Layer"]
+        ES["⚡ Eventstreams<br/>Real-Time"]
+        DF["📊 Dataflows Gen2<br/>Batch"]
+        PIPE["🔧 Data Pipelines"]
+    end
+
+    subgraph Fabric["☁️ Microsoft Fabric"]
+        subgraph Bronze["🥉 Bronze Layer"]
+            B_SLOT[bronze_slot_telemetry]
+            B_TABLE[bronze_table_games]
+            B_PLAYER[bronze_player_profile]
+            B_FIN[bronze_financial_txn]
+            B_SEC[bronze_security_events]
+        end
+
+        subgraph Silver["🥈 Silver Layer"]
+            S_SLOT[silver_slot_cleansed]
+            S_TABLE[silver_table_enriched]
+            S_PLAYER[silver_player_master]
+            S_FIN[silver_financial_reconciled]
+            S_SEC[silver_security_enriched]
+        end
+
+        subgraph Gold["🥇 Gold Layer"]
+            G_SLOT[gold_slot_performance]
+            G_TABLE[gold_table_analytics]
+            G_PLAYER[gold_player_360]
+            G_FIN[gold_financial_summary]
+            G_SEC[gold_compliance_reporting]
+        end
+
+        subgraph Analytics["📈 Analytics"]
+            DL["🔗 Direct Lake<br/>Semantic Model"]
+            PBI["📊 Power BI<br/>Reports"]
+            RTD["⏱️ Real-Time<br/>Dashboards"]
+        end
+    end
+
+    subgraph Governance["🛡️ Governance"]
+        PV["Microsoft Purview"]
+    end
+
+    Sources --> Ingestion
+    Ingestion --> Bronze
+    Bronze --> Silver
+    Silver --> Gold
+    Gold --> Analytics
+    Fabric --> Governance
+
+    style Bronze fill:#CD7F32,color:#000
+    style Silver fill:#C0C0C0,color:#000
+    style Gold fill:#FFD700,color:#000
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              DATA SOURCES                                    │
-├──────────┬──────────┬──────────┬──────────┬──────────┬─────────────────────┤
-│   Slot   │  Table   │  Player  │ Financial│ Security │    Compliance       │
-│ Machines │  Games   │ Loyalty  │   Cage   │Surveillance│   Systems         │
-└────┬─────┴────┬─────┴────┬─────┴────┬─────┴────┬─────┴─────────┬───────────┘
-     │          │          │          │          │               │
-     └──────────┴──────────┴──────────┴──────────┴───────────────┘
-                                    │
-                    ┌───────────────┼───────────────┐
-                    │               │               │
-              ┌─────▼─────┐  ┌──────▼──────┐  ┌────▼────┐
-              │Eventstreams│  │Dataflows G2 │  │Pipelines│
-              │ Real-Time  │  │   Batch     │  │  ETL    │
-              └─────┬─────┘  └──────┬──────┘  └────┬────┘
-                    │               │              │
-                    └───────────────┴──────────────┘
-                                    │
-┌───────────────────────────────────┼───────────────────────────────────────┐
-│                         FABRIC LAKEHOUSE                                   │
-│                                   │                                        │
-│  ┌────────────────────────────────▼────────────────────────────────────┐  │
-│  │                         BRONZE LAYER                                 │  │
-│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │  │
-│  │  │  Slot    │ │  Table   │ │  Player  │ │Financial │ │ Security │  │  │
-│  │  │Telemetry │ │  Games   │ │ Profile  │ │   Txn    │ │  Events  │  │  │
-│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘  │  │
-│  └─────────────────────────────────┬───────────────────────────────────┘  │
-│                                    │                                       │
-│  ┌─────────────────────────────────▼───────────────────────────────────┐  │
-│  │                         SILVER LAYER                                 │  │
-│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │  │
-│  │  │  Slot    │ │  Table   │ │  Player  │ │Financial │ │ Security │  │  │
-│  │  │ Cleansed │ │ Enriched │ │  Master  │ │Reconciled│ │ Enriched │  │  │
-│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘  │  │
-│  └─────────────────────────────────┬───────────────────────────────────┘  │
-│                                    │                                       │
-│  ┌─────────────────────────────────▼───────────────────────────────────┐  │
-│  │                          GOLD LAYER                                  │  │
-│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │  │
-│  │  │  Slot    │ │  Table   │ │  Player  │ │Financial │ │Compliance│  │  │
-│  │  │Performance│ │Analytics │ │   360    │ │ Summary  │ │Reporting │  │  │
-│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘  │  │
-│  └─────────────────────────────────────────────────────────────────────┘  │
-│                                                                            │
-└───────────────────────────────────┬────────────────────────────────────────┘
-                                    │
-        ┌───────────────────────────┼───────────────────────────┐
-        │                           │                           │
-┌───────▼───────┐          ┌────────▼────────┐         ┌───────▼───────┐
-│  Direct Lake  │          │   Eventhouse    │         │   Purview     │
-│Semantic Model │          │  KQL Database   │         │  Governance   │
-└───────┬───────┘          └────────┬────────┘         └───────────────┘
-        │                           │
-┌───────▼───────┐          ┌────────▼────────┐
-│   Power BI    │          │   Real-Time     │
-│   Reports     │          │   Dashboards    │
-└───────────────┘          └─────────────────┘
+
+### Component Summary
+
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| **Ingestion** | Eventstreams, Dataflows Gen2, Pipelines | Data intake from various sources |
+| **Storage** | OneLake (Delta Lake) | Unified data lake storage |
+| **Processing** | PySpark Notebooks | Data transformation and enrichment |
+| **Analytics** | Direct Lake, Power BI | Business intelligence and reporting |
+| **Governance** | Microsoft Purview | Data catalog, lineage, and security |
+
+---
+
+## 🥉🥈🥇 Medallion Architecture
+
+The medallion architecture provides a structured approach to data refinement:
+
+```mermaid
+flowchart LR
+    subgraph B["🥉 BRONZE<br/>Raw Data"]
+        B1["Schema-on-read"]
+        B2["Append-only"]
+        B3["Full fidelity"]
+    end
+
+    subgraph S["🥈 SILVER<br/>Cleansed Data"]
+        S1["Schema enforced"]
+        S2["Data quality"]
+        S3["Deduplication"]
+    end
+
+    subgraph G["🥇 GOLD<br/>Business Ready"]
+        G1["Aggregated"]
+        G2["Star schema"]
+        G3["Direct Lake optimized"]
+    end
+
+    B --> S --> G
+
+    style B fill:#CD7F32,color:#000
+    style S fill:#C0C0C0,color:#000
+    style G fill:#FFD700,color:#000
 ```
 
-## Medallion Architecture
+---
 
-### Bronze Layer (Raw Data)
+### 🥉 Bronze Layer (Raw Data)
 
 **Purpose:** Land raw data with minimal transformation for auditability and reprocessing.
 
@@ -82,13 +157,15 @@ This document describes the architecture of the Microsoft Fabric Casino/Gaming P
 | `bronze_security_events` | Surveillance | Streaming | 30 days |
 | `bronze_compliance` | Compliance systems | Batch | 7 years |
 
-**Key Characteristics:**
-- Schema-on-read approach
-- Append-only inserts
-- Full source fidelity preserved
-- Metadata columns: `_ingested_at`, `_source_file`, `_batch_id`
+> ℹ️ **Key Characteristics:**
+> - Schema-on-read approach
+> - Append-only inserts
+> - Full source fidelity preserved
+> - Metadata columns: `_ingested_at`, `_source_file`, `_batch_id`
 
-### Silver Layer (Cleansed Data)
+---
+
+### 🥈 Silver Layer (Cleansed Data)
 
 **Purpose:** Validated, cleansed, and enriched data with enforced schema.
 
@@ -101,13 +178,15 @@ This document describes the architecture of the Microsoft Fabric Casino/Gaming P
 | `silver_security_enriched` | Event correlation, alert tagging | Type 1 |
 | `silver_compliance_validated` | Threshold checks, rule validation | Type 1 |
 
-**Key Characteristics:**
-- Schema enforcement (Delta Lake)
-- Data quality rules applied
-- Referential integrity checked
-- Business keys established
+> ℹ️ **Key Characteristics:**
+> - Schema enforcement (Delta Lake)
+> - Data quality rules applied
+> - Referential integrity checked
+> - Business keys established
 
-### Gold Layer (Business Ready)
+---
+
+### 🥇 Gold Layer (Business Ready)
 
 **Purpose:** Aggregated, business-oriented views optimized for analytics.
 
@@ -120,29 +199,42 @@ This document describes the architecture of the Microsoft Fabric Casino/Gaming P
 | `gold_security_dashboard` | Hour/Zone | Incidents, Alerts, Response time |
 | `gold_compliance_reporting` | Day/Type | CTR count, SAR count, W-2G count |
 
-**Key Characteristics:**
-- Star schema design
-- Pre-aggregated metrics
-- Direct Lake optimized
-- Incremental refresh enabled
+> ℹ️ **Key Characteristics:**
+> - Star schema design
+> - Pre-aggregated metrics
+> - Direct Lake optimized
+> - Incremental refresh enabled
 
-## Real-Time Intelligence Architecture
+---
 
-```
-┌─────────────────┐
-│ Slot Machines   │──┐
-│  (SAS Stream)   │  │
-└─────────────────┘  │     ┌─────────────┐     ┌─────────────┐
-                     ├────▶│ Eventstream │────▶│ Eventhouse  │
-┌─────────────────┐  │     │ (Ingestion) │     │(KQL Database)│
-│ Table Games     │──┤     └─────────────┘     └──────┬──────┘
-│  (RFID/POS)     │  │                                │
-└─────────────────┘  │                                │
-                     │                         ┌──────▼──────┐
-┌─────────────────┐  │                         │ Real-Time   │
-│ Security        │──┘                         │ Dashboards  │
-│  (Cameras/Access)                            └─────────────┘
-└─────────────────┘
+## ⚡ Real-Time Intelligence Architecture
+
+```mermaid
+flowchart TB
+    subgraph Sources["📡 Real-Time Sources"]
+        SLOT["🎰 Slot Machines"]
+        TABLE["🃏 Table Games"]
+        SEC["🔒 Security"]
+    end
+
+    subgraph Streaming["⚡ Streaming"]
+        ES["Eventstream"]
+    end
+
+    subgraph RealTime["📊 Real-Time Intelligence"]
+        EH_DB[("Eventhouse<br/>KQL Database")]
+        KQL["KQL Queries"]
+        ALERT["🔔 Alerts"]
+    end
+
+    subgraph Dashboard["📺 Dashboards"]
+        RT_DASH["Real-Time Dashboard"]
+        FLOOR["Floor Monitor"]
+    end
+
+    Sources --> Streaming --> RealTime --> Dashboard
+    ALERT -->|"Jackpot > $10K"| FLOOR
+    ALERT -->|"Machine Down"| FLOOR
 ```
 
 ### Eventhouse Configuration
@@ -154,68 +246,85 @@ This document describes the architecture of the Microsoft Fabric Casino/Gaming P
 
 ### Key KQL Tables
 
-- `SlotEvents` - Real-time slot machine events
-- `TableGameEvents` - Table game transactions
-- `SecurityAlerts` - Security incident stream
-- `FloorHeatmap` - Aggregated activity by zone
+| Table | Description |
+|-------|-------------|
+| `SlotEvents` | Real-time slot machine events |
+| `TableGameEvents` | Table game transactions |
+| `SecurityAlerts` | Security incident stream |
+| `FloorHeatmap` | Aggregated activity by zone |
 
-## Data Governance
+---
+
+## 📊 Data Governance
 
 ### Purview Integration
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     MICROSOFT PURVIEW                            │
-├──────────────────┬──────────────────┬───────────────────────────┤
-│   Data Catalog   │  Data Lineage    │  Access Policies          │
-├──────────────────┼──────────────────┼───────────────────────────┤
-│ - Glossary terms │ - End-to-end     │ - Data access policies    │
-│ - Classifications│ - Transformation │ - Sensitivity labels      │
-│ - Ownership      │ - Impact analysis│ - Row-level security      │
-└──────────────────┴──────────────────┴───────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph Purview["🛡️ Microsoft Purview"]
+        CAT["📚 Data Catalog"]
+        LIN["🔗 Data Lineage"]
+        POL["🔐 Access Policies"]
+    end
+
+    subgraph Features["Features"]
+        F1["Glossary terms"]
+        F2["Classifications"]
+        F3["Ownership"]
+        F4["Impact analysis"]
+        F5["Sensitivity labels"]
+        F6["Row-level security"]
+    end
+
+    Purview --> Features
 ```
 
 ### Data Classification
 
 | Classification | Examples | Handling |
 |----------------|----------|----------|
-| `Highly Confidential` | SSN, Full card numbers | Encrypted, masked |
-| `Confidential` | Player balances, Win/Loss | RBAC restricted |
-| `Internal` | Operational metrics | Staff access |
-| `Public` | Aggregated reports | Open access |
+| 🔴 `Highly Confidential` | SSN, Full card numbers | Encrypted, masked |
+| 🟠 `Confidential` | Player balances, Win/Loss | RBAC restricted |
+| 🟡 `Internal` | Operational metrics | Staff access |
+| 🟢 `Public` | Aggregated reports | Open access |
 
-## Security Architecture
+> ⚠️ **Warning:** PII data must be handled according to gaming regulations and may be subject to audit. Never store unencrypted SSN or full card numbers in the Gold layer.
+
+---
+
+## 🔐 Security Architecture
 
 ### Network Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      VIRTUAL NETWORK                             │
-├─────────────────────────────────────────────────────────────────┤
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
-│  │  Fabric Subnet  │  │ Private Endpoint │  │  Management     │ │
-│  │   10.0.1.0/24   │  │    Subnet        │  │    Subnet       │ │
-│  │                 │  │   10.0.2.0/24    │  │   10.0.3.0/24   │ │
-│  └─────────────────┘  └─────────────────┘  └─────────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                    ┌─────────┴─────────┐
-                    │  Private Endpoints │
-                    ├───────────────────┤
-                    │ - Storage Account │
-                    │ - Key Vault       │
-                    │ - Purview         │
-                    └───────────────────┘
+```mermaid
+flowchart TB
+    subgraph VNet["🌐 Virtual Network"]
+        subgraph Fabric["Fabric Subnet<br/>10.0.1.0/24"]
+            F1["Fabric Workspace"]
+        end
+        subgraph PE["Private Endpoint Subnet<br/>10.0.2.0/24"]
+            P1["Storage PE"]
+            P2["Key Vault PE"]
+            P3["Purview PE"]
+        end
+        subgraph Mgmt["Management Subnet<br/>10.0.3.0/24"]
+            M1["Admin Access"]
+        end
+    end
 ```
 
-### Identity & Access
+### Identity & Access Controls
 
-- **Managed Identity:** System-assigned for Fabric workspace
-- **RBAC:** Principle of least privilege
-- **Key Vault:** All secrets and certificates
-- **Conditional Access:** MFA required for admin operations
+| Control | Implementation |
+|---------|----------------|
+| **Managed Identity** | System-assigned for Fabric workspace |
+| **RBAC** | Principle of least privilege |
+| **Key Vault** | All secrets and certificates |
+| **Conditional Access** | MFA required for admin operations |
 
-## Capacity Planning
+---
+
+## 📈 Capacity Planning
 
 ### F64 SKU Specifications
 
@@ -230,42 +339,52 @@ This document describes the architecture of the Microsoft Fabric Casino/Gaming P
 
 | Workload | CU Consumption |
 |----------|----------------|
-| Bronze ingestion | 4-8 CUs |
-| Silver transformation | 8-16 CUs |
-| Gold aggregation | 4-8 CUs |
-| Real-time analytics | 8-12 CUs |
-| Power BI Direct Lake | 4-8 CUs |
+| 🥉 Bronze ingestion | 4-8 CUs |
+| 🥈 Silver transformation | 8-16 CUs |
+| 🥇 Gold aggregation | 4-8 CUs |
+| ⚡ Real-time analytics | 8-12 CUs |
+| 📊 Power BI Direct Lake | 4-8 CUs |
 
-## Disaster Recovery
+> ℹ️ **Note:** Monitor CU consumption via Log Analytics and adjust capacity as needed.
+
+---
+
+## 🔄 Disaster Recovery
 
 ### RPO/RTO Targets
 
 | Tier | RPO | RTO | Strategy |
 |------|-----|-----|----------|
-| Bronze | 1 hour | 4 hours | Geo-redundant storage |
-| Silver/Gold | 1 hour | 2 hours | Delta Lake time travel |
-| Real-time | 5 minutes | 15 minutes | Eventhouse replication |
-| Reports | 1 day | 1 hour | Git version control |
+| 🥉 Bronze | 1 hour | 4 hours | Geo-redundant storage |
+| 🥈🥇 Silver/Gold | 1 hour | 2 hours | Delta Lake time travel |
+| ⚡ Real-time | 5 minutes | 15 minutes | Eventhouse replication |
+| 📊 Reports | 1 day | 1 hour | Git version control |
 
-## Monitoring & Alerting
+---
+
+## 📡 Monitoring & Alerting
 
 ### Key Metrics
 
-- **Pipeline Health:** Success rate, latency, data volume
-- **Data Quality:** Completeness, validity, freshness
-- **Capacity:** CU utilization, throttling events
-- **Security:** Access anomalies, failed authentications
+| Category | Metrics |
+|----------|---------|
+| **Pipeline Health** | Success rate, latency, data volume |
+| **Data Quality** | Completeness, validity, freshness |
+| **Capacity** | CU utilization, throttling events |
+| **Security** | Access anomalies, failed authentications |
 
 ### Alert Thresholds
 
-| Metric | Warning | Critical |
+| Metric | ⚠️ Warning | 🔴 Critical |
 |--------|---------|----------|
 | Pipeline failure rate | > 5% | > 20% |
 | CU utilization | > 80% | > 95% |
 | Data freshness (Bronze) | > 15 min | > 1 hour |
 | Query latency (P95) | > 5 sec | > 30 sec |
 
-## Technology Decisions
+---
+
+## 🛠️ Technology Decisions
 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
@@ -275,3 +394,23 @@ This document describes the architecture of the Microsoft Fabric Casino/Gaming P
 | BI Connectivity | Direct Lake | Sub-second queries, no import |
 | Governance | Purview | Unified catalog, native integration |
 | IaC | Bicep | Azure native, type-safe |
+
+---
+
+## 📚 Related Documentation
+
+| Document | Description |
+|----------|-------------|
+| [🚀 Deployment Guide](DEPLOYMENT.md) | Infrastructure deployment instructions |
+| [🔐 Security Guide](SECURITY.md) | Security controls and compliance |
+| [📋 Prerequisites](PREREQUISITES.md) | Setup requirements |
+| [📊 Architecture Diagrams](diagrams/architecture-overview.md) | Detailed Mermaid diagrams |
+
+---
+
+[⬆️ Back to top](#️-architecture-documentation)
+
+---
+
+> 📖 **Documentation maintained by:** Microsoft Fabric POC Team
+> 🔗 **Repository:** [Suppercharge_Microsoft_Fabric](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric)

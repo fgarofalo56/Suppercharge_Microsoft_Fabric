@@ -1,24 +1,81 @@
-# Day 2: Transformations & Real-Time Analytics
+# 📅 Day 2: Transformations & Real-Time Analytics
 
-## Overview
+> 🏠 Home > 📆 POC Agenda > ⚡ Day 2
 
-**Duration:** 8 hours
+---
+
+**Date:** `[INSERT DATE]`
+**Duration:** 8 hours (9:00 AM - 5:00 PM)
 **Focus:** Complete Silver/Gold layers, implement real-time casino floor monitoring
 **Audience:** Data Architects (4 participants)
 
 ---
 
-## Morning Session 1: Silver Layer Complete (9:00 - 10:30)
+## 📊 Day 2 Progress Tracker
 
-### Objectives
+```
+Day 2 Progress: ░░░░░░░░░░ 0% Complete
+────────────────────────────────────────────
+🌅 Morning Session 1:   ░░░░░░░░░░  Silver Layer Complete
+🌅 Morning Session 2:   ░░░░░░░░░░  Gold Layer
+☀️ Afternoon Session 3: ░░░░░░░░░░  Real-Time Analytics
+☀️ Afternoon Session 4: ░░░░░░░░░░  Real-Time Dashboards
+```
 
-- Complete Silver layer transformations
-- Implement SCD Type 2 for player master
-- Apply reconciliation patterns for financial data
+---
 
-### 5.1 Player Master with SCD Type 2 (45 min)
+## 📋 Materials Checklist
 
-SCD Type 2 tracks historical changes to player attributes:
+Before starting, ensure the following are ready:
+
+### Prerequisites from Day 1
+- [ ] Bronze layer tables populated
+- [ ] Silver layer started (slot_cleansed)
+- [ ] All participants have workspace access
+
+### Day 2 Materials
+- [ ] Silver layer notebooks prepared
+- [ ] Gold layer notebooks prepared
+- [ ] Eventstream configuration ready
+- [ ] KQL query templates available
+
+### Real-Time Components
+- [ ] Streaming data producer script ready
+- [ ] Event Hub credentials (if using)
+- [ ] Dashboard templates prepared
+
+---
+
+## 🗓️ Daily Schedule At-a-Glance
+
+| Time | Duration | Session | Type |
+|:----:|:--------:|---------|:----:|
+| 9:00-10:30 | 1.5 hr | 🌅 Silver Layer Complete | 👥 Hands-on |
+| 10:30-10:45 | 15 min | ☕ Break | - |
+| 10:45-12:30 | 1.75 hr | 🌅 Gold Layer | 👥 Hands-on |
+| 12:30-13:30 | 1 hr | 🍽️ Lunch | - |
+| 13:30-15:00 | 1.5 hr | ☀️ Real-Time Analytics Setup | 👥 Hands-on |
+| 15:00-15:15 | 15 min | ☕ Break | - |
+| 15:15-16:45 | 1.5 hr | ☀️ Real-Time Dashboards | 👥 Hands-on |
+| 16:45-17:00 | 15 min | 💬 Day 2 Wrap-up | Discussion |
+
+---
+
+## 🌅 Morning Session 1: Silver Layer Complete (9:00 - 10:30)
+
+### 🎯 Session Objectives
+
+| Objective | Duration | Status |
+|-----------|:--------:|:------:|
+| Complete Silver layer transformations | - | ⬜ |
+| Implement SCD Type 2 for player master | 45 min | ⬜ |
+| Apply reconciliation patterns for financial data | 45 min | ⬜ |
+
+---
+
+### 📝 Activity 5.1: Player Master with SCD Type 2 (45 min)
+
+> 💡 **SCD Type 2** tracks historical changes to player attributes
 
 ```python
 # Notebook: 02_silver_player_master
@@ -84,7 +141,9 @@ spark.sql("""
 """).show()
 ```
 
-### 5.2 Financial Reconciliation (45 min)
+---
+
+### 📝 Activity 5.2: Financial Reconciliation (45 min)
 
 Implement cage reconciliation patterns:
 
@@ -140,17 +199,31 @@ spark.sql("""
 """).show()
 ```
 
+**Risk Flag Legend:**
+
+| Flag | Trigger Condition |
+|------|-------------------|
+| `CTR_REQUIRED` | Amount >= $10,000 |
+| `NEAR_CTR` | Amount $8,000 - $9,999 |
+| `HIGH_VARIANCE` | Variance > 1% |
+| `CREDIT_TRANSACTION` | Marker/Credit |
+
 ---
 
-## Morning Session 2: Gold Layer (10:45 - 12:30)
+## 🌅 Morning Session 2: Gold Layer (10:45 - 12:30)
 
-### Objectives
+### 🎯 Session Objectives
 
-- Create aggregated Gold layer tables
-- Implement casino KPI calculations
-- Build star schema dimensions
+| Objective | Duration | Status |
+|-----------|:--------:|:------:|
+| Create aggregated Gold layer tables | - | ⬜ |
+| Implement casino KPI calculations | 45 min | ⬜ |
+| Build Player 360 view | 45 min | ⬜ |
+| Create compliance reporting table | 30 min | ⬜ |
 
-### 6.1 Slot Performance Gold Table (45 min)
+---
+
+### 📝 Activity 6.1: Slot Performance Gold Table (45 min)
 
 ```python
 # Notebook: 01_gold_slot_performance
@@ -206,7 +279,18 @@ df_gold.write \
 spark.sql("OPTIMIZE lh_gold.gold_slot_performance ZORDER BY (machine_id)")
 ```
 
-### 6.2 Player 360 Gold Table (45 min)
+**KPI Definitions:**
+
+| KPI | Formula | Description |
+|-----|---------|-------------|
+| Net Win | Coin In - Coin Out | Gross gaming revenue |
+| Hold % | Net Win / Coin In | Actual retention rate |
+| Theo Win | Coin In x 8% | Expected win at par |
+| Hold Variance | Actual - Theo | Performance vs expected |
+
+---
+
+### 📝 Activity 6.2: Player 360 Gold Table (45 min)
 
 ```python
 # Notebook: 02_gold_player_360
@@ -274,7 +358,17 @@ df_gold.write \
     .saveAsTable("lh_gold.gold_player_360")
 ```
 
-### 6.3 Compliance Reporting Gold Table (30 min)
+**Churn Risk Thresholds:**
+
+| Risk Level | Days Since Visit |
+|------------|:----------------:|
+| Low | 0-30 days |
+| Medium | 31-90 days |
+| High | 90+ days |
+
+---
+
+### 📝 Activity 6.3: Compliance Reporting Gold Table (30 min)
 
 ```python
 # Notebook: 03_gold_compliance_reporting
@@ -311,21 +405,29 @@ df_gold.write \
 
 ---
 
-## Afternoon Session 3: Real-Time Analytics (13:30 - 15:00)
+## ☀️ Afternoon Session 3: Real-Time Analytics (13:30 - 15:00)
 
-### Objectives
+### 🎯 Session Objectives
 
-- Create Eventhouse for real-time data
-- Configure Eventstreams for slot telemetry
-- Write KQL queries for monitoring
+| Objective | Duration | Status |
+|-----------|:--------:|:------:|
+| Create Eventhouse for real-time data | 20 min | ⬜ |
+| Configure Eventstreams for slot telemetry | 40 min | ⬜ |
+| Write KQL queries for monitoring | 30 min | ⬜ |
 
-### 7.1 Create Eventhouse (20 min)
+---
+
+### 📝 Activity 7.1: Create Eventhouse (20 min)
+
+**Steps:**
 
 1. In workspace, click **+ New** > **Eventhouse**
 2. Name: `eh_casino_realtime`
 3. Create database: `kdb_floor_monitoring`
 
-### 7.2 Configure Eventstream (40 min)
+---
+
+### 📝 Activity 7.2: Configure Eventstream (40 min)
 
 ```
 Eventstream: es_slot_telemetry
@@ -361,7 +463,9 @@ Destination: KQL Database
 .create table slot_events ingestion json mapping 'slot_events_mapping' '[{"column":"machine_id","path":"$.machine_id"},{"column":"event_type","path":"$.event_type"},{"column":"event_timestamp","path":"$.event_timestamp"},{"column":"coin_in","path":"$.coin_in"},{"column":"coin_out","path":"$.coin_out"},{"column":"games_played","path":"$.games_played"},{"column":"jackpot_amount","path":"$.jackpot_amount"},{"column":"zone","path":"$.zone"},{"column":"denomination","path":"$.denomination"},{"column":"player_id","path":"$.player_id"}]'
 ```
 
-### 7.3 KQL Monitoring Queries (30 min)
+---
+
+### 📝 Activity 7.3: KQL Monitoring Queries (30 min)
 
 **Real-time floor summary:**
 
@@ -415,47 +519,58 @@ slot_events
 
 ---
 
-## Afternoon Session 4: Real-Time Dashboards (15:15 - 17:00)
+## ☀️ Afternoon Session 4: Real-Time Dashboards (15:15 - 17:00)
 
-### Objectives
+### 🎯 Session Objectives
 
-- Create real-time dashboard in Fabric
-- Implement auto-refresh
-- Build alert rules
+| Objective | Duration | Status |
+|-----------|:--------:|:------:|
+| Create real-time dashboard in Fabric | 45 min | ⬜ |
+| Implement auto-refresh | 15 min | ⬜ |
+| Build alert rules | 30 min | ⬜ |
 
-### 8.1 Create Real-Time Dashboard (45 min)
+---
+
+### 📝 Activity 8.1: Create Real-Time Dashboard (45 min)
 
 1. In Eventhouse, click **New dashboard**
 2. Name: `Casino Floor Monitor`
 
 **Tile 1: Active Machines**
+
 ```kql
 slot_events
 | where event_timestamp > ago(5m)
 | summarize active = dcount(machine_id)
 | project active
 ```
-- Visual: Card
+
+- Visual: **Card**
 
 **Tile 2: Coin In by Zone (5 min)**
+
 ```kql
 slot_events
 | where event_timestamp > ago(5m)
 | summarize coin_in = sum(coin_in) by zone
 | order by coin_in desc
 ```
-- Visual: Bar chart
+
+- Visual: **Bar chart**
 
 **Tile 3: Hourly Trend**
+
 ```kql
 slot_events
 | where event_timestamp > ago(24h)
 | summarize coin_in = sum(coin_in) by bin(event_timestamp, 1h)
 | order by event_timestamp asc
 ```
-- Visual: Line chart
+
+- Visual: **Line chart**
 
 **Tile 4: Jackpot Feed**
+
 ```kql
 slot_events
 | where event_type == "JACKPOT"
@@ -464,20 +579,26 @@ slot_events
 | order by event_timestamp desc
 | take 10
 ```
-- Visual: Table
 
-### 8.2 Configure Alerts (30 min)
+- Visual: **Table**
+
+---
+
+### 📝 Activity 8.2: Configure Alerts (30 min)
 
 **Alert: Large Jackpot**
+
 ```kql
 slot_events
 | where event_type == "JACKPOT"
 | where jackpot_amount >= 10000
 | where event_timestamp > ago(5m)
 ```
+
 - Action: Email to floor manager
 
 **Alert: Machine Down (No Events)**
+
 ```kql
 // Machines that went silent
 let active_machines = slot_events
@@ -490,7 +611,9 @@ active_machines
 | where machine_id !in (current_machines)
 ```
 
-### 8.3 Streaming Data Producer (30 min)
+---
+
+### 📝 Activity 8.3: Streaming Data Producer (30 min)
 
 Create a simple Python producer for testing:
 
@@ -531,30 +654,44 @@ while True:
 
 ---
 
-## Day 2 Validation Checklist
+## ✅ Day 2 Validation Checklist
 
 ### Silver Layer
-- [ ] `silver_player_master` with SCD Type 2 working
-- [ ] `silver_financial_reconciled` with reconciliation status
-- [ ] All Silver tables partitioned appropriately
+
+| Table | Criteria | Status |
+|-------|----------|:------:|
+| `silver_player_master` | SCD Type 2 working | ⬜ |
+| `silver_financial_reconciled` | Reconciliation status | ⬜ |
+| All Silver tables | Partitioned appropriately | ⬜ |
 
 ### Gold Layer
-- [ ] `gold_slot_performance` with KPIs calculated
-- [ ] `gold_player_360` with player metrics
-- [ ] `gold_compliance_reporting` summary
+
+| Table | Criteria | Status |
+|-------|----------|:------:|
+| `gold_slot_performance` | KPIs calculated | ⬜ |
+| `gold_player_360` | Player metrics | ⬜ |
+| `gold_compliance_reporting` | Summary complete | ⬜ |
 
 ### Real-Time
-- [ ] Eventhouse `eh_casino_realtime` created
-- [ ] KQL database with `slot_events` table
-- [ ] Eventstream configured
-- [ ] Real-time dashboard with 4+ tiles
-- [ ] At least one alert configured
+
+| Component | Criteria | Status |
+|-----------|----------|:------:|
+| Eventhouse | `eh_casino_realtime` created | ⬜ |
+| KQL Database | `slot_events` table | ⬜ |
+| Eventstream | Configured | ⬜ |
+| Dashboard | 4+ tiles | ⬜ |
+| Alerts | At least one configured | ⬜ |
 
 ---
 
-## Homework / Preparation for Day 3
+## 📚 Homework / Preparation for Day 3
+
+### Required Reading
 
 1. **Review Direct Lake Tutorial** (Tutorial 05)
+
+### Exploration Tasks
+
 2. **Explore KQL:**
    - Write 3 additional monitoring queries
    - Try different visualizations
@@ -563,6 +700,8 @@ while True:
    - Think about executive dashboard requirements
    - Identify key metrics for compliance reporting
 
+### Background Reading
+
 4. **Read About:**
    - Direct Lake mode vs Import mode
    - DAX best practices
@@ -570,24 +709,85 @@ while True:
 
 ---
 
-## Instructor Notes
+## 📘 Instructor Notes
 
-### Common Issues
+### Common Issues & Solutions
 
-1. **SCD Type 2 Not Working**
-   - Verify Delta Lake merge syntax
-   - Check join conditions
+<table>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+</tr>
+<tr>
+<td>
 
-2. **Eventstream Not Flowing**
-   - Verify source connection
-   - Check KQL mapping
+**SCD Type 2 Not Working**
 
-3. **KQL Queries Slow**
-   - Add time filters first
-   - Use summarize before project
+</td>
+<td>
+
+- Verify Delta Lake merge syntax
+- Check join conditions
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Eventstream Not Flowing**
+
+</td>
+<td>
+
+- Verify source connection
+- Check KQL mapping
+
+</td>
+</tr>
+<tr>
+<td>
+
+**KQL Queries Slow**
+
+</td>
+<td>
+
+- Add time filters first
+- Use summarize before project
+
+</td>
+</tr>
+</table>
 
 ### Key Discussion Points
 
 - When to use SCD Type 1 vs Type 2
 - Real-time vs near-real-time trade-offs
 - KQL vs Spark SQL for analytics
+
+---
+
+## 🔗 Quick Links
+
+| Resource | Link |
+|----------|------|
+| Tutorial 02 | [Silver Layer](../tutorials/02-silver-layer/README.md) |
+| Tutorial 03 | [Gold Layer](../tutorials/03-gold-layer/README.md) |
+| Tutorial 04 | [Real-Time Analytics](../tutorials/04-real-time-analytics/README.md) |
+
+---
+
+<div align="center">
+
+**Day 2 Complete!**
+
+```
+Day 2: ██████████ 100% Complete
+Overall POC: ██████░░░░ 66% Complete
+```
+
+---
+
+[⬅️ Day 1: Foundation](./day1-medallion-foundation.md) | [Day 3: BI & Governance ➡️](./day3-bi-governance-mirroring.md)
+
+</div>

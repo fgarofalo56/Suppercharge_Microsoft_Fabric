@@ -1,0 +1,367 @@
+/// =============================================================================
+/// Fact: Player Activity (Player 360)
+/// =============================================================================
+///
+/// Purpose: Comprehensive player metrics and scoring
+/// Grain: One row per player (snapshot)
+/// Source: lh_gold.gold_player_360
+/// Update Pattern: Daily full refresh
+///
+/// Note: This is a semi-additive fact table (player snapshot)
+/// Use care with aggregations - some metrics are additive, others are not
+///
+/// =============================================================================
+
+table fact_player_activity
+    lineageTag: fact-player-001
+
+    /// ==========================================================================
+    /// PLAYER DIMENSION
+    /// ==========================================================================
+
+    column player_id
+        dataType: string
+        isKey: true
+        lineageTag: fact-player-id
+        summarizeBy: none
+        sourceColumn: player_id
+        description: "Unique player identifier"
+
+    column first_name
+        dataType: string
+        lineageTag: fact-player-fname
+        summarizeBy: none
+        sourceColumn: first_name
+        isHidden: true
+        description: "PII - Hidden"
+
+    column last_name
+        dataType: string
+        lineageTag: fact-player-lname
+        summarizeBy: none
+        sourceColumn: last_name
+        isHidden: true
+        description: "PII - Hidden"
+
+    column city
+        dataType: string
+        lineageTag: fact-player-city
+        summarizeBy: none
+        sourceColumn: city
+
+    column state
+        dataType: string
+        lineageTag: fact-player-state
+        summarizeBy: none
+        sourceColumn: state
+
+    column loyalty_tier
+        dataType: string
+        lineageTag: fact-player-tier
+        summarizeBy: none
+        sourceColumn: loyalty_tier
+        description: "Current loyalty tier"
+
+    column enrollment_date
+        dataType: dateTime
+        formatString: Short Date
+        lineageTag: fact-player-enroll
+        summarizeBy: none
+        sourceColumn: enrollment_date
+
+    column marketing_opt_in
+        dataType: boolean
+        lineageTag: fact-player-optin
+        summarizeBy: none
+        sourceColumn: marketing_opt_in
+
+    /// ==========================================================================
+    /// SLOT ACTIVITY METRICS
+    /// ==========================================================================
+
+    column slot_coin_in
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-player-slotcoinin
+        summarizeBy: sum
+        sourceColumn: slot_coin_in
+        description: "Total slot wagering (lifetime)"
+
+    column slot_coin_out
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-player-slotcoinout
+        summarizeBy: sum
+        sourceColumn: slot_coin_out
+        description: "Total slot payouts received"
+
+    column slot_games_played
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-player-slotgames
+        summarizeBy: sum
+        sourceColumn: slot_games_played
+
+    column slot_machines_played
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-player-slotmachines
+        summarizeBy: sum
+        sourceColumn: slot_machines_played
+
+    column slot_visit_days
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-player-slotvisits
+        summarizeBy: sum
+        sourceColumn: slot_visit_days
+
+    column slot_theo_win
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-player-slottheo
+        summarizeBy: sum
+        sourceColumn: slot_theo_win
+        description: "Theoretical slot win (casino expected revenue)"
+
+    column first_slot_play
+        dataType: dateTime
+        formatString: Short Date
+        lineageTag: fact-player-firstslot
+        summarizeBy: none
+        sourceColumn: first_slot_play
+
+    column last_slot_play
+        dataType: dateTime
+        formatString: Short Date
+        lineageTag: fact-player-lastslot
+        summarizeBy: none
+        sourceColumn: last_slot_play
+
+    /// ==========================================================================
+    /// TABLE ACTIVITY METRICS
+    /// ==========================================================================
+
+    column table_buy_in
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-player-tablebuyin
+        summarizeBy: sum
+        sourceColumn: table_buy_in
+        description: "Total table buy-ins"
+
+    column table_cash_out
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-player-tablecashout
+        summarizeBy: sum
+        sourceColumn: table_cash_out
+
+    column table_hours_played
+        dataType: decimal
+        formatString: #,##0.0
+        lineageTag: fact-player-tablehours
+        summarizeBy: sum
+        sourceColumn: table_hours_played
+
+    column tables_played
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-player-tables
+        summarizeBy: sum
+        sourceColumn: tables_played
+
+    column table_visit_days
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-player-tablevisits
+        summarizeBy: sum
+        sourceColumn: table_visit_days
+
+    column table_theo_win
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-player-tabletheo
+        summarizeBy: sum
+        sourceColumn: table_theo_win
+
+    /// ==========================================================================
+    /// FINANCIAL METRICS
+    /// ==========================================================================
+
+    column total_transactions
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-player-txns
+        summarizeBy: sum
+        sourceColumn: total_transactions
+
+    column total_cash_in
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-player-cashin
+        summarizeBy: sum
+        sourceColumn: total_cash_in
+
+    column total_cash_out
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-player-cashout
+        summarizeBy: sum
+        sourceColumn: total_cash_out
+
+    column total_markers
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-player-markers
+        summarizeBy: sum
+        sourceColumn: total_markers
+        description: "Total credit markers"
+
+    column total_marker_payments
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-player-markerpay
+        summarizeBy: sum
+        sourceColumn: total_marker_payments
+
+    column ctr_transaction_count
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-player-ctr
+        summarizeBy: sum
+        sourceColumn: ctr_transaction_count
+        description: "Count of CTR-triggering transactions"
+
+    /// ==========================================================================
+    /// CALCULATED TOTALS
+    /// ==========================================================================
+
+    column total_gaming_activity
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-player-totalactivity
+        summarizeBy: sum
+        sourceColumn: total_gaming_activity
+        description: "Combined slot and table activity"
+
+    column total_theo_win
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-player-totaltheo
+        summarizeBy: sum
+        sourceColumn: total_theo_win
+        description: "Total theoretical win (slot + table)"
+
+    column total_visits
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-player-totalvisits
+        summarizeBy: sum
+        sourceColumn: total_visits
+
+    column first_visit
+        dataType: dateTime
+        formatString: Short Date
+        lineageTag: fact-player-firstvisit
+        summarizeBy: min
+        sourceColumn: first_visit
+
+    column last_visit
+        dataType: dateTime
+        formatString: Short Date
+        lineageTag: fact-player-lastvisit
+        summarizeBy: max
+        sourceColumn: last_visit
+
+    column days_since_visit
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-player-daysincevisit
+        summarizeBy: average
+        sourceColumn: days_since_visit
+        description: "Days since last activity"
+
+    column account_age_days
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-player-age
+        summarizeBy: average
+        sourceColumn: account_age_days
+
+    /// ==========================================================================
+    /// SCORING & SEGMENTATION
+    /// ==========================================================================
+
+    column player_value_score
+        dataType: decimal
+        formatString: #,##0
+        lineageTag: fact-player-value
+        summarizeBy: average
+        sourceColumn: player_value_score
+        description: "Composite value score (0-1000)"
+
+    column churn_risk
+        dataType: string
+        lineageTag: fact-player-churnrisk
+        summarizeBy: none
+        sourceColumn: churn_risk
+        description: "Churn risk category"
+
+    column churn_risk_score
+        dataType: decimal
+        formatString: #,##0
+        lineageTag: fact-player-churnscore
+        summarizeBy: average
+        sourceColumn: churn_risk_score
+        description: "Churn risk score (0-100)"
+
+    column player_segment
+        dataType: string
+        lineageTag: fact-player-segment
+        summarizeBy: none
+        sourceColumn: player_segment
+        description: "Business segment"
+
+    column vip_flag
+        dataType: boolean
+        lineageTag: fact-player-vip
+        summarizeBy: none
+        sourceColumn: vip_flag
+
+    column preferred_game_type
+        dataType: string
+        lineageTag: fact-player-pref
+        summarizeBy: none
+        sourceColumn: preferred_game_type
+        description: "Slots, Tables, or Mixed"
+
+    /// ==========================================================================
+    /// METADATA
+    /// ==========================================================================
+
+    column _gold_timestamp
+        dataType: dateTime
+        formatString: General Date
+        lineageTag: fact-player-ts
+        summarizeBy: none
+        sourceColumn: _gold_timestamp
+        isHidden: true
+
+    column _batch_id
+        dataType: string
+        lineageTag: fact-player-batch
+        summarizeBy: none
+        sourceColumn: _batch_id
+        isHidden: true
+
+    /// ==========================================================================
+    /// PARTITION
+    /// ==========================================================================
+
+    partition 'fact_player_activity-directlake' = entity
+        mode: directLake
+        source
+            entityPath: gold_player_360
+            schemaName: dbo
+            expressionSource: 'DirectLake'

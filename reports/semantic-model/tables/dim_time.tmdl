@@ -1,0 +1,161 @@
+/// =============================================================================
+/// Dimension: Time
+/// =============================================================================
+///
+/// Purpose: Time of day dimension for hourly/shift analysis
+/// Grain: One row per hour (or 15-minute interval)
+/// Update Pattern: Static (generated via DAX)
+///
+/// =============================================================================
+
+table dim_time
+    lineageTag: dim-time-001
+
+    /// ==========================================================================
+    /// COLUMNS
+    /// ==========================================================================
+
+    column time_key
+        dataType: int64
+        formatString: 0
+        isKey: true
+        lineageTag: dim-time-key
+        summarizeBy: none
+        sourceColumn: time_key
+        description: "Integer time key (HHMM format)"
+
+    column Hour
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-time-hour
+        summarizeBy: none
+        sourceColumn: Hour
+        description: "Hour of day (0-23)"
+
+    column Minute
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-time-minute
+        summarizeBy: none
+        sourceColumn: Minute
+
+    column 'Hour Label'
+        dataType: string
+        lineageTag: dim-time-hour-label
+        summarizeBy: none
+        sourceColumn: HourLabel
+        description: "12-hour format with AM/PM"
+        sortByColumn: Hour
+
+    column 'Hour 24'
+        dataType: string
+        lineageTag: dim-time-hour24
+        summarizeBy: none
+        sourceColumn: Hour24
+        description: "24-hour format (HH:mm)"
+        sortByColumn: time_key
+
+    column Shift
+        dataType: string
+        lineageTag: dim-time-shift
+        summarizeBy: none
+        sourceColumn: Shift
+        description: "Casino shift (Day/Swing/Grave)"
+        sortByColumn: 'Shift Order'
+
+    column 'Shift Order'
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-time-shift-order
+        summarizeBy: none
+        sourceColumn: ShiftOrder
+        isHidden: true
+
+    column 'Is Peak Hour'
+        dataType: boolean
+        lineageTag: dim-time-peak
+        summarizeBy: none
+        sourceColumn: IsPeakHour
+        description: "Peak gaming hours (6 PM - 11 PM)"
+
+    column 'Hour Block'
+        dataType: string
+        lineageTag: dim-time-block
+        summarizeBy: none
+        sourceColumn: HourBlock
+        description: "4-hour blocks for reporting"
+        sortByColumn: 'Hour Block Order'
+
+    column 'Hour Block Order'
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-time-block-order
+        summarizeBy: none
+        sourceColumn: HourBlockOrder
+        isHidden: true
+
+    /// ==========================================================================
+    /// HIERARCHIES
+    /// ==========================================================================
+
+    hierarchy 'Time of Day'
+        lineageTag: dim-time-hier
+
+        level Shift
+            column: Shift
+            lineageTag: dim-time-hier-shift
+
+        level 'Hour Block'
+            column: 'Hour Block'
+            lineageTag: dim-time-hier-block
+
+        level Hour
+            column: 'Hour Label'
+            lineageTag: dim-time-hier-hour
+
+    /// ==========================================================================
+    /// CALCULATED TABLE DEFINITION
+    /// ==========================================================================
+
+    partition 'dim_time-calculated' = calculated
+        mode: import
+        expression:
+            ```
+            VAR Hours = GENERATESERIES(0, 23, 1)
+            RETURN
+            ADDCOLUMNS(
+                Hours,
+                "time_key", [Value] * 100,
+                "Hour", [Value],
+                "Minute", 0,
+                "HourLabel", FORMAT(TIME([Value], 0, 0), "h AM/PM"),
+                "Hour24", FORMAT(TIME([Value], 0, 0), "HH:mm"),
+                "Shift", SWITCH(TRUE(),
+                    [Value] >= 6 && [Value] < 14, "Day",
+                    [Value] >= 14 && [Value] < 22, "Swing",
+                    "Grave"
+                ),
+                "ShiftOrder", SWITCH(TRUE(),
+                    [Value] >= 6 && [Value] < 14, 1,
+                    [Value] >= 14 && [Value] < 22, 2,
+                    3
+                ),
+                "IsPeakHour", [Value] >= 18 && [Value] <= 23,
+                "HourBlock", SWITCH(TRUE(),
+                    [Value] >= 0 && [Value] < 4, "12 AM - 4 AM",
+                    [Value] >= 4 && [Value] < 8, "4 AM - 8 AM",
+                    [Value] >= 8 && [Value] < 12, "8 AM - 12 PM",
+                    [Value] >= 12 && [Value] < 16, "12 PM - 4 PM",
+                    [Value] >= 16 && [Value] < 20, "4 PM - 8 PM",
+                    "8 PM - 12 AM"
+                ),
+                "HourBlockOrder", SWITCH(TRUE(),
+                    [Value] >= 0 && [Value] < 4, 1,
+                    [Value] >= 4 && [Value] < 8, 2,
+                    [Value] >= 8 && [Value] < 12, 3,
+                    [Value] >= 12 && [Value] < 16, 4,
+                    [Value] >= 16 && [Value] < 20, 5,
+                    6
+                )
+            )
+            ```

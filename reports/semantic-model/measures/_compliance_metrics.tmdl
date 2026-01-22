@@ -1,0 +1,320 @@
+/// =============================================================================
+/// Measure Group: Compliance Metrics
+/// =============================================================================
+///
+/// Regulatory compliance tracking for CTR, SAR, W-2G filings
+/// Used for compliance monitoring and audit support
+///
+/// =============================================================================
+
+table '_Compliance Metrics'
+    lineageTag: measures-compliance
+    description: "Regulatory compliance metrics"
+
+    column _placeholder
+        dataType: string
+        isHidden: true
+        lineageTag: measures-compliance-ph
+        sourceColumn: none
+        expression: "Measures Table"
+
+    /// ==========================================================================
+    /// CTR (CURRENCY TRANSACTION REPORT) MEASURES
+    /// ==========================================================================
+
+    measure 'CTR Count' =
+        SUM(fact_compliance[ctr_count])
+        formatString: #,##0
+        lineageTag: m-ctr-count
+        displayFolder: "CTR"
+        description: "Total Currency Transaction Reports filed"
+
+    measure 'CTR Amount' =
+        SUM(fact_compliance[ctr_total_amount])
+        formatString: \$#,##0
+        lineageTag: m-ctr-amount
+        displayFolder: "CTR"
+        description: "Total amount in CTR filings"
+
+    measure 'Avg CTR Amount' =
+        DIVIDE([CTR Amount], [CTR Count], 0)
+        formatString: \$#,##0.00
+        lineageTag: m-avg-ctr
+        displayFolder: "CTR"
+        description: "Average CTR transaction amount"
+
+    measure 'Potential CTR Count' =
+        SUM(fact_compliance[potential_ctr_count])
+        formatString: #,##0
+        lineageTag: m-potential-ctr
+        displayFolder: "CTR"
+        description: "Transactions requiring CTR but not yet filed"
+
+    measure 'Potential CTR Amount' =
+        SUM(fact_compliance[potential_ctr_amount])
+        formatString: \$#,##0
+        lineageTag: m-potential-ctr-amt
+        displayFolder: "CTR"
+        description: "Amount of potential CTR transactions"
+
+    measure 'CTR Backlog' =
+        [Potential CTR Count] - [CTR Count]
+        formatString: #,##0
+        lineageTag: m-ctr-backlog
+        displayFolder: "CTR"
+        description: "CTR filing backlog"
+
+    /// ==========================================================================
+    /// SAR (SUSPICIOUS ACTIVITY REPORT) MEASURES
+    /// ==========================================================================
+
+    measure 'SAR Count' =
+        SUM(fact_compliance[sar_count])
+        formatString: #,##0
+        lineageTag: m-sar-count
+        displayFolder: "SAR"
+        description: "Total Suspicious Activity Reports filed"
+
+    measure 'SAR Amount' =
+        SUM(fact_compliance[sar_total_amount])
+        formatString: \$#,##0
+        lineageTag: m-sar-amount
+        displayFolder: "SAR"
+        description: "Total amount in SAR filings"
+
+    measure 'Avg SAR Amount' =
+        DIVIDE([SAR Amount], [SAR Count], 0)
+        formatString: \$#,##0.00
+        lineageTag: m-avg-sar
+        displayFolder: "SAR"
+        description: "Average SAR transaction amount"
+
+    measure 'SAR Rate' =
+        DIVIDE([SAR Count], [CTR Count], 0) * 100
+        formatString: 0.00"%"
+        lineageTag: m-sar-rate
+        displayFolder: "SAR"
+        description: "SAR to CTR ratio"
+
+    /// ==========================================================================
+    /// W-2G (JACKPOT TAX FORM) MEASURES
+    /// ==========================================================================
+
+    measure 'W2G Count' =
+        SUM(fact_compliance[w2g_count])
+        formatString: #,##0
+        lineageTag: m-w2g-count
+        displayFolder: "W-2G"
+        description: "Total W-2G forms filed (jackpot tax)"
+
+    measure 'W2G Amount' =
+        SUM(fact_compliance[w2g_total_amount])
+        formatString: \$#,##0
+        lineageTag: m-w2g-amount
+        displayFolder: "W-2G"
+        description: "Total amount of reported jackpots"
+
+    measure 'Avg W2G Amount' =
+        DIVIDE([W2G Amount], [W2G Count], 0)
+        formatString: \$#,##0.00
+        lineageTag: m-avg-w2g
+        displayFolder: "W-2G"
+        description: "Average W-2G jackpot amount"
+
+    /// ==========================================================================
+    /// TOTAL FILINGS
+    /// ==========================================================================
+
+    measure 'Total Filings' =
+        [CTR Count] + [SAR Count] + [W2G Count]
+        formatString: #,##0
+        lineageTag: m-total-filings
+        displayFolder: "Totals"
+        description: "Total regulatory filings (CTR + SAR + W-2G)"
+
+    measure 'Total Filing Amount' =
+        COALESCE([CTR Amount], 0) +
+        COALESCE([SAR Amount], 0) +
+        COALESCE([W2G Amount], 0)
+        formatString: \$#,##0
+        lineageTag: m-total-filing-amt
+        displayFolder: "Totals"
+        description: "Total amount across all filing types"
+
+    measure 'Regulatory Filings' =
+        SUM(fact_compliance[total_regulatory_filings])
+        formatString: #,##0
+        lineageTag: m-reg-filings
+        displayFolder: "Totals"
+        description: "Pre-calculated regulatory filing total"
+
+    /// ==========================================================================
+    /// FILING STATUS
+    /// ==========================================================================
+
+    measure 'Pending Filings' =
+        SUM(fact_compliance[pending_filings])
+        formatString: #,##0
+        lineageTag: m-pending
+        displayFolder: "Status"
+        description: "Filings not yet submitted"
+
+    measure 'Submitted Filings' =
+        SUM(fact_compliance[submitted_filings])
+        formatString: #,##0
+        lineageTag: m-submitted
+        displayFolder: "Status"
+        description: "Filings submitted to regulators"
+
+    measure 'Filing Completion Rate' =
+        DIVIDE([Submitted Filings], [Submitted Filings] + [Pending Filings], 1) * 100
+        formatString: 0.0"%"
+        lineageTag: m-filing-rate
+        displayFolder: "Status"
+        description: "Percentage of filings completed"
+
+    measure 'Pending Filing Indicator' =
+        IF([Pending Filings] > 0, "Pending", "Current")
+        formatString: @
+        lineageTag: m-pending-ind
+        displayFolder: "Status"
+        description: "Indicator for pending filings"
+
+    /// ==========================================================================
+    /// STRUCTURING DETECTION
+    /// ==========================================================================
+
+    measure 'Structuring Suspects' =
+        SUM(fact_compliance[structuring_suspect_count])
+        formatString: #,##0
+        lineageTag: m-structuring
+        displayFolder: "Structuring"
+        description: "Potential structuring incidents detected"
+
+    measure 'Structuring Amount' =
+        SUM(fact_compliance[structuring_suspect_amount])
+        formatString: \$#,##0
+        lineageTag: m-structuring-amt
+        displayFolder: "Structuring"
+        description: "Total amount in suspected structuring"
+
+    measure 'Avg Structuring Amount' =
+        DIVIDE([Structuring Amount], [Structuring Suspects], 0)
+        formatString: \$#,##0.00
+        lineageTag: m-avg-structuring
+        displayFolder: "Structuring"
+        description: "Average amount per structuring suspect"
+
+    measure 'Structuring Alert' =
+        IF([Structuring Suspects] > 0, "ALERT", "Clear")
+        formatString: @
+        lineageTag: m-structuring-alert
+        displayFolder: "Structuring"
+        description: "Structuring alert indicator"
+
+    /// ==========================================================================
+    /// COMPLIANCE HEALTH SCORES
+    /// ==========================================================================
+
+    measure 'Compliance Score' =
+        VAR Pending = [Pending Filings]
+        VAR Structuring = [Structuring Suspects]
+        RETURN
+        SWITCH(
+            TRUE(),
+            Pending = 0 && Structuring = 0, 100,
+            Structuring > 0, 60,
+            Pending > 10, 70,
+            Pending > 5, 80,
+            90
+        )
+        formatString: #,##0
+        lineageTag: m-compliance-score
+        displayFolder: "Health"
+        description: "Compliance health score (0-100)"
+
+    measure 'Compliance Status' =
+        SWITCH(
+            TRUE(),
+            [Compliance Score] >= 90, "Compliant",
+            [Compliance Score] >= 70, "Attention Needed",
+            "At Risk"
+        )
+        formatString: @
+        lineageTag: m-compliance-status
+        displayFolder: "Health"
+        description: "Compliance status category"
+
+    measure 'Compliance Status Color' =
+        SWITCH(
+            [Compliance Status],
+            "Compliant", "#107C10",
+            "Attention Needed", "#FFB900",
+            "At Risk", "#D13438",
+            "#605E5C"
+        )
+        formatString: @
+        lineageTag: m-compliance-color
+        displayFolder: "Health"
+        description: "Color code for compliance status"
+
+    /// ==========================================================================
+    /// DAILY RATES
+    /// ==========================================================================
+
+    measure 'Daily Filing Rate' =
+        DIVIDE(
+            [Total Filings],
+            DISTINCTCOUNT(fact_compliance[report_date]),
+            0
+        )
+        formatString: #,##0.0
+        lineageTag: m-daily-rate
+        displayFolder: "Rates"
+        description: "Average filings per day"
+
+    measure 'Daily CTR Rate' =
+        DIVIDE(
+            [CTR Count],
+            DISTINCTCOUNT(fact_compliance[report_date]),
+            0
+        )
+        formatString: #,##0.0
+        lineageTag: m-daily-ctr-rate
+        displayFolder: "Rates"
+        description: "Average CTRs per day"
+
+    measure 'Days with Filings' =
+        DISTINCTCOUNT(fact_compliance[report_date])
+        formatString: #,##0
+        lineageTag: m-days-filings
+        displayFolder: "Rates"
+        description: "Number of days with filing activity"
+
+    /// ==========================================================================
+    /// THRESHOLD ALERTS
+    /// ==========================================================================
+
+    measure 'CTR Threshold Alert' =
+        IF([Pending Filings] > 5, "CTR Backlog", "On Track")
+        formatString: @
+        lineageTag: m-ctr-alert
+        displayFolder: "Alerts"
+        description: "CTR filing backlog alert"
+
+    measure 'Filing Deadline Alert' =
+        IF([Pending Filings] > 10, "Deadline Risk", "OK")
+        formatString: @
+        lineageTag: m-deadline-alert
+        displayFolder: "Alerts"
+        description: "Filing deadline risk indicator"
+
+    measure 'Compliance Alert Count' =
+        VAR CTRAlert = IF([Pending Filings] > 5, 1, 0)
+        VAR SARAlert = IF([SAR Count] > 0, 1, 0)
+        VAR StructAlert = IF([Structuring Suspects] > 0, 1, 0)
+        RETURN CTRAlert + SARAlert + StructAlert
+        formatString: #,##0
+        lineageTag: m-alert-count
+        displayFolder: "Alerts"
+        description: "Count of active compliance alerts"

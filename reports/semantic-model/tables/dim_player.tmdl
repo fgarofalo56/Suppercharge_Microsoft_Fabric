@@ -1,0 +1,240 @@
+/// =============================================================================
+/// Dimension: Player
+/// =============================================================================
+///
+/// Purpose: Player demographics and attributes for segmentation
+/// Grain: One row per unique player
+/// Source: Derived from gold_player_360
+/// Update Pattern: SCD Type 2 (maintain history in source)
+///
+/// Note: Sensitive PII fields should be masked or excluded from reporting
+///
+/// =============================================================================
+
+table dim_player
+    lineageTag: dim-player-001
+
+    /// ==========================================================================
+    /// COLUMNS
+    /// ==========================================================================
+
+    column player_id
+        dataType: string
+        isKey: true
+        lineageTag: dim-player-id
+        summarizeBy: none
+        sourceColumn: player_id
+        description: "Unique player identifier"
+
+    column 'Player Name'
+        dataType: string
+        lineageTag: dim-player-name
+        summarizeBy: none
+        sourceColumn: player_name
+        description: "Masked display name for reporting"
+        /// Note: Use first_name + last initial or masked version
+
+    column 'First Name'
+        dataType: string
+        lineageTag: dim-player-fname
+        summarizeBy: none
+        sourceColumn: first_name
+        isHidden: true
+        description: "First name (PII - hidden by default)"
+
+    column 'Last Name'
+        dataType: string
+        lineageTag: dim-player-lname
+        summarizeBy: none
+        sourceColumn: last_name
+        isHidden: true
+        description: "Last name (PII - hidden by default)"
+
+    column 'Age Group'
+        dataType: string
+        lineageTag: dim-player-age
+        summarizeBy: none
+        sourceColumn: age_group
+        description: "Age range bucket (21-30, 31-40, etc.)"
+        sortByColumn: 'Age Group Order'
+
+    column 'Age Group Order'
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-player-age-order
+        summarizeBy: none
+        sourceColumn: age_group_order
+        isHidden: true
+
+    column gender
+        dataType: string
+        lineageTag: dim-player-gender
+        summarizeBy: none
+        sourceColumn: gender
+        description: "Gender (M/F/Other/Unknown)"
+
+    column city
+        dataType: string
+        lineageTag: dim-player-city
+        summarizeBy: none
+        sourceColumn: city
+
+    column state
+        dataType: string
+        lineageTag: dim-player-state
+        summarizeBy: none
+        sourceColumn: state
+        description: "State/Province code"
+
+    column region
+        dataType: string
+        lineageTag: dim-player-region
+        summarizeBy: none
+        sourceColumn: region
+        description: "Geographic region (Local, Regional, National, International)"
+
+    column loyalty_tier
+        dataType: string
+        lineageTag: dim-player-tier
+        summarizeBy: none
+        sourceColumn: loyalty_tier
+        description: "Current loyalty tier (Bronze, Silver, Gold, Platinum, Diamond)"
+        sortByColumn: 'Tier Order'
+
+    column 'Tier Order'
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-player-tier-order
+        summarizeBy: none
+        sourceColumn: tier_order
+        isHidden: true
+
+    column enrollment_date
+        dataType: dateTime
+        formatString: Short Date
+        lineageTag: dim-player-enroll
+        summarizeBy: none
+        sourceColumn: enrollment_date
+        description: "Loyalty program enrollment date"
+
+    column enrollment_year
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-player-enroll-year
+        summarizeBy: none
+        sourceColumn: enrollment_year
+
+    column marketing_opt_in
+        dataType: boolean
+        lineageTag: dim-player-optin
+        summarizeBy: none
+        sourceColumn: marketing_opt_in
+        description: "Has opted in to marketing communications"
+
+    column preferred_game_type
+        dataType: string
+        lineageTag: dim-player-pref
+        summarizeBy: none
+        sourceColumn: preferred_game_type
+        description: "Preferred gaming type (Slots, Tables, Mixed)"
+
+    column player_segment
+        dataType: string
+        lineageTag: dim-player-segment
+        summarizeBy: none
+        sourceColumn: player_segment
+        description: "Business segment (VIP, High Value, Medium Value, Low Value, Minimal)"
+        sortByColumn: 'Segment Order'
+
+    column 'Segment Order'
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-player-seg-order
+        summarizeBy: none
+        sourceColumn: segment_order
+        isHidden: true
+
+    column vip_flag
+        dataType: boolean
+        lineageTag: dim-player-vip
+        summarizeBy: none
+        sourceColumn: vip_flag
+        description: "Is VIP player (Diamond/Platinum or high value score)"
+
+    column churn_risk
+        dataType: string
+        lineageTag: dim-player-churn
+        summarizeBy: none
+        sourceColumn: churn_risk
+        description: "Churn risk level (Active, Low, Medium, Medium-High, High)"
+        sortByColumn: 'Churn Order'
+
+    column 'Churn Order'
+        dataType: int64
+        formatString: 0
+        lineageTag: dim-player-churn-order
+        summarizeBy: none
+        sourceColumn: churn_order
+        isHidden: true
+
+    column is_active
+        dataType: boolean
+        lineageTag: dim-player-active
+        summarizeBy: none
+        sourceColumn: is_active
+        description: "Has activity in last 90 days"
+
+    /// ==========================================================================
+    /// HIERARCHIES
+    /// ==========================================================================
+
+    hierarchy 'Player Geography'
+        lineageTag: dim-player-geo-hier
+
+        level Region
+            column: region
+            lineageTag: dim-player-hier-region
+
+        level State
+            column: state
+            lineageTag: dim-player-hier-state
+
+        level City
+            column: city
+            lineageTag: dim-player-hier-city
+
+    hierarchy 'Player Segment'
+        lineageTag: dim-player-seg-hier
+
+        level 'Loyalty Tier'
+            column: loyalty_tier
+            lineageTag: dim-player-hier-tier
+
+        level Segment
+            column: player_segment
+            lineageTag: dim-player-hier-segment
+
+    /// ==========================================================================
+    /// MEASURES (Player-specific)
+    /// ==========================================================================
+
+    measure 'Player Count' =
+        COUNTROWS(dim_player)
+        formatString: #,##0
+        lineageTag: dim-player-count
+
+    measure 'VIP Count' =
+        CALCULATE(
+            COUNTROWS(dim_player),
+            dim_player[vip_flag] = TRUE
+        )
+        formatString: #,##0
+        lineageTag: dim-player-vip-count
+
+    measure 'Active Player Count' =
+        CALCULATE(
+            COUNTROWS(dim_player),
+            dim_player[is_active] = TRUE
+        )
+        formatString: #,##0
+        lineageTag: dim-player-active-count

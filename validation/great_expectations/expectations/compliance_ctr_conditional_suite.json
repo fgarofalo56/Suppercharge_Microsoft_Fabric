@@ -1,0 +1,79 @@
+{
+  "expectation_suite_name": "compliance_ctr_conditional_suite",
+  "meta": {
+    "great_expectations_version": "0.18.0",
+    "notes": "Conditional validation for CTR filings - validates amount >= $10,000 threshold",
+    "domain": "Regulatory Compliance - CTR",
+    "compliance_requirements": [
+      "Bank Secrecy Act (BSA) compliance",
+      "Currency Transaction Report threshold: $10,000"
+    ],
+    "usage_note": "Apply this suite to CTR-filtered data only"
+  },
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 0,
+        "max_value": null
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "filing_type",
+        "value_set": ["CTR"]
+      },
+      "meta": {
+        "notes": "This suite is for CTR filings only"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "amount",
+        "min_value": 10000,
+        "max_value": null
+      },
+      "meta": {
+        "notes": "CTR required for transactions >= $10,000 (BSA requirement)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "transaction_date"
+      },
+      "meta": {
+        "notes": "Transaction date required for CTR filing"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "player_id"
+      },
+      "meta": {
+        "notes": "Customer identification required for CTR"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "cage_location"
+      },
+      "meta": {
+        "notes": "Transaction location required for CTR"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "cashier_id"
+      },
+      "meta": {
+        "notes": "Employee identification required for CTR"
+      }
+    }
+  ]
+}

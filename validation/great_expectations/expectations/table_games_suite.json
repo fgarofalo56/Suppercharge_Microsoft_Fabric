@@ -1,0 +1,284 @@
+{
+  "expectation_suite_name": "table_games_suite",
+  "meta": {
+    "great_expectations_version": "0.18.0",
+    "notes": "Comprehensive data quality expectations for casino table games events",
+    "domain": "Table Games Operations",
+    "compliance_requirements": [
+      "Gaming Commission drop/count accuracy",
+      "Player rating accuracy",
+      "Chip inventory management",
+      "Table performance analytics"
+    ]
+  },
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 1,
+        "max_value": null
+      },
+      "meta": {
+        "notes": "Table should have at least 1 record"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "event_id"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "table_id"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "game_type"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "event_type"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "event_timestamp"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "event_id"
+      },
+      "meta": {
+        "notes": "Event ID is required - primary identifier"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "table_id"
+      },
+      "meta": {
+        "notes": "Table ID is required for tracking"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "game_type"
+      },
+      "meta": {
+        "notes": "Game type is required for classification"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "event_type"
+      },
+      "meta": {
+        "notes": "Event type is required"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "event_timestamp"
+      },
+      "meta": {
+        "notes": "Timestamp is required for event sequencing"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_unique",
+      "kwargs": {
+        "column": "event_id"
+      },
+      "meta": {
+        "notes": "Event ID must be unique"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "event_id",
+        "regex": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+        "mostly": 0.95
+      },
+      "meta": {
+        "notes": "Event ID should be UUID format"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "table_id",
+        "regex": "^TBL-[A-Z]{2}-[0-9]{3}$"
+      },
+      "meta": {
+        "notes": "Table ID format: TBL-XX-XXX (e.g., TBL-BJ-001, TBL-CR-015)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "game_type",
+        "value_set": [
+          "BLACKJACK",
+          "CRAPS",
+          "ROULETTE",
+          "BACCARAT",
+          "POKER"
+        ]
+      },
+      "meta": {
+        "notes": "Valid table game types"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "event_type",
+        "value_set": [
+          "GAME_START",
+          "GAME_END",
+          "BET_PLACED",
+          "HAND_COMPLETE",
+          "WIN",
+          "LOSS",
+          "PUSH",
+          "SURRENDER",
+          "DEALER_CHANGE",
+          "TABLE_OPEN",
+          "TABLE_CLOSE",
+          "MARKER_ISSUED",
+          "CHIP_FILL",
+          "CHIP_CREDIT"
+        ]
+      },
+      "meta": {
+        "notes": "Valid table game event types"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "outcome",
+        "value_set": ["WIN", "LOSS", "PUSH", "BLACKJACK", "BUST", "SURRENDER", null]
+      },
+      "meta": {
+        "notes": "Valid hand outcomes"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "bet_amount",
+        "min_value": 0,
+        "max_value": null,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Bet amount must be non-negative (buy-in/wager must be positive when present)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "win_amount",
+        "min_value": 0,
+        "max_value": null,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Win amount must be non-negative"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "chip_count",
+        "min_value": 0,
+        "max_value": null,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Chip count must be non-negative"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "hand_number",
+        "min_value": 1,
+        "max_value": null,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Hand number starts at 1"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "seat_position",
+        "min_value": 1,
+        "max_value": 8,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Seat position: 1-8 (typical table max)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "event_timestamp"
+      },
+      "meta": {
+        "notes": "Event timestamp must be parseable"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "player_id",
+        "regex": "^P[0-9]+$",
+        "mostly": 0.90
+      },
+      "meta": {
+        "notes": "Player ID format when present (rated play)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "session_id",
+        "regex": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+        "mostly": 0.95
+      },
+      "meta": {
+        "notes": "Session ID should be UUID format when present"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "cards_dealt",
+        "regex": "^[2-9TJQKA][SHDC](\\-[2-9TJQKA][SHDC])*$",
+        "mostly": 0.90
+      },
+      "meta": {
+        "notes": "Cards format: rank+suit with hyphen separator (e.g., AS-KH, 7D-8C-3S)"
+      }
+    }
+  ]
+}

@@ -1,8 +1,51 @@
-# Data Generation
+# :slot_machine: Data Generation
 
-This directory contains Python generators for creating synthetic casino/gaming data for the Microsoft Fabric POC.
+> **[Home](../README.md)** | **[Tutorials](../tutorials/)** | **[Notebooks](../notebooks/)** | **[Validation](../validation/)**
+
+Synthetic data generators for creating realistic casino/gaming data for the Microsoft Fabric POC.
+
+---
+
+## Overview
+
+```
++------------------+     +------------------+     +------------------+
+|  Configuration   |     |    Generators    |     |     Output       |
++------------------+     +------------------+     +------------------+
+|  - Date range    | --> | SlotMachine      | --> | Parquet (default)|
+|  - Volume        |     | TableGame        |     | CSV              |
+|  - Seed          |     | Player           |     | JSON             |
+|  - PII handling  |     | Financial        |     |                  |
+|                  |     | Security         |     | Bronze Layer     |
+|                  |     | Compliance       |     | Ready            |
++------------------+     +------------------+     +------------------+
+```
+
+---
 
 ## Quick Start
+
+### Option 1: Docker (Recommended)
+
+The fastest way to generate data without installing dependencies.
+
+```bash
+# Generate demo dataset (quick, small)
+docker-compose run --rm demo-generator
+
+# Generate full dataset (30 days, all domains)
+docker-compose run --rm data-generator
+
+# Generate with custom parameters
+docker-compose run --rm data-generator --all --days 14 --format parquet
+
+# Stream events to Azure Event Hub
+EVENTHUB_CONNECTION_STRING="your-connection" docker-compose up streaming-generator
+```
+
+Output will be in the `./output` directory.
+
+### Option 2: Local Python
 
 ```bash
 # Install dependencies
@@ -18,30 +61,52 @@ python generate.py --slots 100000 --players 5000
 python generate.py --all --format csv --output ./csv_output
 ```
 
+### Option 3: Use Sample Data
+
+Pre-generated sample datasets are available for quick exploration:
+
+```bash
+# View available sample data
+ls ../sample-data/bronze/
+
+# Copy sample data to output
+cp -r ../sample-data/bronze/* ./output/
+```
+
+See [Sample Data](#sample-data) section for details.
+
+---
+
 ## Data Generators
 
-| Generator | Output File | Description |
-|-----------|-------------|-------------|
-| `SlotMachineGenerator` | `bronze_slot_telemetry` | Slot machine events, meters, jackpots |
-| `TableGameGenerator` | `bronze_table_games` | Table game transactions, ratings |
-| `PlayerGenerator` | `bronze_player_profile` | Player demographics, loyalty |
-| `FinancialGenerator` | `bronze_financial_txn` | Cage transactions, markers |
-| `SecurityGenerator` | `bronze_security_events` | Access control, surveillance |
-| `ComplianceGenerator` | `bronze_compliance` | CTR, SAR, W-2G filings |
+| Generator | Output Table | Description | Key Fields |
+|-----------|--------------|-------------|------------|
+| `SlotMachineGenerator` | `bronze_slot_telemetry` | Slot machine events, meters, jackpots | `machine_id`, `coin_in`, `coin_out`, `jackpot_amount` |
+| `TableGameGenerator` | `bronze_table_games` | Table game transactions, ratings | `table_id`, `game_type`, `bet_amount`, `result` |
+| `PlayerGenerator` | `bronze_player_profile` | Player demographics, loyalty | `player_id`, `loyalty_tier`, `ssn_hash` |
+| `FinancialGenerator` | `bronze_financial_txn` | Cage transactions, markers | `txn_id`, `amount`, `ctr_flag` |
+| `SecurityGenerator` | `bronze_security_events` | Access control, surveillance | `event_id`, `location`, `threat_level` |
+| `ComplianceGenerator` | `bronze_compliance` | CTR, SAR, W-2G filings | `filing_type`, `amount`, `status` |
+
+---
 
 ## Default Volumes
 
 When using `--all`, the following volumes are generated:
 
-| Data Type | Records | Est. Size |
-|-----------|---------|-----------|
-| Slot Events | 500,000 | ~500 MB |
-| Table Games | 100,000 | ~100 MB |
-| Players | 10,000 | ~10 MB |
-| Financial | 50,000 | ~50 MB |
-| Security | 25,000 | ~25 MB |
-| Compliance | 10,000 | ~10 MB |
-| **Total** | **~700,000** | **~700 MB** |
+| Data Type | Records | Est. Size | Bronze Table |
+|-----------|---------|-----------|--------------|
+| Slot Events | 500,000 | ~500 MB | `bronze_slot_telemetry` |
+| Table Games | 100,000 | ~100 MB | `bronze_table_games` |
+| Players | 10,000 | ~10 MB | `bronze_player_profile` |
+| Financial | 50,000 | ~50 MB | `bronze_financial_txn` |
+| Security | 25,000 | ~25 MB | `bronze_security_events` |
+| Compliance | 10,000 | ~10 MB | `bronze_compliance` |
+| **Total** | **~700,000** | **~700 MB** | |
+
+> **Note:** Volumes can be scaled up or down using command line options.
+
+---
 
 ## Command Line Options
 
@@ -66,6 +131,8 @@ Options:
   --compliance     Number of compliance records
   --include-pii    Include raw PII (testing only)
 ```
+
+---
 
 ## Using Generators Programmatically
 
@@ -96,49 +163,114 @@ for batch in slot_gen.generate_batches(100000, batch_size=10000):
     process_batch(batch)
 ```
 
-## Data Quality
+---
+
+## Sample Output Preview
+
+### Slot Machine Events
+
+```json
+{
+  "event_id": "evt_a1b2c3d4",
+  "machine_id": "SM-0042",
+  "asset_number": "A-12345",
+  "event_type": "PLAY",
+  "event_timestamp": "2024-01-15T14:32:18Z",
+  "denomination": 0.25,
+  "coin_in": 100.00,
+  "coin_out": 85.50,
+  "games_played": 400,
+  "theoretical_hold": 8.5,
+  "actual_hold": 14.5,
+  "player_id": "PLY-98765"
+}
+```
+
+### Player Profile
+
+```json
+{
+  "player_id": "PLY-98765",
+  "loyalty_number": "GOLD-2024-00123",
+  "first_name": "J***",
+  "last_name": "S***",
+  "ssn_hash": "sha256:a1b2c3...",
+  "ssn_masked": "XXX-XX-1234",
+  "loyalty_tier": "Gold",
+  "points_balance": 15420,
+  "total_theo": 12500.00,
+  "vip_flag": true
+}
+```
+
+---
+
+## Data Quality Features
 
 All generators include:
-- Consistent schema definitions
-- Referential integrity (player IDs, machine IDs)
-- Realistic distributions and patterns
-- Compliance threshold logic (CTR $10K, W-2G $1,200)
-- PII handling (hashing, masking)
+
+| Feature | Description |
+|---------|-------------|
+| **Consistent Schemas** | Matching Delta Lake table definitions |
+| **Referential Integrity** | Player IDs, Machine IDs cross-reference correctly |
+| **Realistic Distributions** | Based on industry patterns and statistics |
+| **Compliance Logic** | CTR $10K threshold, W-2G $1,200 threshold |
+| **PII Protection** | Hashing, masking enabled by default |
+| **Reproducibility** | Seed-based generation for consistent results |
+
+---
 
 ## PII Handling
 
-By default, PII is protected:
-- SSN: Hashed + masked (XXX-XX-1234)
-- Names: First initial only (J*** S***)
-- Addresses: Hashed
-- Card numbers: Masked (****-****-****-1234)
+> **Warning:** By default, PII is protected. Use `--include-pii` only for testing/development.
 
-Use `--include-pii` only for testing/development.
+| PII Type | Default Handling | Example Output |
+|----------|------------------|----------------|
+| SSN | Hashed + Masked | `XXX-XX-1234` |
+| Names | First initial only | `J*** S***` |
+| Addresses | Hashed | `sha256:abc123...` |
+| Card Numbers | Masked | `****-****-****-1234` |
+| Phone | Partial mask | `(***) ***-4567` |
+| Email | Domain only | `j***@example.com` |
+
+---
 
 ## Compliance Data
 
-The compliance generator includes realistic patterns for:
+The compliance generator includes realistic patterns for regulatory filings:
 
 ### CTR (Currency Transaction Reports)
-- Threshold: >= $10,000
-- Filed within 15 days
-- Includes cash-in/cash-out breakdown
+
+| Field | Value |
+|-------|-------|
+| Threshold | >= $10,000 |
+| Filing Deadline | 15 days |
+| Includes | Cash-in/cash-out breakdown |
 
 ### SAR (Suspicious Activity Reports)
-- Pattern detection (structuring)
-- Multiple categories
-- Narrative generation
-- Filed within 30 days
+
+| Field | Value |
+|-------|-------|
+| Triggers | Pattern detection (structuring) |
+| Categories | Multiple (layering, structuring, etc.) |
+| Filing Deadline | 30 days |
+| Includes | Narrative generation |
 
 ### W-2G (Gambling Winnings)
-- Slots: >= $1,200
-- Keno: >= $1,500
-- Poker tournaments: >= $5,000
-- Includes withholding calculations
+
+| Game Type | Threshold |
+|-----------|-----------|
+| Slots | >= $1,200 |
+| Keno | >= $1,500 |
+| Poker Tournaments | >= $5,000 |
+| Table Games | >= $600 (300:1 odds) |
+
+---
 
 ## Output Schemas
 
 ### Slot Machine Events
+
 ```
 event_id, machine_id, asset_number, location_id, zone,
 event_type, event_timestamp, denomination, coin_in, coin_out,
@@ -148,6 +280,7 @@ error_code, error_message, _ingested_at, _source, _batch_id
 ```
 
 ### Player Profiles
+
 ```
 player_id, loyalty_number, first_name, last_name, email,
 phone, date_of_birth, ssn_hash, ssn_masked, address_line1,
@@ -159,4 +292,118 @@ marketing_channel, host_assigned, vip_flag, self_excluded,
 account_status, _ingested_at, _source, _batch_id
 ```
 
-See individual generator docstrings for complete schemas.
+> **Tip:** See individual generator docstrings for complete schema documentation.
+
+---
+
+## Directory Structure
+
+```
+data-generation/
+|-- generators/
+|   |-- __init__.py
+|   |-- slot_machine.py      # Slot telemetry generator
+|   |-- table_game.py        # Table games generator
+|   |-- player.py            # Player profile generator
+|   |-- financial.py         # Financial transaction generator
+|   |-- security.py          # Security events generator
+|   |-- compliance.py        # Compliance filing generator
+|   +-- base.py              # Base generator class
+|-- output/                   # Default output directory
+|-- generate.py               # Main CLI entry point
++-- README.md
+```
+
+---
+
+## Sample Data
+
+Pre-generated sample datasets are available for quick exploration without running generators.
+
+### Available Sample Datasets
+
+| Dataset | Records | Format | Location |
+|---------|---------|--------|----------|
+| Slot Telemetry | 10,000 | CSV/Parquet | `../sample-data/bronze/slot_telemetry_sample.*` |
+| Player Profiles | 500 | CSV/Parquet | `../sample-data/bronze/player_profiles_sample.*` |
+| Table Games | 2,000 | CSV/Parquet | `../sample-data/bronze/table_games_sample.*` |
+| Financial | 1,000 | CSV/Parquet | `../sample-data/bronze/financial_sample.*` |
+
+### Using Sample Data
+
+```python
+import pandas as pd
+
+# Load sample slot data
+df = pd.read_parquet('../sample-data/bronze/slot_telemetry_sample.parquet')
+print(f"Records: {len(df)}")
+print(df.head())
+
+# Or use CSV
+df = pd.read_csv('../sample-data/bronze/slot_telemetry_sample.csv')
+```
+
+### Schema Definitions
+
+Schema definitions are available in `../sample-data/schemas/` describing:
+- Column names and data types
+- Business descriptions
+- Valid value ranges
+- PII handling requirements
+
+---
+
+## Docker Reference
+
+### Docker Compose Services
+
+| Service | Command | Description |
+|---------|---------|-------------|
+| `data-generator` | `docker-compose run --rm data-generator` | Full 30-day dataset |
+| `demo-generator` | `docker-compose run --rm demo-generator` | Quick demo dataset |
+| `streaming-generator` | `docker-compose up streaming-generator` | Event Hub streaming |
+| `data-validator` | `docker-compose run --rm data-validator` | Validate output |
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DATA_FORMAT` | `parquet` | Output format (parquet, csv, json) |
+| `DATA_DAYS` | `30` | Days of historical data |
+| `DATA_OUTPUT_DIR` | `/app/output` | Output directory |
+| `EVENTHUB_CONNECTION_STRING` | - | Azure Event Hub connection |
+| `EVENTHUB_NAME` | `slot-telemetry` | Event Hub name |
+| `STREAMING_RATE` | `10` | Events per second |
+
+### Building the Docker Image
+
+```bash
+# Build from project root
+docker-compose build data-generator
+
+# Build with specific tag
+docker build -t fabric-data-generator:v1.1.0 .
+
+# Run without docker-compose
+docker run -v ./output:/app/output fabric-data-generator --all --days 7
+```
+
+---
+
+## Related Resources
+
+| Resource | Description |
+|----------|-------------|
+| [Bronze Layer Tutorial](../tutorials/01-bronze-layer/README.md) | How to ingest generated data |
+| [Validation Tests](../validation/README.md) | Data quality testing |
+| [Notebooks](../notebooks/README.md) | Fabric notebooks for processing |
+| [Sample Data](../sample-data/) | Pre-generated datasets |
+| [Docker Compose](../docker-compose.yml) | Container orchestration |
+
+---
+
+<div align="center">
+
+**[Back to Top](#slot_machine-data-generation)** | **[Main README](../README.md)**
+
+</div>

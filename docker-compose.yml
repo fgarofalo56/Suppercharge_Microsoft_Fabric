@@ -1,0 +1,157 @@
+# =============================================================================
+# Microsoft Fabric Casino/Gaming POC - Docker Compose Configuration
+# =============================================================================
+#
+# Usage:
+#   Quick demo:     docker-compose run --rm data-generator --all --days 7
+#   Full dataset:   docker-compose run --rm data-generator --all --days 30
+#   Streaming:      docker-compose up streaming-generator
+#   Validation:     docker-compose run --rm data-validator
+#
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # Data Generator - Batch mode for generating historical data
+  # ---------------------------------------------------------------------------
+  data-generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fabric-data-generator:latest
+    container_name: fabric-data-generator
+
+    # Volume mounts
+    volumes:
+      # Output data directory - mount to host for access
+      - ./output:/app/output
+      # Optional: mount custom config
+      # - ./config:/app/config:ro
+
+    # Environment variables
+    environment:
+      - DATA_OUTPUT_DIR=/app/output
+      - DATA_FORMAT=${DATA_FORMAT:-parquet}
+      - DATA_DAYS=${DATA_DAYS:-30}
+      - PYTHONUNBUFFERED=1
+
+    # Resource limits (adjust based on data volume)
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '1'
+          memory: 2G
+
+    # Default command - generate all data with specified days
+    command: ["generate", "--all", "--days", "${DATA_DAYS:-30}"]
+
+  # ---------------------------------------------------------------------------
+  # Streaming Generator - Real-time event streaming to Event Hub or stdout
+  # ---------------------------------------------------------------------------
+  streaming-generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fabric-data-generator:latest
+    container_name: fabric-streaming-generator
+
+    # Volume for local logging/output
+    volumes:
+      - ./output/streaming:/app/output/streaming
+
+    # Environment variables for Azure Event Hub
+    environment:
+      - EVENTHUB_CONNECTION_STRING=${EVENTHUB_CONNECTION_STRING:-}
+      - EVENTHUB_NAME=${EVENTHUB_NAME:-slot-telemetry}
+      - STREAMING_RATE=${STREAMING_RATE:-10}
+      - PYTHONUNBUFFERED=1
+
+    # Resource limits for streaming
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    # Streaming command with rate and duration
+    command: ["stream", "--rate", "${STREAMING_RATE:-10}", "--duration", "${STREAMING_DURATION:-3600}"]
+
+    # Restart policy for long-running streaming
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Data Validator - Validate generated data against schemas
+  # ---------------------------------------------------------------------------
+  data-validator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fabric-data-generator:latest
+    container_name: fabric-data-validator
+
+    # Mount output for validation
+    volumes:
+      - ./output:/app/output:ro
+      - ./validation:/app/validation:ro
+
+    environment:
+      - DATA_OUTPUT_DIR=/app/output
+      - PYTHONUNBUFFERED=1
+
+    # Validation command
+    command: ["validate", "--input", "/app/output"]
+
+    # Depends on data being generated
+    profiles:
+      - validation
+
+  # ---------------------------------------------------------------------------
+  # Quick Demo - Generate small dataset for quick testing
+  # ---------------------------------------------------------------------------
+  demo-generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fabric-data-generator:latest
+    container_name: fabric-demo-generator
+
+    volumes:
+      - ./output/demo:/app/output
+
+    environment:
+      - DATA_OUTPUT_DIR=/app/output
+      - DATA_FORMAT=parquet
+      - PYTHONUNBUFFERED=1
+
+    # Small dataset for demos
+    command: >
+      generate
+      --slots 1000
+      --tables 500
+      --players 100
+      --financial 500
+      --security 200
+      --compliance 100
+      --days 7
+
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  default:
+    name: fabric-poc-network
+    driver: bridge
+
+# =============================================================================
+# Volumes (named volumes for persistence)
+# =============================================================================
+volumes:
+  output-data:
+    name: fabric-poc-output
+    driver: local

@@ -1,0 +1,517 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/reportDefinition/1.0.0/schema.json",
+  "metadata": {
+    "name": "Casino Executive Dashboard",
+    "description": "High-level KPIs and trends for casino executives",
+    "version": "1.0.0",
+    "lastModified": "2025-01-21",
+    "author": "Fabric POC Team",
+    "tags": ["executive", "kpi", "revenue", "compliance"]
+  },
+  "datasetBinding": {
+    "semantic_model": "Casino Analytics Model",
+    "workspace": "casino-fabric-poc",
+    "connection_mode": "Direct Lake"
+  },
+  "theme": {
+    "name": "Casino Dark",
+    "primaryColor": "#1A1A2E",
+    "secondaryColor": "#16213E",
+    "accentColor": "#0F3460",
+    "highlightColor": "#E94560",
+    "fontFamily": "Segoe UI"
+  },
+  "pages": [
+    {
+      "name": "Executive Summary",
+      "displayName": "Executive Summary",
+      "displayOption": "FitToPage",
+      "width": 1280,
+      "height": 720,
+      "background": {
+        "color": "#1A1A2E",
+        "transparency": 0
+      },
+      "visuals": [
+        {
+          "name": "Title",
+          "type": "textbox",
+          "position": { "x": 20, "y": 10, "width": 400, "height": 50 },
+          "config": {
+            "text": "CASINO EXECUTIVE DASHBOARD",
+            "fontSize": 24,
+            "fontWeight": "bold",
+            "fontColor": "#FFFFFF"
+          }
+        },
+        {
+          "name": "DateSlicer",
+          "type": "slicer",
+          "position": { "x": 1000, "y": 10, "width": 260, "height": 50 },
+          "config": {
+            "field": "dim_date[Date]",
+            "selectionType": "between",
+            "defaultSelection": "Last 30 Days",
+            "orientation": "horizontal"
+          }
+        },
+        {
+          "name": "KPI_NetWin",
+          "type": "card",
+          "position": { "x": 20, "y": 70, "width": 200, "height": 100 },
+          "config": {
+            "measure": "[Net Win]",
+            "title": "Net Win",
+            "displayUnits": "auto",
+            "decimalPlaces": 0,
+            "calloutValue": {
+              "fontSize": 32,
+              "fontColor": "#00D26A"
+            },
+            "categoryLabel": {
+              "show": true,
+              "fontSize": 12,
+              "fontColor": "#AAAAAA"
+            },
+            "conditionalFormatting": {
+              "rules": [
+                { "condition": "value > 0", "color": "#00D26A" },
+                { "condition": "value <= 0", "color": "#FF6B6B" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "KPI_HoldPct",
+          "type": "card",
+          "position": { "x": 230, "y": 70, "width": 200, "height": 100 },
+          "config": {
+            "measure": "[Hold %]",
+            "title": "Hold %",
+            "displayUnits": "none",
+            "decimalPlaces": 2,
+            "suffix": "%",
+            "calloutValue": {
+              "fontSize": 32,
+              "fontColor": "#4ECDC4"
+            },
+            "targetValue": 8.0,
+            "conditionalFormatting": {
+              "rules": [
+                { "condition": "value >= 8", "color": "#00D26A" },
+                { "condition": "value >= 6", "color": "#FFE66D" },
+                { "condition": "value < 6", "color": "#FF6B6B" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "KPI_ActivePlayers",
+          "type": "card",
+          "position": { "x": 440, "y": 70, "width": 200, "height": 100 },
+          "config": {
+            "measure": "[Unique Players]",
+            "title": "Active Players",
+            "displayUnits": "thousands",
+            "decimalPlaces": 1,
+            "calloutValue": {
+              "fontSize": 32,
+              "fontColor": "#95E1D3"
+            }
+          }
+        },
+        {
+          "name": "KPI_TotalGames",
+          "type": "card",
+          "position": { "x": 650, "y": 70, "width": 200, "height": 100 },
+          "config": {
+            "measure": "[Total Games]",
+            "title": "Games Played",
+            "displayUnits": "millions",
+            "decimalPlaces": 2,
+            "calloutValue": {
+              "fontSize": 32,
+              "fontColor": "#F38181"
+            }
+          }
+        },
+        {
+          "name": "ZoneSlicer",
+          "type": "slicer",
+          "position": { "x": 870, "y": 70, "width": 180, "height": 100 },
+          "config": {
+            "field": "fact_slot_performance[zone]",
+            "selectionType": "multiSelect",
+            "searchEnabled": true,
+            "orientation": "vertical",
+            "title": "Zone Filter"
+          }
+        },
+        {
+          "name": "MoMGrowth",
+          "type": "kpi",
+          "position": { "x": 1060, "y": 70, "width": 200, "height": 100 },
+          "config": {
+            "indicator": "[Net Win]",
+            "trendAxis": "dim_date[Date]",
+            "targetGoal": "[Net Win PM]",
+            "title": "MoM Growth",
+            "showTrendLine": true,
+            "goalDirection": "increase"
+          }
+        },
+        {
+          "name": "NetWinTrend",
+          "type": "lineChart",
+          "position": { "x": 20, "y": 180, "width": 800, "height": 250 },
+          "config": {
+            "title": "Net Win Trend",
+            "xAxis": {
+              "field": "dim_date[Date]",
+              "dateHierarchy": ["Month", "Day"],
+              "title": ""
+            },
+            "yAxis": {
+              "field": "[Net Win]",
+              "title": "Net Win ($)",
+              "startFromZero": false
+            },
+            "legend": {
+              "field": "fact_slot_performance[zone]",
+              "position": "top"
+            },
+            "dataLabels": false,
+            "markers": false,
+            "referenceLine": {
+              "measure": "[Net Win 7D Avg]",
+              "label": "7D Avg",
+              "style": "dashed",
+              "color": "#FFE66D"
+            }
+          }
+        },
+        {
+          "name": "ComplianceSummary",
+          "type": "multiRowCard",
+          "position": { "x": 830, "y": 180, "width": 430, "height": 120 },
+          "config": {
+            "title": "Compliance Summary",
+            "measures": [
+              { "field": "[CTR Count]", "label": "CTR Filings" },
+              { "field": "[SAR Count]", "label": "SAR Filings" },
+              { "field": "[W2G Count]", "label": "W-2G Forms" },
+              { "field": "[Pending Filings]", "label": "Pending" }
+            ],
+            "conditionalFormatting": {
+              "[Pending Filings]": {
+                "rules": [
+                  { "condition": "value > 5", "color": "#FF6B6B" },
+                  { "condition": "value > 0", "color": "#FFE66D" },
+                  { "condition": "value == 0", "color": "#00D26A" }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "name": "ComplianceStatus",
+          "type": "gauge",
+          "position": { "x": 830, "y": 310, "width": 200, "height": 120 },
+          "config": {
+            "value": "[Compliance Score]",
+            "minimum": 0,
+            "maximum": 100,
+            "target": 90,
+            "title": "Compliance Score",
+            "calloutValue": {
+              "fontSize": 24
+            },
+            "colorRanges": [
+              { "min": 0, "max": 69, "color": "#FF6B6B" },
+              { "min": 70, "max": 89, "color": "#FFE66D" },
+              { "min": 90, "max": 100, "color": "#00D26A" }
+            ]
+          }
+        },
+        {
+          "name": "ZonePerformance",
+          "type": "clusteredBarChart",
+          "position": { "x": 20, "y": 440, "width": 400, "height": 260 },
+          "config": {
+            "title": "Zone Performance",
+            "yAxis": {
+              "field": "fact_slot_performance[zone]",
+              "sort": "descending",
+              "sortBy": "[Net Win]"
+            },
+            "xAxis": {
+              "field": "[Net Win]",
+              "title": "Net Win ($)"
+            },
+            "dataLabels": {
+              "show": true,
+              "displayUnits": "thousands",
+              "labelPosition": "outsideEnd"
+            },
+            "colorSaturation": {
+              "measure": "[Hold %]",
+              "min": "#4ECDC4",
+              "max": "#00D26A"
+            }
+          }
+        },
+        {
+          "name": "TopMachines",
+          "type": "table",
+          "position": { "x": 430, "y": 440, "width": 400, "height": 260 },
+          "config": {
+            "title": "Top 10 Machines by Net Win",
+            "columns": [
+              { "field": "fact_slot_performance[machine_id]", "width": 100, "title": "Machine" },
+              { "field": "fact_slot_performance[zone]", "width": 80, "title": "Zone" },
+              { "field": "[Net Win]", "width": 100, "title": "Net Win", "format": "$#,##0" },
+              { "field": "[Hold %]", "width": 60, "title": "Hold %", "format": "0.0%" },
+              { "field": "[Total Games]", "width": 80, "title": "Games", "format": "#,##0" }
+            ],
+            "topN": {
+              "enabled": true,
+              "topN": 10,
+              "by": "[Net Win]",
+              "direction": "top"
+            },
+            "conditionalFormatting": {
+              "[Hold %]": {
+                "backgroundScale": {
+                  "min": "#FF6B6B",
+                  "mid": "#FFE66D",
+                  "max": "#00D26A",
+                  "minValue": 5,
+                  "midValue": 8,
+                  "maxValue": 12
+                }
+              }
+            },
+            "totals": {
+              "show": true,
+              "label": "Total"
+            }
+          }
+        },
+        {
+          "name": "PlayerTierDistribution",
+          "type": "donutChart",
+          "position": { "x": 840, "y": 440, "width": 210, "height": 260 },
+          "config": {
+            "title": "Player Tier Distribution",
+            "legend": {
+              "field": "fact_player_activity[loyalty_tier]",
+              "position": "right"
+            },
+            "values": {
+              "measure": "COUNT(fact_player_activity[player_id])"
+            },
+            "detailLabels": {
+              "show": true,
+              "labelStyle": "category, percent"
+            },
+            "innerRadius": 50,
+            "colors": {
+              "Diamond": "#E94560",
+              "Platinum": "#9B59B6",
+              "Gold": "#F1C40F",
+              "Silver": "#95A5A6",
+              "Bronze": "#CD7F32"
+            }
+          }
+        },
+        {
+          "name": "ChurnRisk",
+          "type": "stackedBarChart",
+          "position": { "x": 1060, "y": 440, "width": 200, "height": 260 },
+          "config": {
+            "title": "Churn Risk",
+            "yAxis": {
+              "field": "fact_player_activity[churn_risk]"
+            },
+            "xAxis": {
+              "field": "COUNT(fact_player_activity[player_id])",
+              "title": "Players"
+            },
+            "legend": false,
+            "dataLabels": true,
+            "colors": {
+              "Active": "#00D26A",
+              "Low": "#4ECDC4",
+              "Medium": "#FFE66D",
+              "Medium-High": "#F38181",
+              "High": "#FF6B6B"
+            }
+          }
+        }
+      ],
+      "filters": [
+        {
+          "type": "page",
+          "field": "dim_date[Date]",
+          "filterType": "relativeDateRange",
+          "relativeDateRange": {
+            "timeUnitCount": 30,
+            "timeUnit": "days"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Revenue Details",
+      "displayName": "Revenue Details",
+      "displayOption": "FitToPage",
+      "width": 1280,
+      "height": 720,
+      "visuals": [
+        {
+          "name": "RevenueMatrix",
+          "type": "matrix",
+          "position": { "x": 20, "y": 70, "width": 800, "height": 400 },
+          "config": {
+            "title": "Revenue by Zone and Denomination",
+            "rows": "fact_slot_performance[zone]",
+            "columns": "fact_slot_performance[denomination]",
+            "values": [
+              { "measure": "[Total Coin In]", "format": "$#,##0" },
+              { "measure": "[Net Win]", "format": "$#,##0" },
+              { "measure": "[Hold %]", "format": "0.0%" }
+            ],
+            "subtotals": {
+              "rowSubtotals": true,
+              "columnSubtotals": true
+            },
+            "conditionalFormatting": {
+              "[Hold %]": {
+                "dataBar": {
+                  "positive": "#00D26A",
+                  "negative": "#FF6B6B"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "ManufacturerPerformance",
+          "type": "clusteredColumnChart",
+          "position": { "x": 830, "y": 70, "width": 430, "height": 200 },
+          "config": {
+            "title": "Manufacturer Performance",
+            "xAxis": {
+              "field": "fact_slot_performance[manufacturer]"
+            },
+            "yAxis": {
+              "field": "[Net Win]"
+            },
+            "legend": false,
+            "dataLabels": true
+          }
+        },
+        {
+          "name": "HoldVarianceScatter",
+          "type": "scatterChart",
+          "position": { "x": 830, "y": 280, "width": 430, "height": 200 },
+          "config": {
+            "title": "Hold Variance Analysis",
+            "xAxis": {
+              "field": "[Theoretical Win]",
+              "title": "Theoretical Win"
+            },
+            "yAxis": {
+              "field": "[Net Win]",
+              "title": "Actual Net Win"
+            },
+            "size": {
+              "field": "[Total Games]"
+            },
+            "legend": {
+              "field": "fact_slot_performance[zone]"
+            },
+            "trendLine": {
+              "show": true,
+              "type": "linear"
+            }
+          }
+        },
+        {
+          "name": "DailyRevenueTrend",
+          "type": "areaChart",
+          "position": { "x": 20, "y": 480, "width": 1240, "height": 220 },
+          "config": {
+            "title": "Daily Revenue Breakdown",
+            "xAxis": {
+              "field": "dim_date[Date]"
+            },
+            "yAxis": {
+              "field": "[Net Win]"
+            },
+            "legend": {
+              "field": "fact_slot_performance[zone]"
+            },
+            "stacked": true
+          }
+        }
+      ]
+    }
+  ],
+  "bookmarks": [
+    {
+      "name": "Last7Days",
+      "displayName": "Last 7 Days",
+      "filters": [
+        {
+          "field": "dim_date[Date]",
+          "filterType": "relativeDateRange",
+          "relativeDateRange": { "timeUnitCount": 7, "timeUnit": "days" }
+        }
+      ]
+    },
+    {
+      "name": "Last30Days",
+      "displayName": "Last 30 Days",
+      "filters": [
+        {
+          "field": "dim_date[Date]",
+          "filterType": "relativeDateRange",
+          "relativeDateRange": { "timeUnitCount": 30, "timeUnit": "days" }
+        }
+      ]
+    },
+    {
+      "name": "CurrentMonth",
+      "displayName": "Current Month",
+      "filters": [
+        {
+          "field": "dim_date[Date]",
+          "filterType": "relativeDateRange",
+          "relativeDateRange": { "timeUnitCount": 1, "timeUnit": "months", "includeToday": true }
+        }
+      ]
+    }
+  ],
+  "drillthrough": [
+    {
+      "name": "MachineDetails",
+      "targetPage": "Machine Drillthrough",
+      "fields": ["fact_slot_performance[machine_id]"],
+      "keepAllFilters": true
+    }
+  ],
+  "subscriptions": [
+    {
+      "name": "Daily Executive Summary",
+      "schedule": {
+        "frequency": "daily",
+        "time": "07:00",
+        "timezone": "America/Los_Angeles"
+      },
+      "recipients": ["exec-team@casino.com"],
+      "format": "pdf",
+      "pages": ["Executive Summary"]
+    }
+  ]
+}

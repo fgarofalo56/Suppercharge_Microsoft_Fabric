@@ -1,0 +1,282 @@
+/// =============================================================================
+/// Fact: Slot Performance
+/// =============================================================================
+///
+/// Purpose: Daily slot machine performance metrics
+/// Grain: One row per machine per business day
+/// Source: lh_gold.gold_slot_performance
+/// Update Pattern: Daily append/overwrite by partition
+///
+/// =============================================================================
+
+table fact_slot_performance
+    lineageTag: fact-slot-001
+
+    /// ==========================================================================
+    /// DIMENSION KEYS
+    /// ==========================================================================
+
+    column machine_id
+        dataType: string
+        lineageTag: fact-slot-machine
+        summarizeBy: none
+        sourceColumn: machine_id
+        description: "Foreign key to dim_machine"
+
+    column business_date
+        dataType: dateTime
+        formatString: Short Date
+        lineageTag: fact-slot-date
+        summarizeBy: none
+        sourceColumn: business_date
+        description: "Business date (foreign key to dim_date)"
+
+    column zone
+        dataType: string
+        lineageTag: fact-slot-zone
+        summarizeBy: none
+        sourceColumn: zone
+        description: "Floor zone (can also be used for filtering)"
+
+    column denomination
+        dataType: decimal
+        formatString: \$#,0.00
+        lineageTag: fact-slot-denom
+        summarizeBy: none
+        sourceColumn: denomination
+
+    column manufacturer
+        dataType: string
+        lineageTag: fact-slot-mfr
+        summarizeBy: none
+        sourceColumn: manufacturer
+
+    column machine_type
+        dataType: string
+        lineageTag: fact-slot-type
+        summarizeBy: none
+        sourceColumn: machine_type
+
+    /// ==========================================================================
+    /// VOLUME MEASURES
+    /// ==========================================================================
+
+    column total_coin_in
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-slot-coinin
+        summarizeBy: sum
+        sourceColumn: total_coin_in
+        description: "Total amount wagered"
+
+    column total_coin_out
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-slot-coinout
+        summarizeBy: sum
+        sourceColumn: total_coin_out
+        description: "Total amount paid out to players"
+
+    column total_games
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-slot-games
+        summarizeBy: sum
+        sourceColumn: total_games
+        description: "Total number of games played"
+
+    column total_events
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-slot-events
+        summarizeBy: sum
+        sourceColumn: total_events
+        description: "Total transaction events"
+
+    /// ==========================================================================
+    /// FINANCIAL KPIs
+    /// ==========================================================================
+
+    column net_win
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-slot-netwin
+        summarizeBy: sum
+        sourceColumn: net_win
+        description: "Casino revenue (Coin In - Coin Out)"
+
+    column actual_hold_pct
+        dataType: decimal
+        formatString: 0.00%
+        lineageTag: fact-slot-holdpct
+        summarizeBy: average
+        sourceColumn: actual_hold_pct
+        description: "Actual hold percentage"
+
+    column theoretical_win
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-slot-theowin
+        summarizeBy: sum
+        sourceColumn: theoretical_win
+        description: "Expected win based on house edge"
+
+    column hold_variance
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-slot-variance
+        summarizeBy: sum
+        sourceColumn: hold_variance
+        description: "Actual vs Theoretical variance"
+
+    column hold_variance_pct
+        dataType: decimal
+        formatString: 0.00%
+        lineageTag: fact-slot-varpct
+        summarizeBy: average
+        sourceColumn: hold_variance_pct
+        description: "Variance as percentage"
+
+    /// ==========================================================================
+    /// JACKPOT METRICS
+    /// ==========================================================================
+
+    column jackpot_payouts
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-slot-jackpot
+        summarizeBy: sum
+        sourceColumn: jackpot_payouts
+        description: "Total jackpot amounts paid"
+
+    column jackpot_count
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-slot-jackpotcnt
+        summarizeBy: sum
+        sourceColumn: jackpot_count
+        description: "Number of jackpots hit"
+
+    /// ==========================================================================
+    /// PLAYER METRICS
+    /// ==========================================================================
+
+    column unique_players
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-slot-players
+        summarizeBy: sum
+        sourceColumn: unique_players
+        description: "Distinct players on this machine"
+
+    column unique_sessions
+        dataType: int64
+        formatString: #,##0
+        lineageTag: fact-slot-sessions
+        summarizeBy: sum
+        sourceColumn: unique_sessions
+        description: "Distinct gaming sessions"
+
+    column games_per_player
+        dataType: decimal
+        formatString: #,##0.0
+        lineageTag: fact-slot-gpp
+        summarizeBy: average
+        sourceColumn: games_per_player
+        description: "Average games per player (engagement)"
+
+    /// ==========================================================================
+    /// OPERATIONAL METRICS
+    /// ==========================================================================
+
+    column avg_bet
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-slot-avgbet
+        summarizeBy: average
+        sourceColumn: avg_bet
+        description: "Average bet size"
+
+    column win_per_unit
+        dataType: decimal
+        formatString: \$#,##0.00
+        lineageTag: fact-slot-wpupd
+        summarizeBy: sum
+        sourceColumn: win_per_unit
+        description: "Win per unit per day (WPUPD)"
+
+    column operating_hours
+        dataType: decimal
+        formatString: #,##0.0
+        lineageTag: fact-slot-hours
+        summarizeBy: sum
+        sourceColumn: operating_hours
+        description: "Hours with activity"
+
+    /// ==========================================================================
+    /// QUALITY & STATUS
+    /// ==========================================================================
+
+    column avg_data_quality
+        dataType: decimal
+        formatString: 0.0
+        lineageTag: fact-slot-dq
+        summarizeBy: average
+        sourceColumn: avg_data_quality
+        description: "Average data quality score (0-100)"
+
+    column performance_status
+        dataType: string
+        lineageTag: fact-slot-status
+        summarizeBy: none
+        sourceColumn: performance_status
+        description: "Performance flag (HIGH_PERFORMER, NORMAL, UNDERPERFORMER, LOW_ACTIVITY)"
+
+    column alert_flags
+        dataType: string
+        lineageTag: fact-slot-alerts
+        summarizeBy: none
+        sourceColumn: alert_flags
+        description: "Alert flags array (JSON)"
+        isHidden: true
+
+    /// ==========================================================================
+    /// METADATA
+    /// ==========================================================================
+
+    column _gold_timestamp
+        dataType: dateTime
+        formatString: General Date
+        lineageTag: fact-slot-ts
+        summarizeBy: none
+        sourceColumn: _gold_timestamp
+        isHidden: true
+        description: "Gold layer processing timestamp"
+
+    column _batch_id
+        dataType: string
+        lineageTag: fact-slot-batch
+        summarizeBy: none
+        sourceColumn: _batch_id
+        isHidden: true
+        description: "Processing batch identifier"
+
+    column _theoretical_hold_used
+        dataType: decimal
+        formatString: 0.00%
+        lineageTag: fact-slot-theo
+        summarizeBy: none
+        sourceColumn: _theoretical_hold_used
+        isHidden: true
+        description: "Theoretical hold percentage used in calculations"
+
+    /// ==========================================================================
+    /// PARTITION (Direct Lake)
+    /// ==========================================================================
+
+    partition 'fact_slot_performance-directlake' = entity
+        mode: directLake
+        source
+            entityPath: gold_slot_performance
+            schemaName: dbo
+            expressionSource: 'DirectLake'

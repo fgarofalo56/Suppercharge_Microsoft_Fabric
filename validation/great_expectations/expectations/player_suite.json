@@ -1,0 +1,261 @@
+{
+  "expectation_suite_name": "player_suite",
+  "meta": {
+    "great_expectations_version": "0.18.0",
+    "notes": "Comprehensive data quality expectations for player/loyalty member profiles",
+    "domain": "Player Management",
+    "compliance_requirements": [
+      "Age verification (21+)",
+      "PII protection",
+      "Loyalty program integrity",
+      "Marketing consent compliance"
+    ]
+  },
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 1,
+        "max_value": null
+      },
+      "meta": {
+        "notes": "Table should have at least 1 record"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "player_id"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "first_name"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "last_name"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "loyalty_tier"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "date_of_birth"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "email"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "ssn_hash"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "player_id"
+      },
+      "meta": {
+        "notes": "Player ID is required - primary identifier"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "first_name"
+      },
+      "meta": {
+        "notes": "First name is required for identification"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "last_name"
+      },
+      "meta": {
+        "notes": "Last name is required for identification"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "loyalty_tier"
+      },
+      "meta": {
+        "notes": "Loyalty tier is required for program membership"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_unique",
+      "kwargs": {
+        "column": "player_id"
+      },
+      "meta": {
+        "notes": "Player ID must be unique"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "player_id",
+        "regex": "^P[0-9]+$"
+      },
+      "meta": {
+        "notes": "Player ID format: P followed by digits (e.g., P12345)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "loyalty_tier",
+        "value_set": ["Bronze", "Silver", "Gold", "Platinum", "Diamond"]
+      },
+      "meta": {
+        "notes": "Valid loyalty tier levels"
+      }
+    },
+    {
+      "expectation_type": "expect_column_value_lengths_to_equal",
+      "kwargs": {
+        "column": "ssn_hash",
+        "value": 64,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "SSN hash must be 64 characters (SHA-256 hex digest)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "ssn_hash",
+        "regex": "^[a-fA-F0-9]{64}$",
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "SSN hash must be valid hexadecimal SHA-256 format"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "email",
+        "regex": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+        "mostly": 0.95
+      },
+      "meta": {
+        "notes": "Email must contain @ and valid domain format"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "gender",
+        "value_set": ["M", "F", "O", null]
+      },
+      "meta": {
+        "notes": "Valid gender codes"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "phone",
+        "regex": "^[0-9\\-\\+\\(\\)\\s]{10,20}$",
+        "mostly": 0.90
+      },
+      "meta": {
+        "notes": "Phone number basic format validation"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "state",
+        "regex": "^[A-Z]{2}$",
+        "mostly": 0.95
+      },
+      "meta": {
+        "notes": "State code should be 2-letter uppercase"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "zip_code",
+        "regex": "^[0-9]{5}(-[0-9]{4})?$",
+        "mostly": 0.95
+      },
+      "meta": {
+        "notes": "ZIP code format: 5 digits or ZIP+4"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "date_of_birth",
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Date of birth must be parseable"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "enrollment_date",
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Enrollment date must be parseable"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "column": "marketing_opt_in",
+        "type_": "BOOLEAN"
+      },
+      "meta": {
+        "notes": "Marketing opt-in must be boolean"
+      }
+    },
+    {
+      "expectation_type": "expect_column_value_lengths_to_be_between",
+      "kwargs": {
+        "column": "first_name",
+        "min_value": 1,
+        "max_value": 100
+      },
+      "meta": {
+        "notes": "First name length validation"
+      }
+    },
+    {
+      "expectation_type": "expect_column_value_lengths_to_be_between",
+      "kwargs": {
+        "column": "last_name",
+        "min_value": 1,
+        "max_value": 100
+      },
+      "meta": {
+        "notes": "Last name length validation"
+      }
+    }
+  ]
+}

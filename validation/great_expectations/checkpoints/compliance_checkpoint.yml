@@ -1,0 +1,68 @@
+# Compliance Data Validation Checkpoint
+# Validates regulatory compliance filings (CTR, SAR, W-2G)
+# CRITICAL: This checkpoint validates data required for regulatory reporting
+
+name: compliance_checkpoint
+config_version: 1.0
+template_name:
+module_name: great_expectations.checkpoint
+class_name: Checkpoint
+
+# Execution behavior
+run_name_template: "%Y%m%d-%H%M%S-compliance-validation"
+
+# Expectation suites to validate
+expectation_suite_name: compliance_suite
+
+# Action list - includes notification for compliance failures
+action_list:
+  - name: store_validation_result
+    action:
+      class_name: StoreValidationResultAction
+  - name: store_evaluation_params
+    action:
+      class_name: StoreEvaluationParametersAction
+  - name: update_data_docs
+    action:
+      class_name: UpdateDataDocsAction
+      site_names:
+        - local_site
+  # Uncomment for email notifications on compliance failures
+  # - name: send_email_on_validation_result
+  #   action:
+  #     class_name: EmailAction
+  #     notify_on: failure
+  #     use_tls: true
+  #     use_ssl: false
+  #     smtp_address: ${SMTP_ADDRESS}
+  #     smtp_port: ${SMTP_PORT}
+  #     sender_login: ${SMTP_USER}
+  #     sender_password: ${SMTP_PASSWORD}
+  #     receiver_emails: compliance-team@casino.com
+
+# Batch request configuration
+batch_request: {}
+
+# Evaluation parameters
+evaluation_parameters: {}
+
+# Runtime configuration - stricter for compliance
+runtime_configuration:
+  result_format:
+    result_format: COMPLETE
+    include_unexpected_rows: true
+    partial_unexpected_count: 100
+    unexpected_index_column_names:
+      - filing_id
+      - filing_type
+      - amount
+
+# Validations list
+validations:
+  - batch_request:
+      datasource_name: casino_bronze
+      data_connector_name: runtime_data_connector
+      data_asset_name: compliance_filings
+      batch_identifiers:
+        default_identifier_name: bronze_compliance_data
+    expectation_suite_name: compliance_suite

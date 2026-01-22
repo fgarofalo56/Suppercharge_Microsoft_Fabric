@@ -1,0 +1,282 @@
+{
+  "expectation_suite_name": "security_suite",
+  "meta": {
+    "great_expectations_version": "0.18.0",
+    "notes": "Comprehensive data quality expectations for casino security and surveillance events",
+    "domain": "Security & Surveillance",
+    "compliance_requirements": [
+      "Gaming Commission incident reporting",
+      "Exclusion list management",
+      "Access control audit trail",
+      "Incident response tracking"
+    ]
+  },
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 0,
+        "max_value": null
+      },
+      "meta": {
+        "notes": "Table may have zero records during quiet periods"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "event_id"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "event_type"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "event_timestamp"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "location_id"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "severity_level"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "event_id"
+      },
+      "meta": {
+        "notes": "Event ID is required - primary identifier"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "event_type"
+      },
+      "meta": {
+        "notes": "Event type is required for classification"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "event_timestamp"
+      },
+      "meta": {
+        "notes": "Timestamp is required for incident timeline"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "location_id"
+      },
+      "meta": {
+        "notes": "Location is required for incident tracking"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_unique",
+      "kwargs": {
+        "column": "event_id"
+      },
+      "meta": {
+        "notes": "Event ID must be unique"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "event_id",
+        "regex": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+        "mostly": 0.95
+      },
+      "meta": {
+        "notes": "Event ID should be UUID format"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "event_type",
+        "value_set": [
+          "BADGE_SWIPE",
+          "DOOR_ENTRY",
+          "ACCESS_GRANTED",
+          "ACCESS_DENIED",
+          "CAMERA_ALERT",
+          "MOTION_DETECTED",
+          "CAMERA_OBSTRUCTION",
+          "EXCLUSION_CHECK",
+          "EXCLUSION_VIOLATION",
+          "INCIDENT_REPORT",
+          "ALTERCATION",
+          "MEDICAL_EMERGENCY",
+          "THREAT_DETECTED",
+          "WEAPON_DETECTED",
+          "TRESPASS",
+          "UNAUTHORIZED_ACCESS",
+          "SUSPICIOUS_ACTIVITY",
+          "PATRON_COMPLAINT",
+          "ESCORT_REQUEST",
+          "SECURITY_PATROL"
+        ]
+      },
+      "meta": {
+        "notes": "Valid security event types"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "severity_level",
+        "value_set": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+      },
+      "meta": {
+        "notes": "Valid severity levels for incident prioritization"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "location_id",
+        "regex": "^LOC-[A-Z0-9]{3,10}$"
+      },
+      "meta": {
+        "notes": "Location ID format: LOC-XXX to LOC-XXXXXXXXXX"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "location_type",
+        "value_set": [
+          "GAMING_FLOOR",
+          "CAGE",
+          "COUNT_ROOM",
+          "VAULT",
+          "ENTRANCE",
+          "EXIT",
+          "PARKING",
+          "RESTAURANT",
+          "HOTEL",
+          "BACK_OF_HOUSE",
+          "SURVEILLANCE_ROOM",
+          "SERVER_ROOM",
+          null
+        ]
+      },
+      "meta": {
+        "notes": "Valid location types"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "person_type",
+        "value_set": ["EMPLOYEE", "PATRON", "VENDOR", "CONTRACTOR", "UNKNOWN", null]
+      },
+      "meta": {
+        "notes": "Valid person type classifications"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "resolution_status",
+        "value_set": ["PENDING", "IN_PROGRESS", "RESOLVED", "ESCALATED", "FALSE_ALARM", null]
+      },
+      "meta": {
+        "notes": "Valid resolution statuses"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "event_timestamp"
+      },
+      "meta": {
+        "notes": "Event timestamp must be parseable"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "response_timestamp",
+        "mostly": 0.95
+      },
+      "meta": {
+        "notes": "Response timestamp must be parseable when present"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "resolution_timestamp",
+        "mostly": 0.95
+      },
+      "meta": {
+        "notes": "Resolution timestamp must be parseable when present"
+      }
+    },
+    {
+      "expectation_type": "expect_column_value_lengths_to_be_between",
+      "kwargs": {
+        "column": "description",
+        "min_value": 0,
+        "max_value": 1000,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Description should not exceed 1000 characters"
+      }
+    },
+    {
+      "expectation_type": "expect_column_value_lengths_to_be_between",
+      "kwargs": {
+        "column": "resolution_notes",
+        "min_value": 0,
+        "max_value": 2000,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Resolution notes should not exceed 2000 characters"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "column": "gaming_related",
+        "type_": "BOOLEAN"
+      },
+      "meta": {
+        "notes": "Gaming related flag must be boolean"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "amount_involved",
+        "min_value": 0,
+        "max_value": null,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Amount involved must be non-negative when present"
+      }
+    }
+  ]
+}

@@ -1,26 +1,97 @@
-# Day 3: BI, Governance & Database Mirroring
+# 📅 Day 3: BI, Governance & Database Mirroring
 
-## Overview
+> 🏠 Home > 📆 POC Agenda > 📊 Day 3
 
-**Duration:** 8 hours
+---
+
+**Date:** `[INSERT DATE]`
+**Duration:** 8 hours (9:00 AM - 5:00 PM)
 **Focus:** Direct Lake Power BI, Purview governance, Database Mirroring
 **Audience:** Data Architects (4) + BI Developers (2) + Data Governance (4+)
 
 ---
 
-## Morning Session 1: Direct Lake & Power BI (9:00 - 10:30)
+## 📊 Day 3 Progress Tracker
 
-### Objectives
+```
+Day 3 Progress: ░░░░░░░░░░ 0% Complete
+────────────────────────────────────────────
+🌅 Morning Session 1:   ░░░░░░░░░░  Direct Lake & Power BI
+🌅 Morning Session 2:   ░░░░░░░░░░  Power BI Reports
+☀️ Afternoon Session 3: ░░░░░░░░░░  Purview Governance
+☀️ Afternoon Session 4: ░░░░░░░░░░  Database Mirroring
+```
 
-- Create Direct Lake semantic model
-- Define DAX measures for casino KPIs
-- Understand Direct Lake benefits and limitations
+---
 
-### Audience Expansion
+## 📋 Materials Checklist
 
-Data Architects (4) + BI Developers (2) = 6 participants
+Before starting, ensure the following are ready:
 
-### 9.1 Create Semantic Model (30 min)
+### Prerequisites from Day 2
+- [ ] Gold layer tables populated and optimized
+- [ ] Real-time analytics operational
+- [ ] All participants have workspace access
+
+### Day 3 Materials
+- [ ] DAX measure templates prepared
+- [ ] Report layout templates available
+- [ ] Purview account configured
+- [ ] SQL Server source (if available for mirroring demo)
+
+### Expanded Audience
+- [ ] BI Developers notified for 9:00 AM start
+- [ ] Governance team notified for 1:30 PM start
+- [ ] All stakeholders notified for final session
+
+---
+
+## 🗓️ Daily Schedule At-a-Glance
+
+| Time | Duration | Session | Type | Audience |
+|:----:|:--------:|---------|:----:|----------|
+| 9:00-10:30 | 1.5 hr | 🌅 Direct Lake & Power BI | 👥 Hands-on | 6 |
+| 10:30-10:45 | 15 min | ☕ Break | - | - |
+| 10:45-12:30 | 1.75 hr | 🌅 Power BI Reports | 👥 Hands-on | 6 |
+| 12:30-13:30 | 1 hr | 🍽️ Lunch | - | - |
+| 13:30-15:00 | 1.5 hr | ☀️ Purview Governance | 🎤👥 Demo + Hands-on | 10+ |
+| 15:00-15:15 | 15 min | ☕ Break | - | - |
+| 15:15-16:30 | 1.25 hr | ☀️ Database Mirroring | 🎤 Demo | 10+ |
+| 16:30-17:00 | 30 min | 💬 POC Summary & Next Steps | Discussion | All |
+
+---
+
+## 👥 Audience Expansion Schedule
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  9:00 AM ────────────────────────────────────────────── 5:00 PM │
+├─────────────────────────────────────────────────────────────────┤
+│  Data Architects (4)  ████████████████████████████████████████  │
+│  BI Developers (2)    ████████████████████████████████████████  │
+│  Governance Team (4+) ░░░░░░░░░░░░░░░░██████████████████████████│
+│                                       ↑                         │
+│                                    1:30 PM                      │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🌅 Morning Session 1: Direct Lake & Power BI (9:00 - 10:30)
+
+### 🎯 Session Objectives
+
+| Objective | Duration | Status |
+|-----------|:--------:|:------:|
+| Create Direct Lake semantic model | 30 min | ⬜ |
+| Define relationships in star schema | 15 min | ⬜ |
+| Implement DAX measures for casino KPIs | 45 min | ⬜ |
+
+---
+
+### 📝 Activity 9.1: Create Semantic Model (30 min)
+
+**Steps:**
 
 1. Open `lh_gold` Lakehouse
 2. Click **New semantic model**
@@ -31,11 +102,16 @@ Data Architects (4) + BI Developers (2) = 6 participants
 4. Name: `Casino Analytics Model`
 
 **Verify Direct Lake Mode:**
+
 - Open model settings
-- Confirm "Storage mode: Direct Lake"
+- Confirm "Storage mode: **Direct Lake**"
 - Note: No scheduled refresh needed
 
-### 9.2 Define Relationships (15 min)
+> 💡 **Direct Lake Advantage:** Data is read directly from Delta tables with no import or refresh required.
+
+---
+
+### 📝 Activity 9.2: Define Relationships (15 min)
 
 Create star schema relationships:
 
@@ -60,9 +136,11 @@ Create star schema relationships:
 └──────────────────────┘
 ```
 
-### 9.3 Create DAX Measures (45 min)
+---
 
-**Slot Performance Measures:**
+### 📝 Activity 9.3: Create DAX Measures (45 min)
+
+#### Slot Performance Measures
 
 ```dax
 // Total Coin In
@@ -98,7 +176,7 @@ Total Games = SUM(gold_slot_performance[total_games])
 Avg Bet = DIVIDE([Total Coin In], [Total Games], 0)
 ```
 
-**Player Measures:**
+#### Player Measures
 
 ```dax
 // Total Players
@@ -129,7 +207,7 @@ CALCULATE(
 )
 ```
 
-**Time Intelligence:**
+#### Time Intelligence Measures
 
 ```dax
 // Coin In MTD
@@ -163,15 +241,19 @@ AVERAGEX(
 
 ---
 
-## Morning Session 2: Power BI Reports (10:45 - 12:30)
+## 🌅 Morning Session 2: Power BI Reports (10:45 - 12:30)
 
-### Objectives
+### 🎯 Session Objectives
 
-- Build executive dashboard
-- Create operational floor report
-- Implement compliance reporting
+| Objective | Duration | Status |
+|-----------|:--------:|:------:|
+| Build executive dashboard | 45 min | ⬜ |
+| Create operational floor report | 45 min | ⬜ |
+| Implement player analytics report | 30 min | ⬜ |
 
-### 10.1 Executive Dashboard (45 min)
+---
+
+### 📝 Activity 10.1: Executive Dashboard (45 min)
 
 **Page Layout:**
 
@@ -195,14 +277,18 @@ AVERAGEX(
 
 **Create Visuals:**
 
-1. **KPI Cards:** Net Win, Hold %, Unique Players, Total Games
-2. **Line Chart:** Net Win by Date with Prior Period
-3. **Bar Chart:** Net Win by Zone
-4. **Table:** Top 10 Machines (machine_id, zone, net_win, hold_%)
-5. **Donut Chart:** Players by Loyalty Tier
-6. **Multi-row Card:** Compliance filing counts
+| Visual | Type | Data |
+|--------|------|------|
+| KPI Cards | Card | Net Win, Hold %, Unique Players, Total Games |
+| Net Win Trend | Line Chart | Net Win by Date with Prior Period |
+| Zone Performance | Bar Chart | Net Win by Zone |
+| Top Machines | Table | machine_id, zone, net_win, hold_% |
+| Player Tier Mix | Donut Chart | Players by Loyalty Tier |
+| Compliance Summary | Multi-row Card | Filing counts |
 
-### 10.2 Slot Operations Report (45 min)
+---
+
+### 📝 Activity 10.2: Slot Operations Report (45 min)
 
 **Page Layout:**
 
@@ -222,7 +308,9 @@ AVERAGEX(
 └───────────────────────────┴────────────────────────────────┘
 ```
 
-### 10.3 Player Analytics Report (30 min)
+---
+
+### 📝 Activity 10.3: Player Analytics Report (30 min)
 
 **Page Layout:**
 
@@ -246,20 +334,25 @@ AVERAGEX(
 
 ---
 
-## Afternoon Session 3: Purview Integration (13:30 - 15:00)
+## ☀️ Afternoon Session 3: Purview Integration (13:30 - 15:00)
 
-### Objectives
+### 🎯 Session Objectives
 
-- Connect Purview to Fabric workspace
-- Scan and catalog data assets
-- Apply classifications and glossary terms
-- View data lineage
+| Objective | Duration | Status |
+|-----------|:--------:|:------:|
+| Connect Purview to Fabric workspace | 20 min | ⬜ |
+| Scan and catalog data assets | 20 min | ⬜ |
+| Apply classifications and review | 20 min | ⬜ |
+| Create glossary terms | 30 min | ⬜ |
+| View data lineage | 20 min | ⬜ |
 
-### Audience Expansion
+> 👥 **Audience Expansion:** All participants (10+) join for this session
 
-All participants (10+)
+---
 
-### 11.1 Connect Purview to Fabric (20 min)
+### 📝 Activity 11.1: Connect Purview to Fabric (20 min)
+
+**Steps:**
 
 1. Open [Microsoft Purview Portal](https://purview.microsoft.com)
 2. Navigate to **Data Map** > **Sources**
@@ -269,7 +362,11 @@ All participants (10+)
    - Tenant: Select your tenant
    - Workspace: `casino-fabric-poc`
 
-### 11.2 Create and Run Scan (20 min)
+---
+
+### 📝 Activity 11.2: Create and Run Scan (20 min)
+
+**Steps:**
 
 1. On registered source, click **New scan**
 2. Configure:
@@ -279,19 +376,23 @@ All participants (10+)
 3. Set trigger: Run once now
 4. Click **Save and Run**
 
-### 11.3 Review Auto-Classifications (20 min)
+---
+
+### 📝 Activity 11.3: Review Auto-Classifications (20 min)
 
 Navigate to scanned tables and verify:
 
-| Table | Column | Expected Classification |
-|-------|--------|------------------------|
-| silver_player_master | ssn_hash | Government ID (Hash) |
-| silver_player_master | email | Email Address |
-| silver_player_master | phone | Phone Number |
-| silver_player_master | date_of_birth | Date of Birth |
-| bronze_financial_txn | amount | Financial Amount |
+| Table | Column | Expected Classification | Status |
+|-------|--------|------------------------|:------:|
+| silver_player_master | ssn_hash | Government ID (Hash) | ⬜ |
+| silver_player_master | email | Email Address | ⬜ |
+| silver_player_master | phone | Phone Number | ⬜ |
+| silver_player_master | date_of_birth | Date of Birth | ⬜ |
+| bronze_financial_txn | amount | Financial Amount | ⬜ |
 
-### 11.4 Create Glossary Terms (30 min)
+---
+
+### 📝 Activity 11.4: Create Glossary Terms (30 min)
 
 **Business Glossary Hierarchy:**
 
@@ -326,7 +427,9 @@ Related Terms: Coin Out, Net Win, Hold Percentage
 Resources: NIGC MICS Section 543.24
 ```
 
-### 11.5 View Data Lineage (20 min)
+---
+
+### 📝 Activity 11.5: View Data Lineage (20 min)
 
 1. Navigate to `gold_slot_performance` in catalog
 2. Click **Lineage** tab
@@ -349,15 +452,20 @@ Executive Dashboard
 
 ---
 
-## Afternoon Session 4: Database Mirroring (15:15 - 17:00)
+## ☀️ Afternoon Session 4: Database Mirroring (15:15 - 17:00)
 
-### Objectives
+### 🎯 Session Objectives
 
-- Understand Database Mirroring concepts
-- Configure SQL Server mirroring (demo)
-- Review Snowflake and Cosmos DB options
+| Objective | Duration | Status |
+|-----------|:--------:|:------:|
+| Understand Database Mirroring concepts | 20 min | ⬜ |
+| Configure SQL Server mirroring (demo) | 40 min | ⬜ |
+| Review Snowflake and Cosmos DB options | 20 min | ⬜ |
+| POC Summary and Next Steps | 30 min | ⬜ |
 
-### 12.1 Mirroring Overview (20 min)
+---
+
+### 📝 Activity 12.1: Mirroring Overview (20 min)
 
 **What is Database Mirroring?**
 
@@ -370,12 +478,17 @@ Source Database → Change Data Capture → OneLake → Delta Tables
 ```
 
 **Benefits:**
-- Near real-time data availability
-- No ETL code required
-- Automatic schema synchronization
-- Delta Lake format in OneLake
 
-### 12.2 SQL Server Mirroring Demo (40 min)
+| Benefit | Description |
+|---------|-------------|
+| Near real-time | Data available within seconds |
+| No ETL code | Automatic replication |
+| Auto sync | Schema changes propagate |
+| Delta format | Native Lakehouse integration |
+
+---
+
+### 📝 Activity 12.2: SQL Server Mirroring Demo (40 min)
 
 **Prerequisites (if available):**
 - SQL Server 2016+ or Azure SQL Database
@@ -416,7 +529,9 @@ EXEC sys.sp_cdc_enable_table
    - Ongoing replication lag
    - Table sync status
 
-### 12.3 Query Mirrored Data (20 min)
+---
+
+### 📝 Activity 12.3: Query Mirrored Data (20 min)
 
 ```python
 # Read mirrored table
@@ -437,7 +552,9 @@ df.filter(col("transaction_time") > "2024-01-01") \
   .show(10)
 ```
 
-### 12.4 Snowflake & Cosmos DB Overview (20 min)
+---
+
+### 📝 Activity 12.4: Snowflake & Cosmos DB Overview (20 min)
 
 **Snowflake Mirroring:**
 - Connect to Snowflake account
@@ -479,36 +596,45 @@ df.filter(col("transaction_time") > "2024-01-01") \
 
 ---
 
-## Day 3 Validation Checklist
+## ✅ Day 3 Validation Checklist
 
 ### Direct Lake & Power BI
-- [ ] Semantic model created in Direct Lake mode
-- [ ] All DAX measures calculating correctly
-- [ ] Executive dashboard complete
-- [ ] Slot operations report complete
-- [ ] Player analytics report complete
+
+| Checkpoint | Criteria | Status |
+|------------|----------|:------:|
+| Semantic Model | Created in Direct Lake mode | ⬜ |
+| DAX Measures | All calculating correctly | ⬜ |
+| Executive Dashboard | Complete | ⬜ |
+| Slot Operations Report | Complete | ⬜ |
+| Player Analytics Report | Complete | ⬜ |
 
 ### Purview Governance
-- [ ] Purview connected to Fabric workspace
-- [ ] Scan completed successfully
-- [ ] Classifications verified on player data
-- [ ] Glossary terms created (5+ terms)
-- [ ] Lineage visible for Gold tables
+
+| Checkpoint | Criteria | Status |
+|------------|----------|:------:|
+| Purview Connection | Connected to Fabric workspace | ⬜ |
+| Scan | Completed successfully | ⬜ |
+| Classifications | Verified on player data | ⬜ |
+| Glossary Terms | 5+ terms created | ⬜ |
+| Lineage | Visible for Gold tables | ⬜ |
 
 ### Database Mirroring
-- [ ] Mirroring concepts understood
-- [ ] SQL Server demo completed (if source available)
-- [ ] Mirrored data queryable
-- [ ] Hybrid architecture understood
+
+| Checkpoint | Criteria | Status |
+|------------|----------|:------:|
+| Concepts | Mirroring understood | ⬜ |
+| SQL Server Demo | Completed (if source available) | ⬜ |
+| Mirrored Data | Queryable | ⬜ |
+| Hybrid Architecture | Understood | ⬜ |
 
 ---
 
-## POC Completion Summary
+## 🏆 POC Completion Summary
 
 ### What We Built
 
 | Component | Status | Details |
-|-----------|--------|---------|
+|-----------|:------:|---------|
 | Bronze Layer | ✅ | 6 tables, raw data preservation |
 | Silver Layer | ✅ | SCD Type 2, reconciliation, quality |
 | Gold Layer | ✅ | KPIs, star schema, optimized |
@@ -565,47 +691,84 @@ flowchart TB
 
 ---
 
-## Next Steps & Recommendations
+## 🚀 Next Steps & Recommendations
 
 ### Immediate (Week 1-2)
-1. Connect production data sources
-2. Expand data generators for more volume
-3. Add additional compliance reports
+
+| Priority | Action |
+|:--------:|--------|
+| 1 | Connect production data sources |
+| 2 | Expand data generators for more volume |
+| 3 | Add additional compliance reports |
 
 ### Short-Term (Month 1)
-1. Implement AI/ML models (Tutorial 09)
-2. Add more real-time use cases
-3. Configure alerting and monitoring
+
+| Priority | Action |
+|:--------:|--------|
+| 1 | Implement AI/ML models (Tutorial 09) |
+| 2 | Add more real-time use cases |
+| 3 | Configure alerting and monitoring |
 
 ### Long-Term (Quarter 1)
-1. Production deployment planning
-2. Security hardening (RLS, DLP)
-3. Cost optimization review
-4. Training program rollout
+
+| Priority | Action |
+|:--------:|--------|
+| 1 | Production deployment planning |
+| 2 | Security hardening (RLS, DLP) |
+| 3 | Cost optimization review |
+| 4 | Training program rollout |
 
 ---
 
-## Resources & Documentation
+## 📚 Resources & Documentation
 
 ### Tutorials
-- [Tutorial 00: Environment Setup](../tutorials/00-environment-setup/)
-- [Tutorial 01: Bronze Layer](../tutorials/01-bronze-layer/)
-- [Tutorial 02: Silver Layer](../tutorials/02-silver-layer/)
-- [Tutorial 03: Gold Layer](../tutorials/03-gold-layer/)
-- [Tutorial 04: Real-Time Analytics](../tutorials/04-real-time-analytics/)
-- [Tutorial 05: Direct Lake & Power BI](../tutorials/05-direct-lake-powerbi/)
-- [Tutorial 06: Data Pipelines](../tutorials/06-data-pipelines/)
-- [Tutorial 07: Governance & Purview](../tutorials/07-governance-purview/)
-- [Tutorial 08: Database Mirroring](../tutorials/08-database-mirroring/)
-- [Tutorial 09: Advanced AI/ML](../tutorials/09-advanced-ai-ml/)
+
+| Tutorial | Topic | Link |
+|----------|-------|------|
+| 00 | Environment Setup | [View](../tutorials/00-environment-setup/) |
+| 01 | Bronze Layer | [View](../tutorials/01-bronze-layer/) |
+| 02 | Silver Layer | [View](../tutorials/02-silver-layer/) |
+| 03 | Gold Layer | [View](../tutorials/03-gold-layer/) |
+| 04 | Real-Time Analytics | [View](../tutorials/04-real-time-analytics/) |
+| 05 | Direct Lake & Power BI | [View](../tutorials/05-direct-lake-powerbi/) |
+| 06 | Data Pipelines | [View](../tutorials/06-data-pipelines/) |
+| 07 | Governance & Purview | [View](../tutorials/07-governance-purview/) |
+| 08 | Database Mirroring | [View](../tutorials/08-database-mirroring/) |
+| 09 | Advanced AI/ML | [View](../tutorials/09-advanced-ai-ml/) |
 
 ### Microsoft Documentation
-- [Microsoft Fabric Documentation](https://learn.microsoft.com/fabric/)
-- [Direct Lake Overview](https://learn.microsoft.com/fabric/data-warehouse/direct-lake-mode)
-- [Microsoft Purview](https://learn.microsoft.com/purview/)
-- [Database Mirroring](https://learn.microsoft.com/fabric/database/mirrored-database/)
+
+| Resource | Link |
+|----------|------|
+| Microsoft Fabric Docs | [learn.microsoft.com/fabric](https://learn.microsoft.com/fabric/) |
+| Direct Lake Overview | [Direct Lake Mode](https://learn.microsoft.com/fabric/data-warehouse/direct-lake-mode) |
+| Microsoft Purview | [Purview Docs](https://learn.microsoft.com/purview/) |
+| Database Mirroring | [Mirroring Docs](https://learn.microsoft.com/fabric/database/mirrored-database/) |
 
 ### Support Contacts
-- POC Lead: [Name]
-- Microsoft Technical Contact: [Name]
-- Partner Support: [Name]
+
+| Role | Name | Contact |
+|------|------|---------|
+| POC Lead | `[Name]` | `[Email]` |
+| Microsoft Technical Contact | `[Name]` | `[Email]` |
+| Partner Support | `[Name]` | `[Email]` |
+
+---
+
+<div align="center">
+
+**POC Complete!**
+
+```
+Day 3:       ██████████ 100% Complete
+Overall POC: ██████████ 100% Complete
+
+🎉 Congratulations! 🎉
+```
+
+---
+
+[⬅️ Day 2: Transformations](./day2-transformations-realtime.md) | [🏠 POC Overview](./README.md)
+
+</div>

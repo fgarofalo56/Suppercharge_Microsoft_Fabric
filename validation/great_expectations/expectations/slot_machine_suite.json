@@ -1,0 +1,277 @@
+{
+  "expectation_suite_name": "slot_machine_suite",
+  "meta": {
+    "great_expectations_version": "0.18.0",
+    "notes": "Comprehensive data quality expectations for slot machine telemetry data",
+    "domain": "Slot Machine Operations",
+    "compliance_requirements": [
+      "Gaming Commission reporting accuracy",
+      "SAS protocol compliance",
+      "Financial reconciliation support"
+    ]
+  },
+  "expectations": [
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 1,
+        "max_value": null
+      },
+      "meta": {
+        "notes": "Table should have at least 1 record"
+      }
+    },
+    {
+      "expectation_type": "expect_table_columns_to_match_ordered_list",
+      "kwargs": {
+        "column_list": [
+          "machine_id",
+          "event_type",
+          "event_timestamp",
+          "coin_in",
+          "coin_out",
+          "games_played",
+          "jackpot_amount",
+          "zone",
+          "denomination",
+          "manufacturer",
+          "machine_type",
+          "player_id",
+          "session_id"
+        ]
+      },
+      "meta": {
+        "notes": "Core columns must be present (additional columns allowed)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "machine_id"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "event_type"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "event_timestamp"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "coin_in"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "coin_out"
+      }
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "column": "denomination"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "machine_id"
+      },
+      "meta": {
+        "notes": "Machine ID is required for all events - critical for tracking"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "event_type"
+      },
+      "meta": {
+        "notes": "Event type is required for classification"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "event_timestamp"
+      },
+      "meta": {
+        "notes": "Timestamp is required for audit trail"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "machine_id",
+        "regex": "^SLOT-[0-9]{4}$"
+      },
+      "meta": {
+        "notes": "Machine ID format: SLOT-XXXX (e.g., SLOT-0001, SLOT-1234)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "event_type",
+        "value_set": [
+          "GAME_PLAY",
+          "JACKPOT",
+          "METER_UPDATE",
+          "DOOR_OPEN",
+          "DOOR_CLOSE",
+          "POWER_ON",
+          "POWER_OFF",
+          "BILL_IN",
+          "TICKET_OUT",
+          "TILT"
+        ]
+      },
+      "meta": {
+        "notes": "Valid SAS protocol event types"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "coin_in",
+        "min_value": 0,
+        "max_value": null,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Coin in must be non-negative (wagered amount)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "coin_out",
+        "min_value": 0,
+        "max_value": null,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Coin out must be non-negative (payout amount)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "denomination",
+        "value_set": [0.01, 0.05, 0.10, 0.25, 0.50, 1.00, 2.00, 5.00, 10.00, 25.00, 100.00, null]
+      },
+      "meta": {
+        "notes": "Valid slot machine denominations in USD"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "jackpot_amount",
+        "min_value": 0,
+        "max_value": null
+      },
+      "meta": {
+        "notes": "Jackpot amount must be non-negative when present"
+      }
+    },
+    {
+      "expectation_type": "expect_column_pair_values_A_to_be_greater_than_B",
+      "kwargs": {
+        "column_A": "jackpot_amount",
+        "column_B": "coin_in",
+        "or_equal": true,
+        "ignore_row_if": "either_value_is_missing",
+        "mostly": 0.95
+      },
+      "meta": {
+        "notes": "Jackpot should typically exceed the wager that triggered it"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "zone",
+        "value_set": [
+          "North",
+          "South",
+          "East",
+          "West",
+          "VIP",
+          "High Limit",
+          "Penny",
+          "Main Floor",
+          null
+        ]
+      },
+      "meta": {
+        "notes": "Valid casino floor zones"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "machine_type",
+        "value_set": [
+          "Video Slots",
+          "Mechanical Reels",
+          "Video Poker",
+          "Progressive",
+          null
+        ]
+      },
+      "meta": {
+        "notes": "Valid slot machine types"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "player_id",
+        "regex": "^P[0-9]+$",
+        "mostly": 0.95
+      },
+      "meta": {
+        "notes": "Player ID format: P followed by digits (when present for carded play)"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "column": "games_played",
+        "min_value": 0,
+        "max_value": 10000,
+        "mostly": 0.99
+      },
+      "meta": {
+        "notes": "Games played should be reasonable positive integer"
+      }
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_dateutil_parseable",
+      "kwargs": {
+        "column": "event_timestamp"
+      },
+      "meta": {
+        "notes": "Timestamp must be parseable ISO 8601 format"
+      }
+    },
+    {
+      "expectation_type": "expect_multicolumn_values_to_be_unique",
+      "kwargs": {
+        "column_list": ["machine_id", "event_timestamp", "event_type"]
+      },
+      "meta": {
+        "notes": "Natural key uniqueness check"
+      }
+    }
+  ]
+}

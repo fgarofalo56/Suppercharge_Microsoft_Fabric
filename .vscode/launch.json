@@ -1,0 +1,328 @@
+{
+  // ==============================================================================
+  // VS Code Debug Configurations for Microsoft Fabric Casino/Gaming POC
+  // ==============================================================================
+  // Use these configurations to debug Python scripts and tests.
+  // Select configuration from the Debug dropdown (Ctrl+Shift+D).
+  // ==============================================================================
+
+  "version": "0.2.0",
+  "configurations": [
+    // =========================================================================
+    // Data Generation
+    // =========================================================================
+    {
+      "name": "Generate: Slot Events",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "data-generation.generate",
+      "args": [
+        "--type", "slot_events",
+        "--records", "100",
+        "--output", ".data/raw"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Generate: Player Profiles",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "data-generation.generate",
+      "args": [
+        "--type", "player_profiles",
+        "--records", "100",
+        "--output", ".data/raw"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Generate: Financial Transactions",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "data-generation.generate",
+      "args": [
+        "--type", "financial_transactions",
+        "--records", "100",
+        "--output", ".data/raw"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Generate: All Data Types",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "data-generation.generate",
+      "args": [
+        "--type", "all",
+        "--records", "500",
+        "--output", ".data/raw"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+
+    // =========================================================================
+    // Streaming Producer
+    // =========================================================================
+    {
+      "name": "Stream: Event Hub Producer",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/data-generation/generators/streaming/event_hub_producer.py",
+      "args": [
+        "--events-per-second", "10",
+        "--duration", "60"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      },
+      "envFile": "${workspaceFolder}/.env"
+    },
+
+    // =========================================================================
+    // Testing
+    // =========================================================================
+    {
+      "name": "Test: All Tests",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "validation/",
+        "-v",
+        "--tb=short",
+        "-x"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Test: Unit Tests",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "validation/unit_tests/",
+        "-v",
+        "--tb=short"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Test: Integration Tests",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "validation/integration_tests/",
+        "-v",
+        "--tb=short"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Test: Deployment Tests",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "validation/deployment_tests/",
+        "-v",
+        "--tb=short"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Test: Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "${file}",
+        "-v",
+        "--tb=long",
+        "-s"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Test: With Coverage",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "validation/",
+        "-v",
+        "--cov=data-generation",
+        "--cov-report=html",
+        "--cov-report=term-missing"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+
+    // =========================================================================
+    // Data Validation
+    // =========================================================================
+    {
+      "name": "Validate: Great Expectations",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/validation/great_expectations/validate_data.py",
+      "args": [
+        "--data-path", ".data/raw",
+        "--suite", "casino_data_quality"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+
+    // =========================================================================
+    // Generic Debugging
+    // =========================================================================
+    {
+      "name": "Debug: Current Python File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      },
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "Debug: Current File with Arguments",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "args": "${input:arguments}",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      },
+      "envFile": "${workspaceFolder}/.env"
+    },
+
+    // =========================================================================
+    // Jupyter / Interactive
+    // =========================================================================
+    {
+      "name": "Debug: Jupyter - Current Cell",
+      "type": "debugpy",
+      "request": "launch",
+      "jupyter": {
+        "notebook": "${file}"
+      },
+      "justMyCode": true
+    },
+
+    // =========================================================================
+    // Attach to Running Process
+    // =========================================================================
+    {
+      "name": "Attach: Remote Debug",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}",
+          "remoteRoot": "/workspaces/Suppercharge_Microsoft_Fabric"
+        }
+      ],
+      "justMyCode": false
+    }
+  ],
+
+  // Input variables for dynamic arguments
+  "inputs": [
+    {
+      "id": "arguments",
+      "type": "promptString",
+      "description": "Enter command line arguments",
+      "default": ""
+    },
+    {
+      "id": "recordCount",
+      "type": "pickString",
+      "description": "Select number of records to generate",
+      "options": ["100", "500", "1000", "5000", "10000"],
+      "default": "1000"
+    }
+  ],
+
+  // Compound configurations (run multiple configs together)
+  "compounds": [
+    {
+      "name": "Full Test Suite",
+      "configurations": [
+        "Test: Unit Tests",
+        "Test: Integration Tests",
+        "Test: Deployment Tests"
+      ],
+      "stopAll": true
+    }
+  ]
+}

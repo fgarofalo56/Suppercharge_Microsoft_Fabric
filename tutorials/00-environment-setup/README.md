@@ -1,30 +1,85 @@
 # Tutorial 00: Environment Setup
 
-This tutorial guides you through setting up your Microsoft Fabric environment for the Casino/Gaming POC.
+> **🏠 [Home](../../README.md)** > **📖 [Tutorials](../README.md)** > **⚙️ Environment Setup**
 
-## Prerequisites
+---
+
+## 🎓 Tutorial 00: Environment Setup
+
+| | |
+|---|---|
+| **Difficulty** | ⭐ Beginner |
+| **Time** | ⏱️ 30-45 minutes |
+| **Prerequisites** | Azure subscription with Fabric enabled |
+
+---
+
+### 📍 Progress Tracker
+
+```
+╔════════╦════════╦════════╦════════╦════════╦════════╦════════╦════════╦════════╦════════╗
+║   00   ║   01   ║   02   ║   03   ║   04   ║   05   ║   06   ║   07   ║   08   ║   09   ║
+║ SETUP  ║ BRONZE ║ SILVER ║  GOLD  ║  RT    ║  PBI   ║ PIPES  ║  GOV   ║ MIRROR ║  AI/ML ║
+╠════════╬════════╬════════╬════════╬════════╬════════╬════════╬════════╬════════╬════════╣
+║   ●    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║
+╚════════╩════════╩════════╩════════╩════════╩════════╩════════╩════════╩════════╩════════╝
+     ▲
+     │
+ YOU ARE HERE
+```
+
+| Navigation | |
+|---|---|
+| **Previous** | N/A - This is the first tutorial |
+| **Next** | [01-Bronze Layer](../01-bronze-layer/README.md) |
+
+---
+
+## 📖 Overview
+
+This tutorial guides you through setting up your Microsoft Fabric environment for the Casino/Gaming POC. You will create the foundational workspace and Lakehouse infrastructure needed for the medallion architecture.
+
+```mermaid
+graph LR
+    subgraph "What We're Building"
+        A[Azure Subscription] --> B[Fabric Workspace]
+        B --> C[🥉 lh_bronze]
+        B --> D[🥈 lh_silver]
+        B --> E[🥇 lh_gold]
+    end
+```
+
+---
+
+## 🎯 Learning Objectives
+
+By the end of this tutorial, you will be able to:
+
+- [ ] Understand Microsoft Fabric workspace structure
+- [ ] Create and configure a Fabric workspace
+- [ ] Create Lakehouses for the medallion architecture
+- [ ] Connect to Azure Data Lake Storage
+- [ ] Configure workspace settings and access
+
+---
+
+## 📋 Prerequisites
 
 Before starting, ensure you have:
 
 - [ ] Azure subscription with Fabric enabled
-- [ ] Fabric capacity (F64 recommended)
-- [ ] Azure CLI installed locally
+- [ ] Fabric capacity (F64 recommended, F2 minimum for POC)
+- [ ] Azure CLI installed locally (optional)
 - [ ] Access to Fabric portal (app.fabric.microsoft.com)
 
-## Learning Objectives
+> ℹ️ **Note:** If you don't have a Fabric capacity, you can start a free trial at [app.fabric.microsoft.com](https://app.fabric.microsoft.com).
 
-By the end of this tutorial, you will:
+---
 
-1. Understand Microsoft Fabric workspace structure
-2. Create and configure a Fabric workspace
-3. Create Lakehouses for the medallion architecture
-4. Connect to Azure Data Lake Storage
-5. Configure workspace settings and access
-
-## Step 1: Access Microsoft Fabric
+## 🛠️ Step 1: Access Microsoft Fabric
 
 1. Navigate to [Microsoft Fabric](https://app.fabric.microsoft.com)
-2. Sign in with your Azure AD account
+2. Sign in with your Azure AD / Entra ID account
 3. Verify you see the Fabric home page
 
 ### Verify Capacity Access
@@ -32,9 +87,13 @@ By the end of this tutorial, you will:
 1. Click on **Settings** (gear icon) in the top right
 2. Select **Admin portal** (if you have admin access)
 3. Navigate to **Capacity settings**
-4. Confirm your F64 capacity is available and running
+4. Confirm your Fabric capacity is available and running
 
-## Step 2: Create Workspace
+> ⚠️ **Warning:** If your capacity is paused, notebooks and data processing will not work. Ensure the capacity is in "Active" state before proceeding.
+
+---
+
+## 🛠️ Step 2: Create Workspace
 
 ### Create a New Workspace
 
@@ -47,7 +106,7 @@ By the end of this tutorial, you will:
    | Name | `casino-fabric-poc` |
    | Description | Casino/Gaming Fabric POC - Medallion Architecture |
    | License mode | Fabric capacity |
-   | Capacity | Select your F64 capacity |
+   | Capacity | Select your Fabric capacity |
 
 4. Click **Apply**
 
@@ -60,27 +119,40 @@ By the end of this tutorial, you will:
    - Contact list: Add team members
    - Default storage format: Delta
 
-   **Premium:**
+   **Premium/Fabric:**
    - License mode: Fabric capacity
    - Default storage format: Delta/Parquet
 
-## Step 3: Create Lakehouses
+> ℹ️ **Note:** Using Delta format enables time travel, ACID transactions, and schema evolution - all critical features for our medallion architecture.
+
+---
+
+## 🛠️ Step 3: Create Lakehouses
 
 We'll create three Lakehouses for the medallion architecture.
 
-### Bronze Lakehouse (Raw Data)
+```mermaid
+graph TB
+    subgraph "Medallion Architecture"
+        direction LR
+        B[🥉 lh_bronze<br/>Raw Data] --> S[🥈 lh_silver<br/>Cleansed Data]
+        S --> G[🥇 lh_gold<br/>Business Ready]
+    end
+```
+
+### 🥉 Bronze Lakehouse (Raw Data)
 
 1. In your workspace, click **+ New** > **Lakehouse**
 2. Name: `lh_bronze`
 3. Click **Create**
 
-### Silver Lakehouse (Cleansed Data)
+### 🥈 Silver Lakehouse (Cleansed Data)
 
 1. Click **+ New** > **Lakehouse**
 2. Name: `lh_silver`
 3. Click **Create**
 
-### Gold Lakehouse (Business Ready)
+### 🥇 Gold Lakehouse (Business Ready)
 
 1. Click **+ New** > **Lakehouse**
 2. Name: `lh_gold`
@@ -92,12 +164,14 @@ Your workspace should now contain:
 
 ```
 casino-fabric-poc/
-├── lh_bronze
-├── lh_silver
-└── lh_gold
+├── 🥉 lh_bronze
+├── 🥈 lh_silver
+└── 🥇 lh_gold
 ```
 
-## Step 4: Connect to External Storage (Optional)
+---
+
+## 🛠️ Step 4: Connect to External Storage (Optional)
 
 If you deployed the ADLS Gen2 storage account via Bicep, connect it as a shortcut.
 
@@ -119,7 +193,11 @@ If you deployed the ADLS Gen2 storage account via Bicep, connect it as a shortcu
 7. Name the shortcut: `landing_zone`
 8. Click **Create**
 
-## Step 5: Configure Workspace Access
+> ℹ️ **Note:** Shortcuts allow you to access external data without copying it, reducing storage costs and keeping data in sync.
+
+---
+
+## 🛠️ Step 5: Configure Workspace Access
 
 ### Add Team Members
 
@@ -134,12 +212,46 @@ If you deployed the ADLS Gen2 storage account via Bicep, connect it as a shortcu
    | Contributor | Developers | Create/edit |
    | Viewer | Business users | Read only |
 
-## Step 6: Verify Setup
+> ⚠️ **Warning:** Be careful when assigning Admin roles. Admins can delete the workspace and all its contents.
+
+---
+
+## 🛠️ Step 6: Install Local Tools (Optional)
+
+For local development and data generation, install these tools:
+
+### Required Tools
+
+| Tool | Purpose | Installation |
+|------|---------|--------------|
+| Python 3.10+ | Data generation scripts | [python.org](https://python.org) |
+| VS Code | Code editor | [code.visualstudio.com](https://code.visualstudio.com) |
+| Azure CLI | Azure management | [docs.microsoft.com](https://docs.microsoft.com/cli/azure/install-azure-cli) |
+
+### Python Environment Setup
+
+```bash
+# Create virtual environment
+python -m venv .venv
+
+# Activate (Windows)
+.venv\Scripts\activate
+
+# Activate (macOS/Linux)
+source .venv/bin/activate
+
+# Install dependencies (if requirements.txt exists)
+pip install -r requirements.txt
+```
+
+---
+
+## ✅ Step 7: Verify Setup
 
 ### Run Verification Checks
 
 1. **Workspace accessible:** Can see all three Lakehouses
-2. **Capacity assigned:** Workspace shows "Premium" badge
+2. **Capacity assigned:** Workspace shows "Premium" or "Fabric" badge
 3. **Shortcuts working:** Can browse landing zone (if configured)
 4. **Permissions correct:** Team members can access
 
@@ -160,38 +272,96 @@ df = spark.createDataFrame(data, ["name", "value"])
 # Write to Bronze Lakehouse
 df.write.format("delta").mode("overwrite").save("Tables/test_connection")
 
-print("Success! Lakehouse is configured correctly.")
+print("✅ Success! Lakehouse is configured correctly.")
 ```
 
 4. Verify the `test_connection` table appears in the Tables folder
-5. Delete the test table when done
+5. Delete the test table when done:
 
-## Troubleshooting
+```python
+# Clean up test table
+spark.sql("DROP TABLE IF EXISTS test_connection")
+print("✅ Test table cleaned up.")
+```
+
+---
+
+## ✅ Validation Checklist
+
+Before proceeding to the next tutorial, verify:
+
+- [ ] Workspace `casino-fabric-poc` created
+- [ ] All three Lakehouses created (lh_bronze, lh_silver, lh_gold)
+- [ ] Capacity assigned correctly
+- [ ] ADLS shortcut configured (if applicable)
+- [ ] Team access permissions set
+- [ ] Test notebook executed successfully
+- [ ] Test table created and deleted
+
+---
+
+## 🔧 Troubleshooting
 
 ### Workspace Creation Fails
 
-- Verify Fabric is enabled in your tenant
-- Check you have capacity available
-- Ensure your account has workspace creation permissions
+| Issue | Solution |
+|-------|----------|
+| "Fabric not enabled" | Contact your tenant admin to enable Fabric |
+| "No capacity available" | Start a trial or provision a capacity |
+| "Permission denied" | Ensure your account has workspace creation rights |
 
 ### Shortcut Connection Fails
 
-- Verify ADLS account exists and is accessible
-- Check firewall/private endpoint settings
-- Ensure your account has Storage Blob Data Reader role
+| Issue | Solution |
+|-------|----------|
+| "Cannot connect" | Verify ADLS account exists and is accessible |
+| "Firewall blocked" | Check firewall/private endpoint settings |
+| "Access denied" | Ensure you have Storage Blob Data Reader role |
 
 ### Notebook Won't Run
 
-- Verify capacity is running (not paused)
-- Check Spark pool is available
-- Wait 2-3 minutes for first-time Spark startup
+| Issue | Solution |
+|-------|----------|
+| "Capacity not available" | Verify capacity is running (not paused) |
+| "Spark pool error" | Wait 2-3 minutes for first-time Spark startup |
+| "Out of memory" | Reduce data size or upgrade capacity |
 
-## Next Steps
+---
 
-Continue to [Tutorial 01: Bronze Layer](../01-bronze-layer/README.md) to start ingesting data.
+## 🎉 Summary
 
-## Resources
+Congratulations! You have successfully:
+
+- ✅ Created a Microsoft Fabric workspace for the Casino POC
+- ✅ Set up the medallion architecture with Bronze, Silver, and Gold Lakehouses
+- ✅ Configured external storage connectivity (optional)
+- ✅ Verified the environment is ready for data ingestion
+
+Your environment is now ready to start building the data platform!
+
+---
+
+## ➡️ Next Steps
+
+Continue to **[Tutorial 01: Bronze Layer](../01-bronze-layer/README.md)** to start ingesting raw data into the Bronze layer.
+
+---
+
+## 📚 Resources
 
 - [Microsoft Fabric Documentation](https://learn.microsoft.com/fabric/)
 - [Lakehouse Overview](https://learn.microsoft.com/fabric/data-engineering/lakehouse-overview)
 - [Workspace Management](https://learn.microsoft.com/fabric/get-started/workspaces)
+- [OneLake Shortcuts](https://learn.microsoft.com/fabric/onelake/onelake-shortcuts)
+
+---
+
+## 🧭 Navigation
+
+| Previous | Up | Next |
+|----------|-----|------|
+| N/A | [📖 Tutorials Index](../README.md) | [01-Bronze Layer](../01-bronze-layer/README.md) ➡️ |
+
+---
+
+> 💬 **Questions or issues?** Open an issue in the [GitHub repository](https://github.com/your-repo/issues).

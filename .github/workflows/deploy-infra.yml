@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -67,7 +67,7 @@ jobs:
       changes: ${{ steps.whatif.outputs.changes }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -106,7 +106,7 @@ jobs:
       url: https://portal.azure.com
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -143,7 +143,7 @@ jobs:
     needs: deploy
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Login to Azure
         uses: azure/login@v2

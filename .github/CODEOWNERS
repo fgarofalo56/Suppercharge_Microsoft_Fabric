@@ -1,24 +1,60 @@
-# Code Owners for Microsoft Fabric POC
-# These users will be automatically requested for review
+# =============================================================================
+# Code Owners for Microsoft Fabric Casino/Gaming POC
+# =============================================================================
+# These users/teams will be automatically requested for review on PRs
+# Documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+# =============================================================================
 
-# Default owners for everything
-* @frgarofa
+# -----------------------------------------------------------------------------
+# Default Owners (for all files not matched below)
+# -----------------------------------------------------------------------------
+* @fgarofalo56
 
-# Infrastructure (IaC)
-/infra/ @frgarofa
+# -----------------------------------------------------------------------------
+# Infrastructure as Code (Bicep/ARM)
+# Requires review for any infrastructure changes
+# -----------------------------------------------------------------------------
+/infra/ @fgarofalo56
 
+# -----------------------------------------------------------------------------
+# Security-Sensitive Files
+# Extra scrutiny for security configurations
+# -----------------------------------------------------------------------------
+/.github/workflows/ @fgarofalo56
+/.githooks/ @fgarofalo56
+/.env.sample @fgarofalo56
+/docs/SECURITY.md @fgarofalo56
+
+# -----------------------------------------------------------------------------
+# Data Generation & Schemas
+# Review for data quality and compliance
+# -----------------------------------------------------------------------------
+/data-generation/ @fgarofalo56
+/sample-data/ @fgarofalo56
+
+# -----------------------------------------------------------------------------
+# Notebooks & Analytics
+# -----------------------------------------------------------------------------
+/notebooks/ @fgarofalo56
+/reports/ @fgarofalo56
+
+# -----------------------------------------------------------------------------
 # Documentation
-/docs/ @frgarofa
-*.md @frgarofa
+# -----------------------------------------------------------------------------
+/docs/ @fgarofalo56
+/tutorials/ @fgarofalo56
+/poc-agenda/ @fgarofalo56
+*.md @fgarofalo56
 
-# Data Generation
-/data-generation/ @frgarofa
+# -----------------------------------------------------------------------------
+# Validation & Testing
+# -----------------------------------------------------------------------------
+/validation/ @fgarofalo56
 
-# Notebooks
-/notebooks/ @frgarofa
-
-# GitHub Actions
-/.github/ @frgarofa
-
-# Tutorials
-/tutorials/ @frgarofa
+# -----------------------------------------------------------------------------
+# Docker & DevOps
+# -----------------------------------------------------------------------------
+/Dockerfile @fgarofalo56
+/docker-compose.yml @fgarofalo56
+/.devcontainer/ @fgarofalo56
+/scripts/ @fgarofalo56

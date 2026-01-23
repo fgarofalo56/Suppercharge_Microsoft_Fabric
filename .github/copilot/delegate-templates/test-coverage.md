@@ -78,8 +78,9 @@ describe('[Module/Component Name]', () => {
 
 ## Test Naming Convention
 <!-- How tests should be named -->
-- Use descriptive names: `should_returnUser_when_idIsValid`
-- Or BDD style: `'should return user when id is valid'`
+- Use descriptive names for JavaScript/TypeScript: `shouldReturnUserWhenIdIsValid`
+- For Python/other snake_case ecosystems: `should_return_user_when_id_is_valid`
+- Or BDD-style string descriptions: `'should return user when id is valid'`
 - Include the condition being tested
 - Be specific about expected outcome
 

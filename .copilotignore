@@ -1,0 +1,346 @@
+# ============================================================================
+# GitHub Copilot Content Exclusion Rules (.copilotignore)
+# ============================================================================
+# This file reduces embedding load and improves Copilot Chat performance by
+# excluding files that are not useful for context generation.
+#
+# Best Practices:
+# - Exclude generated/compiled code (not human-written)
+# - Exclude binary files and large assets
+# - Exclude dependency directories (node_modules, vendor, etc.)
+# - Exclude logs, caches, and temporary files
+# - Exclude secrets and sensitive configuration
+# ============================================================================
+
+# ============================================================================
+# DEPENDENCY DIRECTORIES - Largest impact on performance
+# ============================================================================
+node_modules/
+**/node_modules/
+.pnpm-store/
+bower_components/
+jspm_packages/
+
+# Python
+venv/
+.venv/
+env/
+.env/
+ENV/
+__pycache__/
+*.egg-info/
+.eggs/
+site-packages/
+Lib/
+lib/python*/
+
+# .NET
+packages/
+**/packages/
+
+# Go
+vendor/
+
+# Java
+.m2/
+.gradle/
+target/
+
+# Ruby
+.bundle/
+vendor/bundle/
+
+# PHP
+vendor/
+
+# Rust
+target/
+
+# ============================================================================
+# BUILD OUTPUTS & COMPILED CODE
+# ============================================================================
+dist/
+build/
+out/
+output/
+.next/
+.nuxt/
+.output/
+.cache/
+.parcel-cache/
+.turbo/
+.svelte-kit/
+.angular/
+.vercel/
+.netlify/
+
+# .NET build outputs
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+publish/
+
+# Go binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# TypeScript
+*.tsbuildinfo
+.tsc-output/
+*.js.map
+*.d.ts.map
+
+# ============================================================================
+# LARGE GENERATED FILES
+# ============================================================================
+# Lock files (large, auto-generated)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+composer.lock
+Gemfile.lock
+poetry.lock
+Cargo.lock
+go.sum
+packages.lock.json
+
+# Generated API clients/schemas
+**/generated/
+**/auto-generated/
+**/__generated__/
+*.generated.ts
+*.generated.js
+*.g.cs
+*.g.dart
+
+# OpenAPI/Swagger generated
+**/openapi-client/
+**/swagger-client/
+
+# GraphQL generated
+**/__generated__/
+*.graphql.ts
+
+# Protobuf generated
+*_pb.js
+*_pb.d.ts
+*.pb.go
+*.pb.cc
+*.pb.h
+
+# ============================================================================
+# LOGS, CACHES & TEMPORARY FILES
+# ============================================================================
+*.log
+logs/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.swp
+*.swo
+*~
+
+# Test & coverage reports
+coverage/
+.nyc_output/
+htmlcov/
+.pytest_cache/
+.coverage
+*.lcov
+test-results/
+TestResults/
+junit.xml
+
+# Build caches
+.eslintcache
+.stylelintcache
+.prettiercache
+.ruff_cache/
+.mypy_cache/
+.tox/
+.nox/
+.hypothesis/
+
+# IDE caches
+.idea/
+*.iml
+.vs/
+*.suo
+.history/
+
+# ============================================================================
+# BINARY & MEDIA FILES
+# ============================================================================
+# Images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.webp
+*.svg
+*.bmp
+*.tiff
+
+# Fonts
+*.woff
+*.woff2
+*.ttf
+*.eot
+*.otf
+
+# Audio/Video
+*.mp3
+*.mp4
+*.wav
+*.ogg
+*.webm
+*.avi
+*.mov
+*.mkv
+*.flac
+
+# Documents
+*.pdf
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+*.bz2
+*.gz
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.mdb
+
+# ============================================================================
+# SECRETS & SENSITIVE DATA
+# ============================================================================
+.env
+.env.*
+!.env.example
+!.env.template
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.keystore
+*.jks
+**/secrets/
+**/credentials/
+**/private/
+id_rsa*
+id_ed25519*
+
+# ============================================================================
+# OS & EDITOR FILES
+# ============================================================================
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.lnk
+
+# ============================================================================
+# INFRASTRUCTURE & CONFIG (often not useful for code context)
+# ============================================================================
+# Terraform state (sensitive + large)
+*.tfstate
+*.tfstate.*
+.terraform/
+**/.terraform/
+
+# Docker
+*.tar
+docker-compose.override.yml
+
+# Kubernetes secrets
+*-secret.yaml
+*-secret.yml
+
+# ============================================================================
+# DOCUMENTATION ASSETS (keep docs, exclude assets)
+# ============================================================================
+docs/images/
+docs/assets/
+docs/diagrams/*.png
+docs/diagrams/*.svg
+
+# ============================================================================
+# MINIFIED/BUNDLED CODE
+# ============================================================================
+*.min.js
+*.min.css
+*.bundle.js
+*.bundle.css
+*-bundle.js
+*-bundle.css
+*.chunk.js
+*.chunk.css
+
+# Source maps
+*.map
+*.js.map
+*.css.map
+
+# ============================================================================
+# LARGE DATA FILES
+# ============================================================================
+*.csv
+*.json.gz
+*.ndjson
+*.parquet
+*.arrow
+data/
+datasets/
+fixtures/large/
+seeds/
+
+# ============================================================================
+# THIRD-PARTY CODE (vendored/copied)
+# ============================================================================
+**/third-party/
+**/third_party/
+**/external/
+**/lib/vendor/
+
+# ============================================================================
+# COPILOT SESSION FILES
+# ============================================================================
+.copilot/
+.copilot-sessions/
+
+# ============================================================================
+# PROJECT-SPECIFIC EXCLUSIONS
+# ============================================================================
+# Add your project-specific patterns below:
+
+# Example: Large fixture files
+# tests/fixtures/*.json
+
+# Example: Generated documentation
+# docs/api/**/*.html

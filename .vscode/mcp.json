@@ -1,0 +1,230 @@
+{
+  // ==========================================================================
+  // MCP Server Configuration for GitHub Copilot
+  // ==========================================================================
+  // This file configures Model Context Protocol servers that extend Copilot's
+  // capabilities. Enable/disable servers by uncommenting as needed.
+  //
+  // Documentation: https://code.visualstudio.com/docs/copilot/customization/mcp-servers
+  // ==========================================================================
+
+  "servers": {
+    // ========================================================================
+    // CORE SERVERS (Always Enabled)
+    // ========================================================================
+
+    // Archon - Project/Task Management & Knowledge Base
+    "archon": {
+      "url": "http://localhost:8051/mcp",
+      "type": "http"
+    },
+
+    // GitHub MCP Server - Official GitHub operations
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
+    },
+
+    // Microsoft Docs - Access to Microsoft documentation
+    "microsoft.docs.mcp": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp"
+    },
+
+    // ========================================================================
+    // DEVELOPMENT SERVERS
+    // ========================================================================
+
+    // Serena - Code intelligence and refactoring
+    "serena": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "ide-assistant"
+      ]
+    },
+
+    // Playwright - Browser automation and testing
+    "playwright": {
+      "command": "cmd",
+      "args": ["/c", "npx", "@playwright/mcp@latest"]
+    },
+
+    // Filesystem - File operations (commented - enable if needed)
+    // "filesystem": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@anthropic/mcp-filesystem"]
+    // },
+
+    // Sequential Thinking - Enhanced reasoning chains (commented)
+    // "sequential-thinking": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@anthropic/mcp-sequential-thinking"]
+    // },
+
+    // Memory - Persistent memory across sessions (commented)
+    // "memory": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@anthropic/mcp-memory"]
+    // },
+
+    // ========================================================================
+    // SEARCH & RESEARCH SERVERS
+    // ========================================================================
+
+    // Brave Search - Web search
+    "brave-search": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "@brave/brave-search-mcp-server"],
+      "env": {
+        "BRAVE_API_KEY": "${BRAVE_API_KEY}"
+      }
+    },
+
+    // Context7 - Library documentation lookup (commented)
+    // "context7": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@context7/mcp-server"]
+    // },
+
+    // ========================================================================
+    // DATABASE SERVERS (Uncomment as needed)
+    // ========================================================================
+
+    // PostgreSQL - Database operations
+    // "postgres": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@anthropic/mcp-postgres"],
+    //   "env": {
+    //     "DATABASE_URL": "${DATABASE_URL}"
+    //   }
+    // },
+
+    // SQLite - Local database operations
+    // "sqlite": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@anthropic/mcp-sqlite"],
+    //   "env": {
+    //     "SQLITE_PATH": "${SQLITE_PATH}"
+    //   }
+    // },
+
+    // Redis - Cache operations
+    // "redis": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@anthropic/mcp-redis"],
+    //   "env": {
+    //     "REDIS_URL": "${REDIS_URL}"
+    //   }
+    // },
+
+    // ========================================================================
+    // DEVOPS & INFRASTRUCTURE SERVERS (Uncomment as needed)
+    // ========================================================================
+
+    // Docker - Container management
+    // "docker": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@anthropic/mcp-docker"]
+    // },
+
+    // Kubernetes - K8s operations
+    // "kubernetes": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@anthropic/mcp-kubernetes"]
+    // },
+
+    // ========================================================================
+    // ENTERPRISE SERVERS (Uncomment as needed)
+    // ========================================================================
+
+    // Azure DevOps - Azure DevOps integration
+    // "azure-devops": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@azure/mcp-devops"],
+    //   "env": {
+    //     "AZURE_DEVOPS_ORG": "${AZURE_DEVOPS_ORG}",
+    //     "AZURE_DEVOPS_PAT": "${AZURE_DEVOPS_PAT}"
+    //   }
+    // },
+
+    // Jira - Jira ticket management
+    // "jira": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@atlassian/mcp-jira"],
+    //   "env": {
+    //     "JIRA_URL": "${JIRA_URL}",
+    //     "JIRA_TOKEN": "${JIRA_TOKEN}"
+    //   }
+    // },
+
+    // Slack - Team communication
+    // "slack": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@slack/mcp-server"],
+    //   "env": {
+    //     "SLACK_TOKEN": "${SLACK_TOKEN}"
+    //   }
+    // },
+
+    // ========================================================================
+    // AI/ML SERVERS (Uncomment as needed)
+    // ========================================================================
+
+    // OpenAI - OpenAI API access
+    // "openai": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@openai/mcp-server"],
+    //   "env": {
+    //     "OPENAI_API_KEY": "${OPENAI_API_KEY}"
+    //   }
+    // },
+
+    // Ollama - Local LLM models
+    // "ollama": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@ollama/mcp-server"],
+    //   "env": {
+    //     "OLLAMA_HOST": "http://localhost:11434"
+    //   }
+    // },
+
+    // Hugging Face - Model hub access
+    // "huggingface": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@huggingface/mcp-server"],
+    //   "env": {
+    //     "HF_TOKEN": "${HF_TOKEN}"
+    //   }
+    // },
+
+    // ========================================================================
+    // MONITORING & OBSERVABILITY (Uncomment as needed)
+    // ========================================================================
+
+    // Datadog - Monitoring integration
+    // "datadog": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@datadog/mcp-server"],
+    //   "env": {
+    //     "DD_API_KEY": "${DD_API_KEY}",
+    //     "DD_APP_KEY": "${DD_APP_KEY}"
+    //   }
+    // },
+
+    // Sentry - Error tracking
+    // "sentry": {
+    //   "command": "cmd",
+    //   "args": ["/c", "npx", "-y", "@sentry/mcp-server"],
+    //   "env": {
+    //     "SENTRY_AUTH_TOKEN": "${SENTRY_AUTH_TOKEN}"
+    //   }
+    // }
+  },
+
+  "inputs": []
+}

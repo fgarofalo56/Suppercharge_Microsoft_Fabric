@@ -1,0 +1,3 @@
+# Awesome Copilot Helper Dependencies
+
+PyYAML>=6.0.1  # For parsing YAML front matter

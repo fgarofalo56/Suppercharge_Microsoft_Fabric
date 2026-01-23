@@ -1,0 +1,95 @@
+[
+    // ========================================================================
+    // GitHub Copilot Spark Shortcuts
+    // ========================================================================
+    {
+        "key": "ctrl+shift+s ctrl+shift+p",
+        "command": "workbench.action.chat.open",
+        "args": {
+            "query": "@workspace /spark-prototype "
+        },
+        "when": "!editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+s ctrl+shift+t",
+        "command": "workbench.action.chat.open",
+        "args": {
+            "query": "@workspace /spark-teach "
+        },
+        "when": "!editorTextFocus"
+    },
+
+    // ========================================================================
+    // GitHub Codespaces Shortcuts
+    // ========================================================================
+    {
+        "key": "ctrl+shift+c ctrl+shift+c",
+        "command": "workbench.action.chat.open",
+        "args": {
+            "query": "@workspace /codespace-create "
+        },
+        "when": "!editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+c ctrl+shift+f",
+        "command": "workbench.action.chat.open",
+        "args": {
+            "query": "@workspace /codespace-configure "
+        },
+        "when": "!editorTextFocus"
+    },
+
+    // ========================================================================
+    // Git Worktrees Shortcuts
+    // ========================================================================
+    {
+        "key": "ctrl+shift+w ctrl+shift+f",
+        "command": "workbench.action.chat.open",
+        "args": {
+            "query": "@workspace /worktree-feature "
+        },
+        "when": "!editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+w ctrl+shift+r",
+        "command": "workbench.action.chat.open",
+        "args": {
+            "query": "@workspace /worktree-review "
+        },
+        "when": "!editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+w ctrl+shift+e",
+        "command": "workbench.action.chat.open",
+        "args": {
+            "query": "@workspace /worktree-experiment "
+        },
+        "when": "!editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+w ctrl+shift+l",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "git worktree list\n"
+        },
+        "when": "terminalFocus"
+    },
+
+    // ========================================================================
+    // Quick Terminal Commands
+    // ========================================================================
+    {
+        "key": "ctrl+shift+g ctrl+shift+w",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "git worktree list\n"
+        }
+    },
+    {
+        "key": "ctrl+shift+g ctrl+shift+c",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "gh codespace list\n"
+        }
+    }
+]

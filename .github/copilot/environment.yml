@@ -1,0 +1,124 @@
+# Environment Configuration for Copilot Coding Agent
+# Defines the runtime environment when agent executes tasks
+
+# Base environment
+base:
+  # Operating system preference
+  os: "ubuntu-latest"
+  
+  # Shell to use
+  shell: "bash"
+
+# Language runtimes
+runtimes:
+  node:
+    version: "20"
+    package_manager: "npm"  # npm, yarn, pnpm
+    install_command: "npm ci"
+    
+  python:
+    version: "3.11"
+    package_manager: "pip"  # pip, poetry, pipenv
+    install_command: "pip install -r requirements.txt"
+    virtual_env: true
+    
+  dotnet:
+    version: "8.0"
+    install_command: "dotnet restore"
+    
+  go:
+    version: "1.22"
+    install_command: "go mod download"
+    
+  rust:
+    version: "stable"
+    install_command: "cargo build"
+
+# Database services (for integration tests)
+services:
+  postgres:
+    enabled: false
+    version: "16"
+    port: 5432
+    
+  redis:
+    enabled: false
+    version: "7"
+    port: 6379
+    
+  mysql:
+    enabled: false
+    version: "8"
+    port: 3306
+
+# Environment variables
+# Note: Secrets should be configured via GitHub Secrets, not here
+env:
+  NODE_ENV: "test"
+  LOG_LEVEL: "warn"
+  CI: "true"
+
+# Pre-task setup commands
+setup:
+  - name: "Install dependencies"
+    run: |
+      if [ -f "package.json" ]; then npm ci; fi
+      if [ -f "requirements.txt" ]; then pip install -r requirements.txt; fi
+      if [ -f "go.mod" ]; then go mod download; fi
+      
+  - name: "Setup test database"
+    run: |
+      if [ -f "scripts/setup-test-db.sh" ]; then ./scripts/setup-test-db.sh; fi
+
+# Validation commands (run before submitting PR)
+validation:
+  - name: "Lint"
+    run: |
+      if [ -f "package.json" ]; then npm run lint || true; fi
+      if [ -f "pyproject.toml" ]; then ruff check . || true; fi
+      
+  - name: "Type check"
+    run: |
+      if [ -f "tsconfig.json" ]; then npx tsc --noEmit || true; fi
+      if [ -f "pyproject.toml" ]; then mypy . || true; fi
+      
+  - name: "Test"
+    run: |
+      if [ -f "package.json" ]; then npm test; fi
+      if [ -f "pytest.ini" ] || [ -f "pyproject.toml" ]; then pytest; fi
+      if [ -f "go.mod" ]; then go test ./...; fi
+
+# Post-task cleanup
+cleanup:
+  - name: "Remove temp files"
+    run: |
+      rm -rf .tmp .cache __pycache__ *.pyc
+
+# Resource limits
+resources:
+  # Maximum memory (MB)
+  max_memory: 4096
+  
+  # Maximum CPU cores
+  max_cpu: 2
+  
+  # Maximum disk space (MB)
+  max_disk: 10240
+
+# Network access
+network:
+  # Allow outbound network access (for package installs)
+  outbound_allowed: true
+  
+  # Allowed domains for network access
+  allowed_domains:
+    - "registry.npmjs.org"
+    - "pypi.org"
+    - "proxy.golang.org"
+    - "crates.io"
+    - "nuget.org"
+    - "github.com"
+    
+  # Block these domains
+  blocked_domains:
+    - "*.local"

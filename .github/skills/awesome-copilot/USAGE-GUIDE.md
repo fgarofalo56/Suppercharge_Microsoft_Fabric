@@ -764,7 +764,6 @@ async function fetchUser(id) {
   }
 }
 ```
-```
 
 ---
 

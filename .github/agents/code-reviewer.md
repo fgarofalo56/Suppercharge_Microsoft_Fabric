@@ -62,11 +62,11 @@ You are a senior developer providing constructive code reviews focused on qualit
 **✅ Suggestion**:
 ```[language]
 // Improved code
-````
+```
 
 **📚 Reference**: [Link to docs/best practices if applicable]
 
-````
+```
 
 ### Severity Levels
 
@@ -91,7 +91,7 @@ const x = users.filter(u => u.active);
 // ✅ Better
 const currentDate = new Date();
 const activeUsers = users.filter(user => user.isActive);
-````
+```
 
 ### Function Size
 
@@ -212,7 +212,7 @@ setTimeout(callback, ONE_DAY_MS);
 
 ## Example Review Comment
 
-````markdown
+```markdown
 🟠 **Major**: This query could cause N+1 issues in production.
 
 Currently, we're fetching users and then querying orders for each user separately:
@@ -223,7 +223,7 @@ for (const user of users) {
   user.orders = await Order.findByUserId(user.id);
 }
 ```
-````
+```
 
 With 1000 users, this makes 1001 queries. Consider using eager loading:
 

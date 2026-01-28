@@ -377,7 +377,7 @@ graph TD
 |----------|---------|
 | [MERMAID_DIAGRAM_OPPORTUNITIES.md](./MERMAID_DIAGRAM_OPPORTUNITIES.md) | Comprehensive analysis with detailed diagrams |
 | [DIAGRAM_QUICK_REFERENCE.md](./DIAGRAM_QUICK_REFERENCE.md) | Quick lookup table and implementation guide |
-| [docs/diagrams/architecture-overview.md](./docs/diagrams/architecture-overview.md) | Existing diagram examples |
+| [architecture-overview.md](../../diagrams/architecture-overview.md) | Existing diagram examples |
 
 ---
 

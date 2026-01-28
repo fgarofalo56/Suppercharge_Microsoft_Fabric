@@ -2,7 +2,7 @@
 
 > 🏠 [Home](../README.md) > 📚 Docs
 
-**Last Updated:** `2025-01-21` | **Version:** 1.0.0
+**Last Updated:** `2025-01-28` | **Version:** 1.1.0
 
 ---
 
@@ -69,6 +69,16 @@ Documentation and development standards:
 
 ---
 
+## 🗄️ Archive
+
+Historical documentation and review materials:
+
+| Archive | Description |
+|:--------|:------------|
+| [📁 Review 2025-01](./archive/review-2025-01/README.md) | Documentation review artifacts from January 2025 |
+
+---
+
 ## 🗂️ Quick Links
 
 ### By Role
@@ -107,4 +117,4 @@ Documentation and development standards:
 ---
 
 > 📖 **Documentation maintained by:** Microsoft Fabric POC Team
-> 🔗 **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/frgarofa/Supercharge_Microsoft_Fabric)
+> 🔗 **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric)

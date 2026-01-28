@@ -274,7 +274,7 @@ find . -name "*.md" -exec markdown-link-check {} \;
 
 If you need help with any fixes:
 1. Check the full review: `DOCUMENTATION_REVIEW.md`
-2. Refer to the style guide: `docs/STYLE_GUIDE.md` (to be created)
+2. Refer to the style guide: `../../STYLE_GUIDE.md`
 3. Review best practices: Keep a Changelog, Conventional Commits
 
 ---

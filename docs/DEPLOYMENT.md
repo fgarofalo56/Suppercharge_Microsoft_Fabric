@@ -223,7 +223,7 @@ Follow these steps for a rapid deployment to the development environment.
 
 ```bash
 # Clone repository
-git clone https://github.com/frgarofa/Supercharge_Microsoft_Fabric.git
+git clone https://github.com/fgarofalo56/Supercharge_Microsoft_Fabric.git
 cd Supercharge_Microsoft_Fabric
 
 # Copy environment template
@@ -890,4 +890,4 @@ After successful deployment, proceed with these guides:
 ---
 
 > 📖 **Documentation maintained by:** Microsoft Fabric POC Team
-> 🔗 **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/frgarofa/Supercharge_Microsoft_Fabric)
+> 🔗 **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/fgarofalo56/Supercharge_Microsoft_Fabric)

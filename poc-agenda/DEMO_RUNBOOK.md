@@ -1063,7 +1063,7 @@ SlotEvents
 
 | Resource | Link |
 |----------|------|
-| GitHub Repository | `github.com/frgarofa/Supercharge_Microsoft_Fabric` |
+| GitHub Repository | `github.com/fgarofalo56/Supercharge_Microsoft_Fabric` |
 | Microsoft Fabric Docs | `learn.microsoft.com/fabric` |
 | Purview Documentation | `learn.microsoft.com/purview` |
 | Support Contact | `[Your contact info]` |
@@ -1212,7 +1212,7 @@ If time is cut, prioritize:
 | Power BI Service | `https://app.powerbi.com` |
 | Microsoft Purview | `https://purview.microsoft.com` |
 | Azure Portal | `https://portal.azure.com` |
-| GitHub Repository | `https://github.com/frgarofa/Supercharge_Microsoft_Fabric` |
+| GitHub Repository | `https://github.com/fgarofalo56/Supercharge_Microsoft_Fabric` |
 | Fabric Documentation | `https://learn.microsoft.com/fabric` |
 
 ---

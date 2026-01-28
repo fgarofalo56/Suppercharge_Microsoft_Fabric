@@ -214,7 +214,7 @@ flowchart TB
 
 1. **Clone repository**
    ```bash
-   git clone https://github.com/frgarofa/Supercharge_Microsoft_Fabric.git
+   git clone https://github.com/fgarofalo56/Supercharge_Microsoft_Fabric.git
    cd Supercharge_Microsoft_Fabric
    ```
 
@@ -319,7 +319,7 @@ Generate sample data in under 5 minutes without installing any dependencies.
 
 ```bash
 # Clone the repository
-git clone https://github.com/frgarofa/Supercharge_Microsoft_Fabric.git
+git clone https://github.com/fgarofalo56/Supercharge_Microsoft_Fabric.git
 cd Supercharge_Microsoft_Fabric
 
 # Generate demo dataset (7 days, smaller volumes)

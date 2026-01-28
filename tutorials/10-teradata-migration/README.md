@@ -1191,6 +1191,21 @@ Continue to **[Tutorial 11: SAS Connectivity](../11-sas-connectivity/README.md)*
 
 ---
 
+## 📁 Included Resources
+
+This tutorial includes the following supplementary files:
+
+| Resource | Description |
+|----------|-------------|
+| [`scripts/teradata_migration_utils.py`](./scripts/teradata_migration_utils.py) | Python utilities for migration |
+| [`scripts/sql_translation_templates.sql`](./scripts/sql_translation_templates.sql) | SQL translation examples |
+| [`scripts/sample_teradata_ddl.sql`](./scripts/sample_teradata_ddl.sql) | Sample Teradata schema for practice |
+| [`templates/migration_assessment.md`](./templates/migration_assessment.md) | Assessment template |
+| [`templates/migration_checklist.md`](./templates/migration_checklist.md) | Migration checklist |
+| [`diagrams/migration-architecture.md`](./diagrams/migration-architecture.md) | Architecture diagrams |
+
+---
+
 ## 📚 Additional Resources
 
 - [Microsoft Fabric Migration Guide](https://learn.microsoft.com/en-us/fabric/fundamentals/migration)

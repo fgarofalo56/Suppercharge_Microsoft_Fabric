@@ -1,3 +1,7 @@
+# Claude Code local settings
+.claude/settings.local.json
+.mcp.json
+
 # Environment and secrets
 .env
 .env.*

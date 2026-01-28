@@ -289,7 +289,7 @@
       "pathMappings": [
         {
           "localRoot": "${workspaceFolder}",
-          "remoteRoot": "/workspaces/Suppercharge_Microsoft_Fabric"
+          "remoteRoot": "/workspaces/Supercharge_Microsoft_Fabric"
         }
       ],
       "justMyCode": false

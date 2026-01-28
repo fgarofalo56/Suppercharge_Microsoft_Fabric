@@ -2,6 +2,20 @@
 
 > 🏠 [Home](../README.md) > 📚 [Docs](./) > 🔐 Security
 
+<div align="center">
+
+# 🔐 Security
+
+**Compliance Focus & Security Architecture**
+
+![Category](https://img.shields.io/badge/Category-Security-red?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Complete-success?style=for-the-badge)
+![Last Updated](https://img.shields.io/badge/Updated-January_2025-blue?style=for-the-badge)
+
+</div>
+
+---
+
 **Last Updated:** `2025-01-21` | **Version:** 1.0.0
 
 ---
@@ -78,6 +92,75 @@ flowchart TB
 | **Data** | Encryption, Classification | Key Vault, Purview |
 | **Monitoring** | Detection, Response | Defender, Sentinel |
 
+### Security Requirements by Environment
+
+The following state diagram shows how security controls progressively increase from development to production:
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#2196F3','primaryTextColor':'#fff','primaryBorderColor':'#1976D2','lineColor':'#FF9800','secondaryColor':'#4CAF50','tertiaryColor':'#F44336'}}}%%
+stateDiagram-v2
+    [*] --> Development
+    
+    Development --> Test: Code Review<br/>✓ Unit Tests Pass
+    Test --> Staging: Integration Tests<br/>✓ Security Scan
+    Staging --> Production: Penetration Test<br/>✓ Compliance Audit
+    
+    state Development {
+        [*] --> DevControls
+        DevControls: 🔵 Basic Controls
+        DevControls: • Local Authentication
+        DevControls: • Test Data Only
+        DevControls: • No Encryption Required
+        DevControls: • Limited Logging
+    }
+    
+    state Test {
+        [*] --> TestControls
+        TestControls: 🟡 Enhanced Controls
+        TestControls: • Azure AD Auth
+        TestControls: • Masked PII
+        TestControls: • TLS 1.2+
+        TestControls: • Audit Logging Enabled
+        TestControls: • RBAC Basic
+    }
+    
+    state Staging {
+        [*] --> StagingControls
+        StagingControls: 🟠 Production-Like Controls
+        StagingControls: • Azure AD + MFA
+        StagingControls: • Full Encryption (Rest & Transit)
+        StagingControls: • RLS Configured
+        StagingControls: • Private Endpoints
+        StagingControls: • Comprehensive Monitoring
+        StagingControls: • Security Alerts Active
+    }
+    
+    state Production {
+        [*] --> ProdControls
+        ProdControls: 🔴 Maximum Controls
+        ProdControls: • MFA + Conditional Access
+        ProdControls: • Customer-Managed Keys
+        ProdControls: • Full RBAC + RLS + OLS
+        ProdControls: • Private Endpoints Required
+        ProdControls: • Defender for Cloud
+        ProdControls: • Sentinel SIEM
+        ProdControls: • 24/7 SOC Monitoring
+        ProdControls: • Compliance Validation
+    }
+    
+    Production --> [*]: Decommission<br/>✓ Data Retention<br/>✓ Secure Deletion
+
+    note right of Development
+        Low security posture
+        Fast iteration
+    end note
+    
+    note right of Production
+        Maximum security posture
+        Strict change control
+    end note
+```
+
 ---
 
 ## 👤 Identity and Access Management
@@ -91,6 +174,87 @@ flowchart TB
 | Conditional Access | Location + device compliance | Recommended |
 | Session timeout | 8 hours (configurable) | Default |
 
+### Authentication & Authorization Flow
+
+The following sequence diagram illustrates how users authenticate and access Fabric resources:
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'actorBkg':'#2196F3','actorBorder':'#1976D2','actorTextColor':'#fff','signalColor':'#FF9800','signalTextColor':'#000','labelBoxBkgColor':'#4CAF50','labelBoxBorderColor':'#388E3C','labelTextColor':'#fff','loopTextColor':'#F44336','activationBkgColor':'#FFF3E0','activationBorderColor':'#FF9800','sequenceNumberColor':'#fff'}}}%%
+sequenceDiagram
+    autonumber
+    actor User as 👤 User
+    participant Browser as 🌐 Browser
+    participant FabricUI as 📊 Fabric Portal
+    participant AAD as 🔐 Azure AD
+    participant CA as 🛡️ Conditional Access
+    participant MFA as 📱 MFA Service
+    participant Fabric as ⚡ Fabric API
+    participant KV as 🔑 Key Vault
+    participant Data as 💾 Data Lake
+    
+    rect rgb(33, 150, 243, 0.1)
+        Note over User,AAD: Authentication Phase
+        User->>Browser: Navigate to Fabric
+        Browser->>FabricUI: Request access
+        FabricUI->>AAD: Redirect to login
+        AAD->>User: Present login page
+        User->>AAD: Submit credentials
+        
+        AAD->>CA: Evaluate policies
+        CA->>CA: Check location, device,<br/>risk level
+        
+        alt Conditional Access Requires MFA
+            CA->>MFA: Request MFA challenge
+            MFA->>User: Send push notification
+            User->>MFA: Approve
+            MFA-->>CA: MFA verified ✓
+        else Low Risk / Trusted Location
+            CA-->>AAD: Policy satisfied ✓
+        end
+        
+        AAD->>AAD: Generate access token<br/>(JWT with claims)
+        AAD-->>Browser: Return token
+    end
+    
+    rect rgb(76, 175, 80, 0.1)
+        Note over Browser,Fabric: Authorization Phase
+        Browser->>FabricUI: Access with token
+        FabricUI->>Fabric: Request data<br/>(Bearer token)
+        Fabric->>Fabric: Validate token signature
+        Fabric->>Fabric: Extract user claims<br/>(UPN, roles, groups)
+        
+        Fabric->>Fabric: Check RBAC permissions<br/>(Workspace role)
+        
+        alt User Has Required Role
+            Fabric->>Fabric: Apply RLS filters<br/>Based on user identity
+            Note over Fabric: Filter: Region = User.Region
+        else Insufficient Permissions
+            Fabric-->>FabricUI: 403 Forbidden ❌
+            FabricUI-->>User: Access Denied
+        end
+    end
+    
+    rect rgb(255, 152, 0, 0.1)
+        Note over Fabric,Data: Data Access Phase
+        Fabric->>KV: Request encryption keys<br/>(Managed Identity)
+        KV->>KV: Verify identity
+        KV-->>Fabric: Return CMK ✓
+        
+        Fabric->>Data: Query filtered data<br/>(TLS 1.2+)
+        Data->>Data: Decrypt using CMK
+        Data->>Data: Apply row-level filters
+        Data-->>Fabric: Return filtered results
+        
+        Fabric->>Fabric: Log audit event<br/>(User, Query, Timestamp)
+        Fabric-->>FabricUI: Return data ✓
+        FabricUI-->>User: Display report 📊
+    end
+    
+    Note over User,Data: 🔒 All communication encrypted with TLS 1.2+<br/>🔑 Tokens expire after 8 hours<br/>📝 All access logged for audit
+```
+
+> 🔒 **Security Note:** This flow implements defense-in-depth with multiple validation points: token signature, RBAC permissions, and row-level security filters.
+
 ### Role-Based Access Control (RBAC)
 
 #### Fabric Workspace Roles
@@ -101,6 +265,9 @@ flowchart TB
 | 🟠 **Member** | Edit all items | Data engineers |
 | 🟡 **Contributor** | Create/edit (no share) | Developers |
 | 🟢 **Viewer** | Read-only | Business users |
+
+<details>
+<summary><b>🔍 Click to expand: Custom RBAC & RLS Examples</b></summary>
 
 #### Custom RBAC Example
 
@@ -135,6 +302,8 @@ flowchart TB
 ```
 
 > ℹ️ **Note:** RLS policies are enforced at the semantic model level and apply to all reports and dashboards.
+
+</details>
 
 ---
 
@@ -187,6 +356,66 @@ resource encryptionKey 'Microsoft.KeyVault/vaults/keys@2023-07-01' = {
 
 > ⚠️ **Warning:** Never store unmasked PII in the Gold layer. All sensitive data must be encrypted or hashed.
 
+### Data Classification Decision Tree
+
+Use this flowchart to determine the appropriate classification level for your data:
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#2196F3','primaryTextColor':'#fff','primaryBorderColor':'#1976D2','lineColor':'#424242','secondaryColor':'#4CAF50','tertiaryColor':'#FF9800','clusterBkg':'#f5f5f5','edgeLabelBackground':'#fff'}}}%%
+flowchart TD
+    Start([📋 New Data Element]) --> Q1{Contains PII?}
+    
+    Q1 -->|Yes| Q2{Contains<br/>Regulated PII?}
+    Q1 -->|No| Q3{Business<br/>Sensitive?}
+    
+    Q2 -->|Yes<br/>SSN, Card Numbers,<br/>Bank Accounts| Restricted[🔴 RESTRICTED/PII<br/>════════════════<br/>✓ Customer-Managed Keys<br/>✓ Field-level encryption<br/>✓ Masking in all reports<br/>✓ No export allowed<br/>✓ Full audit logging<br/>✓ Data loss prevention<br/>════════════════<br/>Examples:<br/>• Social Security Numbers<br/>• Credit Card Numbers<br/>• Bank Account Numbers<br/>• Biometric Data]
+    
+    Q2 -->|No<br/>Names, Emails,<br/>Player IDs| Q4{Required for<br/>Business Operations?}
+    
+    Q4 -->|Yes| Confidential[🟠 CONFIDENTIAL<br/>════════════════<br/>✓ RBAC enforcement<br/>✓ Row-level security<br/>✓ TLS encryption in transit<br/>✓ Export restrictions<br/>✓ Audit logging<br/>════════════════<br/>Examples:<br/>• Player Name + DOB<br/>• Win/Loss Records<br/>• Contact Information<br/>• Transaction History]
+    
+    Q4 -->|No| Q5{Can be<br/>Publicly Shared?}
+    
+    Q3 -->|Yes| Q6{Competitive<br/>Advantage?}
+    Q3 -->|No| Q5
+    
+    Q6 -->|Yes| Confidential
+    Q6 -->|No| Internal[🟡 INTERNAL<br/>════════════════<br/>✓ Standard RBAC<br/>✓ Employee access only<br/>✓ TLS encryption<br/>════════════════<br/>Examples:<br/>• Operational Metrics<br/>• Internal KPIs<br/>• Team Dashboards<br/>• Aggregated Stats]
+    
+    Q5 -->|Yes| Public[🟢 PUBLIC<br/>════════════════<br/>✓ No restrictions<br/>✓ Open access<br/>════════════════<br/>Examples:<br/>• Marketing Materials<br/>• Public Reports<br/>• Anonymous Analytics<br/>• General Statistics]
+    Q5 -->|No| Internal
+    
+    Restricted --> Actions1[🔒 Apply Controls]
+    Confidential --> Actions2[🔒 Apply Controls]
+    Internal --> Actions3[🔒 Apply Controls]
+    Public --> Actions4[✅ Publish]
+    
+    Actions1 --> Labels1[🏷️ Tag in Purview:<br/>microsoft.personal.data<br/>microsoft.security.restricted]
+    Actions2 --> Labels2[🏷️ Tag in Purview:<br/>microsoft.security.confidential]
+    Actions3 --> Labels3[🏷️ Tag in Purview:<br/>microsoft.security.internal]
+    Actions4 --> Labels4[🏷️ Tag in Purview:<br/>microsoft.security.public]
+    
+    style Restricted fill:#F44336,stroke:#C62828,color:#fff,stroke-width:3px
+    style Confidential fill:#FF9800,stroke:#E65100,color:#fff,stroke-width:3px
+    style Internal fill:#FFC107,stroke:#F57F17,color:#000,stroke-width:3px
+    style Public fill:#4CAF50,stroke:#2E7D32,color:#fff,stroke-width:3px
+    
+    style Start fill:#2196F3,stroke:#1976D2,color:#fff,stroke-width:2px
+    style Q1 fill:#E3F2FD,stroke:#1976D2,color:#000
+    style Q2 fill:#E3F2FD,stroke:#1976D2,color:#000
+    style Q3 fill:#E3F2FD,stroke:#1976D2,color:#000
+    style Q4 fill:#E3F2FD,stroke:#1976D2,color:#000
+    style Q5 fill:#E3F2FD,stroke:#1976D2,color:#000
+    style Q6 fill:#E3F2FD,stroke:#1976D2,color:#000
+    
+    style Labels1 fill:#FFEBEE,stroke:#C62828,color:#000
+    style Labels2 fill:#FFF3E0,stroke:#E65100,color:#000
+    style Labels3 fill:#FFFDE7,stroke:#F57F17,color:#000
+    style Labels4 fill:#E8F5E9,stroke:#2E7D32,color:#000
+```
+
+> 💡 **Best Practice:** When in doubt, classify data at a higher security level. You can always downgrade classification with approval, but exposing sensitive data cannot be undone.
+
 ### PII Handling
 
 ```python
@@ -227,6 +456,9 @@ git config core.hooksPath .githooks
 git config --get core.hooksPath
 ```
 
+<details>
+<summary><b>🔍 Click to expand: Pre-commit Hook Block/Warn Lists</b></summary>
+
 ### What Gets Blocked
 
 The pre-commit hook will **block commits** containing:
@@ -256,6 +488,8 @@ The hook will **warn** (but not block) for:
 - Sample/example templates (`*.sample`, `*.example`)
 - Test files (`test_*.py`, `conftest.py`)
 - Sample data directory (`sample-data/`)
+
+</details>
 
 ### Best Practices
 
@@ -379,6 +613,9 @@ resource fabricNsg 'Microsoft.Network/networkSecurityGroups@2023-05-01' = {
 | 🚨 SAR (Suspicious Activity Report) | Pattern-based | Alert + review |
 | 📋 W-2G (Gambling Winnings) | $1,200 slots, $600 keno | Auto-generate |
 
+<details>
+<summary><b>🔍 Click to expand: CTR Detection Logic (PySpark)</b></summary>
+
 #### CTR Detection Logic
 
 ```python
@@ -402,6 +639,8 @@ def detect_structuring(df, window_hours=24):
         (col("rolling_total") >= 10000)
     )
 ```
+
+</details>
 
 ### PCI-DSS Requirements
 
@@ -520,6 +759,9 @@ flowchart LR
 
 ## ✅ Security Checklists
 
+<details>
+<summary><b>🔍 Click to expand: Detailed Security Checklists</b></summary>
+
 ### Pre-Deployment Checklist
 
 | Task | Status | Owner |
@@ -550,6 +792,8 @@ flowchart LR
 | Penetration testing | Annual | ☐ | Security Team |
 | Compliance audits | As required | ☐ | Compliance Team |
 | Security training | Annual | ☐ | HR/Security |
+
+</details>
 
 ---
 
@@ -587,4 +831,4 @@ flowchart LR
 ---
 
 > 📖 **Documentation maintained by:** Microsoft Fabric POC Team
-> 🔗 **Repository:** [Suppercharge_Microsoft_Fabric](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric)
+> 🔗 **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/frgarofa/Supercharge_Microsoft_Fabric)

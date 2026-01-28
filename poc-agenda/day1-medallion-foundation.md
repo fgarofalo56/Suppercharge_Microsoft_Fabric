@@ -60,6 +60,41 @@ Before starting, ensure the following are ready:
 
 ---
 
+### Day 1 Participant Journey
+
+```mermaid
+journey
+    title Day 1: Medallion Foundation - Participant Experience
+    section Morning - Setup
+      Welcome & Introductions: 5: Participant
+      Configure Workspace: 4: Participant
+      Create Lakehouses: 5: Participant
+      Coffee Break: 5: Participant
+    section Late Morning - Bronze
+      Generate Sample Data: 4: Participant
+      Upload to Landing Zone: 5: Participant
+      Build Slot Telemetry Notebook: 3: Participant
+      Create Table Games Ingestion: 4: Participant
+    section Afternoon - More Bronze
+      Lunch Break: 5: Participant
+      Ingest Player Profiles: 4: Participant
+      Handle Financial Transactions: 3: Participant
+      Process Compliance Data: 4: Participant
+      Coffee Break: 5: Participant
+    section Late Afternoon - Silver Start
+      Learn Silver Principles: 4: Participant
+      Implement Data Cleansing: 3: Participant
+      Add Quality Checks: 4: Participant
+      Review Day 1 Achievements: 5: Participant
+```
+
+**Color Key:**
+- 😄 5 = Excellent experience
+- 🙂 4 = Good experience  
+- 😐 3 = Challenging but achievable
+
+---
+
 ## 🌅 Morning Session 1: Environment Setup (9:00 - 10:30)
 
 ### 🎯 Session Objectives

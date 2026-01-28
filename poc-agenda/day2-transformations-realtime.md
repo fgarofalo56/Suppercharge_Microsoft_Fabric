@@ -61,6 +61,66 @@ Before starting, ensure the following are ready:
 
 ---
 
+### Day 2 Learning Path
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#C0C0C0','primaryTextColor':'#000','primaryBorderColor':'#888','lineColor':'#2196F3','secondaryColor':'#FFD700','tertiaryColor':'#fff', 'fontSize':'14px'}}}%%
+flowchart TB
+    Start([Day 2 Start<br/>9:00 AM]) --> Review[Review Day 1<br/>Bronze Layer Success]
+    
+    Review --> Silver{Silver Layer<br/>Complete}
+    
+    Silver --> SCD[SCD Type 2<br/>Player Master]
+    Silver --> Recon[Financial<br/>Reconciliation]
+    Silver --> Quality[Data Quality<br/>Framework]
+    
+    SCD --> SilverDone[✓ Silver Complete]
+    Recon --> SilverDone
+    Quality --> SilverDone
+    
+    SilverDone --> Break1[☕ Break]
+    
+    Break1 --> Gold{Gold Layer<br/>Aggregations}
+    
+    Gold --> SlotPerf[Slot Performance<br/>KPIs]
+    Gold --> Player360[Player 360<br/>View]
+    Gold --> Compliance[Compliance<br/>Reporting]
+    
+    SlotPerf --> GoldDone[✓ Gold Complete]
+    Player360 --> GoldDone
+    Compliance --> GoldDone
+    
+    GoldDone --> Lunch[🍽️ Lunch]
+    
+    Lunch --> RealTime{Real-Time<br/>Intelligence}
+    
+    RealTime --> Eventhouse[Create<br/>Eventhouse]
+    Eventhouse --> Eventstream[Configure<br/>Eventstream]
+    Eventstream --> KQL[Write KQL<br/>Queries]
+    
+    KQL --> Break2[☕ Break]
+    
+    Break2 --> Dashboard[Build Real-Time<br/>Dashboard]
+    Dashboard --> Alerts[Configure<br/>Alerts]
+    
+    Alerts --> Complete([Day 2 Complete<br/>5:00 PM])
+    
+    style Start fill:#4CAF50,stroke:#2E7D32,color:#fff
+    style Complete fill:#4CAF50,stroke:#2E7D32,color:#fff
+    style SilverDone fill:#C0C0C0,stroke:#888,color:#000
+    style GoldDone fill:#FFD700,stroke:#CD7F32,color:#000
+    style Break1 fill:#2196F3,stroke:#1976D2,color:#fff
+    style Break2 fill:#2196F3,stroke:#1976D2,color:#fff
+    style Lunch fill:#2196F3,stroke:#1976D2,color:#fff
+```
+
+**Learning Path Highlights:**
+- 🥈 **Silver Layer**: Data quality, reconciliation, SCD Type 2
+- 🥇 **Gold Layer**: Business KPIs, player analytics, compliance
+- ⚡ **Real-Time**: Eventhouse, Eventstream, KQL dashboards
+
+---
+
 ## 🌅 Morning Session 1: Silver Layer Complete (9:00 - 10:30)
 
 ### 🎯 Session Objectives

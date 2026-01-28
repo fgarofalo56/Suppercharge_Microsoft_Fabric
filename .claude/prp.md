@@ -20,7 +20,7 @@ Build a comprehensive, production-ready Microsoft Fabric demonstration environme
 ## 1. Repository Structure
 
 ```
-Suppercharge_Microsoft_Fabric/
+Supercharge_Microsoft_Fabric/
 ├── README.md                              # Project overview, quick start
 ├── CLAUDE.md                              # Claude Code project configuration
 ├── .gitignore                             # Exclude .env, secrets, temp/

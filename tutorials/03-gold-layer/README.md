@@ -6,6 +6,16 @@
 
 <div align="center">
 
+![Difficulty](https://img.shields.io/badge/⭐_Difficulty-Intermediate-yellow?style=for-the-badge)
+![Duration](https://img.shields.io/badge/⏱️_Duration-90--120_mins-blue?style=for-the-badge)
+![Prerequisites](https://img.shields.io/badge/📋_Prerequisites-Tutorial_02-orange?style=for-the-badge)
+
+</div>
+
+---
+
+<div align="center">
+
 ## Tutorial 03: Gold Layer - Business-Ready Aggregations
 
 | | |
@@ -20,17 +30,97 @@
 
 ### 📍 Progress Tracker
 
-```
-┌────────┬────────┬────────┬────────┬────────┬────────┬────────┬────────┬────────┬────────┐
-│   00   │   01   │   02   │   03   │   04   │   05   │   06   │   07   │   08   │   09   │
-│ SETUP  │ BRONZE │ SILVER │  GOLD  │  RT    │  PBI   │ PIPES  │  GOV   │ MIRROR │  AI/ML │
-├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-│   ✓    │   ✓    │   ✓    │  ▶▶▶   │        │        │        │        │        │        │
-└────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┘
-                               ▲
-                               │
-                          YOU ARE HERE
-```
+<div align="center">
+
+<table>
+<thead>
+<tr>
+<th align="center" width="10%">Tutorial</th>
+<th align="left" width="45%">Name</th>
+<th align="center" width="15%">Status</th>
+<th align="center" width="15%">Duration</th>
+<th align="center" width="15%">Difficulty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">00</td>
+<td><a href="../00-environment-setup/README.md">⚙️ Environment Setup</a></td>
+<td align="center"><img src="https://img.shields.io/badge/✓-COMPLETE-success?style=flat-square" alt="Complete"></td>
+<td align="center">45-60 min</td>
+<td align="center">⭐ Beginner</td>
+</tr>
+<tr>
+<td align="center">01</td>
+<td><a href="../01-bronze-layer/README.md">🥉 Bronze Layer</a></td>
+<td align="center"><img src="https://img.shields.io/badge/✓-COMPLETE-success?style=flat-square" alt="Complete"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐ Beginner</td>
+</tr>
+<tr>
+<td align="center">02</td>
+<td><a href="../02-silver-layer/README.md">🥈 Silver Layer</a></td>
+<td align="center"><img src="https://img.shields.io/badge/✓-COMPLETE-success?style=flat-square" alt="Complete"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr style="background-color: #e8f5e9;">
+<td align="center"><strong>03</strong></td>
+<td><strong>👉 <a href="../03-gold-layer/README.md">🥇 Gold Layer</a></strong></td>
+<td align="center"><img src="https://img.shields.io/badge/●-CURRENT-blue?style=flat-square" alt="Current"></td>
+<td align="center">90-120 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">04</td>
+<td><a href="../04-real-time-analytics/README.md">⚡ Real-Time Analytics</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">90-120 min</td>
+<td align="center">⭐⭐⭐ Advanced</td>
+</tr>
+<tr>
+<td align="center">05</td>
+<td><a href="../05-direct-lake-powerbi/README.md">📊 Direct Lake & Power BI</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">06</td>
+<td><a href="../06-data-pipelines/README.md">🔄 Data Pipelines</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">07</td>
+<td><a href="../07-governance-purview/README.md">🛡️ Governance & Purview</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">08</td>
+<td><a href="../08-database-mirroring/README.md">🔄 Database Mirroring</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">09</td>
+<td><a href="../09-advanced-ai-ml/README.md">🤖 Advanced AI/ML</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">90-120 min</td>
+<td align="center">⭐⭐⭐ Advanced</td>
+</tr>
+</tbody>
+</table>
+
+<p><em>💡 Tip: Click any tutorial name to jump directly to it</em></p>
+
+</div>
+
+---
 
 | Navigation | |
 |---|---|
@@ -77,6 +167,196 @@ flowchart LR
 
     style Gold fill:#FFD700,stroke:#B8860B,stroke-width:2px
 ```
+
+---
+
+## 📊 Visual Overview
+
+The following ERD illustrates the Gold layer star schema design for casino analytics, showing fact tables and their relationships with dimension tables optimized for Power BI Direct Lake mode.
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#FFD700','primaryTextColor':'#000','primaryBorderColor':'#B8860B','lineColor':'#4682B4','secondaryColor':'#FFF8DC','tertiaryColor':'#fff'}}}%%
+erDiagram
+    %% Dimension Tables
+    DIM_DATE {
+        int date_key PK
+        date calendar_date
+        int year
+        int quarter
+        int month
+        int day
+        string month_name
+        string day_name
+        int fiscal_year
+        int fiscal_quarter
+        boolean is_weekend
+        boolean is_holiday
+    }
+    
+    DIM_MACHINE {
+        int machine_key PK
+        string machine_id UK
+        string machine_type
+        string manufacturer
+        string model
+        string denomination
+        string floor_section
+        int floor_position
+        decimal theoretical_hold_pct
+        date install_date
+        date last_maintenance_date
+        string status
+    }
+    
+    DIM_PLAYER {
+        int player_key PK
+        string player_id UK
+        string tier_status
+        date enrollment_date
+        date tier_effective_date
+        string preferred_game_type
+        int lifetime_visits
+        decimal lifetime_coin_in
+        string risk_category
+        string current_status
+        date last_visit_date
+    }
+    
+    DIM_GAME {
+        int game_key PK
+        string game_id UK
+        string game_name
+        string game_theme
+        string game_category
+        string vendor
+        decimal min_bet
+        decimal max_bet
+        string volatility_rating
+        decimal rtp_percentage
+    }
+    
+    DIM_LOCATION {
+        int location_key PK
+        string floor_section
+        string zone_name
+        int floor_number
+        string casino_area
+        int total_machines
+        decimal square_footage
+    }
+    
+    %% Fact Tables
+    FACT_SLOT_PERFORMANCE {
+        int perf_key PK
+        int date_key FK
+        int machine_key FK
+        int game_key FK
+        int location_key FK
+        decimal total_coin_in
+        decimal total_coin_out
+        decimal total_jackpots
+        decimal net_win
+        decimal theoretical_win
+        decimal variance
+        int total_spins
+        int total_sessions
+        decimal avg_bet_amount
+        decimal hold_percentage
+        decimal player_count
+        decimal peak_hour_utilization
+    }
+    
+    FACT_PLAYER_ACTIVITY {
+        int activity_key PK
+        int date_key FK
+        int player_key FK
+        int machine_key FK
+        int game_key FK
+        timestamp session_start
+        timestamp session_end
+        int session_duration_min
+        decimal total_coin_in
+        decimal total_coin_out
+        decimal net_win_loss
+        int total_spins
+        decimal avg_bet
+        decimal max_bet
+        int jackpot_count
+        decimal comp_points_earned
+        decimal theo_value
+    }
+    
+    FACT_FINANCIAL_TXN {
+        int txn_key PK
+        int date_key FK
+        int player_key FK
+        string transaction_id UK
+        string transaction_type
+        decimal amount
+        string payment_method
+        timestamp transaction_timestamp
+        string status
+        string location_code
+        string processed_by
+        boolean compliance_flagged
+    }
+    
+    FACT_DAILY_KPI {
+        int kpi_key PK
+        int date_key FK
+        int location_key FK
+        decimal total_revenue
+        decimal total_coin_in
+        decimal total_coin_out
+        decimal total_jackpots
+        decimal hold_percentage
+        int active_machines
+        int active_players
+        int new_enrollments
+        decimal avg_session_length
+        decimal player_reinvestment_rate
+        decimal compliance_score
+    }
+    
+    %% Relationships - Fact_Slot_Performance
+    FACT_SLOT_PERFORMANCE ||--o{ DIM_DATE : "occurs_on"
+    FACT_SLOT_PERFORMANCE ||--o{ DIM_MACHINE : "played_on"
+    FACT_SLOT_PERFORMANCE ||--o{ DIM_GAME : "features"
+    FACT_SLOT_PERFORMANCE ||--o{ DIM_LOCATION : "located_in"
+    
+    %% Relationships - Fact_Player_Activity
+    FACT_PLAYER_ACTIVITY ||--o{ DIM_DATE : "occurs_on"
+    FACT_PLAYER_ACTIVITY ||--o{ DIM_PLAYER : "performed_by"
+    FACT_PLAYER_ACTIVITY ||--o{ DIM_MACHINE : "played_on"
+    FACT_PLAYER_ACTIVITY ||--o{ DIM_GAME : "features"
+    
+    %% Relationships - Fact_Financial_Txn
+    FACT_FINANCIAL_TXN ||--o{ DIM_DATE : "occurs_on"
+    FACT_FINANCIAL_TXN ||--o{ DIM_PLAYER : "made_by"
+    
+    %% Relationships - Fact_Daily_KPI
+    FACT_DAILY_KPI ||--o{ DIM_DATE : "summarizes"
+    FACT_DAILY_KPI ||--o{ DIM_LOCATION : "for_location"
+```
+
+**Star Schema Benefits:**
+- **Optimized Queries**: Denormalized dimensions for fast aggregations
+- **Direct Lake Ready**: Designed for Power BI Direct Lake mode
+- **Business-Aligned**: Dimensions match business reporting needs
+- **Pre-Aggregated**: Fact tables contain computed KPIs for performance
+
+**Key Design Patterns:**
+- **Conformed Dimensions**: DIM_DATE and DIM_PLAYER shared across all facts
+- **Gaming KPIs**: Coin-in, coin-out, hold percentage, theoretical win
+- **Surrogate Keys**: Integer keys (*_key) for optimal join performance
+- **SCD Type 2**: Player and Machine dimensions track historical changes
+- **Grain Definition**: Daily aggregations in FACT_SLOT_PERFORMANCE, session-level in FACT_PLAYER_ACTIVITY
+
+**Casino-Specific Metrics:**
+- **Hold Percentage**: (Coin-In - Coin-Out) / Coin-In × 100
+- **Theoretical Win**: Expected casino win based on game math
+- **Variance**: Actual win vs. theoretical win
+- **Player Reinvestment Rate**: Percentage of winnings replayed
 
 ---
 
@@ -1084,16 +1364,151 @@ spark.sql("DESCRIBE DETAIL gold_slot_performance").show()
 
 ## ✅ Validation Checklist
 
-Before proceeding to the next tutorial, verify:
+Before moving to the next tutorial, verify:
 
-| Check | Status | Notes |
-|-------|--------|-------|
-| All Gold fact tables created | ☐ | slot_performance, compliance |
-| Player 360 view complete | ☐ | All data sources joined |
-| Dimension tables created | ☐ | dim_date, dim_machine, dim_zone |
-| KPIs calculating correctly | ☐ | Verify hold %, theo win |
-| Partitioning applied | ☐ | Date partitions on facts |
-| Optimization complete | ☐ | Z-ORDER applied |
+- [ ] **All Gold Tables Created** - Fact and dimension tables exist in `lh_gold`
+- [ ] **Star Schema Correct** - Relationships between facts and dimensions verified
+- [ ] **Aggregations Work** - KPIs calculating correctly (hold %, theo win, etc.)
+- [ ] **Dimension Tables Populated** - Date, machine, zone dimensions complete
+- [ ] **Partitioning Applied** - Date-based partitions on fact tables
+- [ ] **Optimization Complete** - Z-ORDER and VACUUM executed successfully
+
+<details>
+<summary>🔍 How to verify each item</summary>
+
+### All Gold Tables Created
+```python
+# List all Gold tables
+tables = spark.sql("SHOW TABLES IN lh_gold").collect()
+table_names = [row.tableName for row in tables]
+
+expected_tables = [
+    "gold_slot_performance",
+    "gold_player_360",
+    "gold_compliance_reporting",
+    "dim_date",
+    "dim_machine",
+    "dim_zone"
+]
+
+for table in expected_tables:
+    status = "✅" if table in table_names else "❌"
+    count = spark.table(f"lh_gold.{table}").count() if table in table_names else 0
+    print(f"{status} {table:30} {count:>10,} rows")
+```
+
+### Star Schema Correct
+```sql
+-- Verify fact table can join to all dimensions
+SELECT 
+    f.business_date,
+    d.date_name,
+    m.machine_name,
+    z.zone_name,
+    f.total_coin_in,
+    f.net_win
+FROM lh_gold.gold_slot_performance f
+JOIN lh_gold.dim_date d ON f.business_date = d.date_key
+JOIN lh_gold.dim_machine m ON f.machine_id = m.machine_id
+JOIN lh_gold.dim_zone z ON m.zone_id = z.zone_id
+LIMIT 10;
+
+-- Should return results without errors
+```
+
+### Aggregations Work
+```python
+# Verify KPI calculations
+df = spark.table("lh_gold.gold_slot_performance")
+
+# Check hold percentage calculation
+df.select(
+    "machine_id",
+    "business_date",
+    "total_coin_in",
+    "total_coin_out",
+    "net_win",
+    "actual_hold_pct",
+    ((col("total_coin_in") - col("total_coin_out")) / col("total_coin_in") * 100).alias("calculated_hold_pct")
+).show(5)
+
+# Verify actual_hold_pct matches calculated_hold_pct
+```
+
+### Dimension Tables Populated
+```python
+# Check date dimension coverage
+df_date = spark.table("lh_gold.dim_date")
+print(f"Date dimension rows: {df_date.count():,}")
+print(f"Date range: {df_date.agg({'date_key': 'min'}).collect()[0][0]} to {df_date.agg({'date_key': 'max'}).collect()[0][0]}")
+
+# Check machine dimension
+df_machine = spark.table("lh_gold.dim_machine")
+print(f"\nMachine dimension rows: {df_machine.count():,}")
+df_machine.groupBy("zone_id").count().show()
+
+# Check zone dimension
+df_zone = spark.table("lh_gold.dim_zone")
+print(f"\nZone dimension rows: {df_zone.count():,}")
+df_zone.show()
+```
+
+### Partitioning Applied
+```python
+# Check if tables are partitioned
+from delta.tables import DeltaTable
+
+table_name = "lh_gold.gold_slot_performance"
+delta_table = DeltaTable.forName(spark, table_name)
+
+# Get table details
+details = delta_table.detail().select("partitionColumns").collect()[0]
+print(f"Partition columns: {details['partitionColumns']}")
+
+# Should show ['business_date'] or similar date partition
+```
+
+### Optimization Complete
+```python
+# Check when tables were last optimized
+from delta.tables import DeltaTable
+
+table_name = "lh_gold.gold_slot_performance"
+delta_table = DeltaTable.forName(spark, table_name)
+
+# Check history for OPTIMIZE operations
+history = delta_table.history(10)
+optimize_ops = history.filter(col("operation") == "OPTIMIZE")
+
+print("Recent optimization history:")
+optimize_ops.select("timestamp", "operation", "operationMetrics").show(truncate=False)
+
+# Also check for VACUUM operations
+vacuum_ops = history.filter(col("operation") == "VACUUM END")
+print("\nRecent vacuum history:")
+vacuum_ops.select("timestamp", "operation", "operationMetrics").show(truncate=False)
+```
+
+### KPI Validation
+```sql
+-- Verify key metrics are calculating correctly
+SELECT 
+    business_date,
+    COUNT(DISTINCT machine_id) as machine_count,
+    SUM(total_coin_in) as total_coin_in,
+    SUM(total_coin_out) as total_coin_out,
+    SUM(net_win) as net_win,
+    AVG(actual_hold_pct) as avg_hold_pct,
+    SUM(theoretical_win) as total_theo
+FROM lh_gold.gold_slot_performance
+WHERE business_date >= DATEADD(day, -7, GETDATE())
+GROUP BY business_date
+ORDER BY business_date DESC;
+
+-- Metrics should be positive and hold % between 5-15%
+```
+
+</details>
 
 ---
 

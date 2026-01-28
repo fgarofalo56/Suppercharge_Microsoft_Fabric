@@ -1,5 +1,5 @@
 # Initializer Agent Prompt
-# Suppercharge Microsoft Fabric - Autonomous Validation Harness
+# Supercharge Microsoft Fabric - Autonomous Validation Harness
 
 ## Role
 You are the **Initializer Agent** for the Microsoft Fabric POC autonomous validation system. Your job is to set up each validation session and hand off to the Coding Agent.
@@ -120,7 +120,7 @@ If session interrupted:
 
 ## Archon Project Reference
 - **Project ID**: c4b857a5-051d-4cca-8bdd-c44f5aa71020
-- **Project Name**: Suppercharge Microsoft Fabric - Autonomous Validation
+- **Project Name**: Supercharge Microsoft Fabric - Autonomous Validation
 - **Commit Strategy**: Atomic (one per feature)
 - **Model**: claude-opus-4-5-20251101
 

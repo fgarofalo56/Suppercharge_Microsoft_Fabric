@@ -41,8 +41,8 @@ FROM python:3.11-slim AS runtime
 LABEL maintainer="Microsoft Fabric POC Team" \
       version="1.0.0" \
       description="Synthetic data generator for Casino/Gaming POC" \
-      org.opencontainers.image.source="https://github.com/your-org/Suppercharge_Microsoft_Fabric" \
-      org.opencontainers.image.documentation="https://github.com/your-org/Suppercharge_Microsoft_Fabric/blob/main/docker/README.md"
+      org.opencontainers.image.source="https://github.com/your-org/Supercharge_Microsoft_Fabric" \
+      org.opencontainers.image.documentation="https://github.com/your-org/Supercharge_Microsoft_Fabric/blob/main/docker/README.md"
 
 # Runtime environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \

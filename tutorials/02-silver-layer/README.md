@@ -6,6 +6,16 @@
 
 <div align="center">
 
+![Difficulty](https://img.shields.io/badge/⭐_Difficulty-Intermediate-yellow?style=for-the-badge)
+![Duration](https://img.shields.io/badge/⏱️_Duration-60--90_mins-blue?style=for-the-badge)
+![Prerequisites](https://img.shields.io/badge/📋_Prerequisites-Tutorial_01-orange?style=for-the-badge)
+
+</div>
+
+---
+
+<div align="center">
+
 ## Tutorial 02: Silver Layer - Data Cleansing & Transformation
 
 | | |
@@ -20,17 +30,97 @@
 
 ### 📍 Progress Tracker
 
-```
-┌────────┬────────┬────────┬────────┬────────┬────────┬────────┬────────┬────────┬────────┐
-│   00   │   01   │   02   │   03   │   04   │   05   │   06   │   07   │   08   │   09   │
-│ SETUP  │ BRONZE │ SILVER │  GOLD  │  RT    │  PBI   │ PIPES  │  GOV   │ MIRROR │  AI/ML │
-├────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-│   ✓    │   ✓    │  ▶▶▶   │        │        │        │        │        │        │        │
-└────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┘
-                     ▲
-                     │
-                YOU ARE HERE
-```
+<div align="center">
+
+<table>
+<thead>
+<tr>
+<th align="center" width="10%">Tutorial</th>
+<th align="left" width="45%">Name</th>
+<th align="center" width="15%">Status</th>
+<th align="center" width="15%">Duration</th>
+<th align="center" width="15%">Difficulty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">00</td>
+<td><a href="../00-environment-setup/README.md">⚙️ Environment Setup</a></td>
+<td align="center"><img src="https://img.shields.io/badge/✓-COMPLETE-success?style=flat-square" alt="Complete"></td>
+<td align="center">45-60 min</td>
+<td align="center">⭐ Beginner</td>
+</tr>
+<tr>
+<td align="center">01</td>
+<td><a href="../01-bronze-layer/README.md">🥉 Bronze Layer</a></td>
+<td align="center"><img src="https://img.shields.io/badge/✓-COMPLETE-success?style=flat-square" alt="Complete"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐ Beginner</td>
+</tr>
+<tr style="background-color: #e8f5e9;">
+<td align="center"><strong>02</strong></td>
+<td><strong>👉 <a href="../02-silver-layer/README.md">🥈 Silver Layer</a></strong></td>
+<td align="center"><img src="https://img.shields.io/badge/●-CURRENT-blue?style=flat-square" alt="Current"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">03</td>
+<td><a href="../03-gold-layer/README.md">🥇 Gold Layer</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">90-120 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">04</td>
+<td><a href="../04-real-time-analytics/README.md">⚡ Real-Time Analytics</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">90-120 min</td>
+<td align="center">⭐⭐⭐ Advanced</td>
+</tr>
+<tr>
+<td align="center">05</td>
+<td><a href="../05-direct-lake-powerbi/README.md">📊 Direct Lake & Power BI</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">06</td>
+<td><a href="../06-data-pipelines/README.md">🔄 Data Pipelines</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">07</td>
+<td><a href="../07-governance-purview/README.md">🛡️ Governance & Purview</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">08</td>
+<td><a href="../08-database-mirroring/README.md">🔄 Database Mirroring</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">09</td>
+<td><a href="../09-advanced-ai-ml/README.md">🤖 Advanced AI/ML</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">90-120 min</td>
+<td align="center">⭐⭐⭐ Advanced</td>
+</tr>
+</tbody>
+</table>
+
+<p><em>💡 Tip: Click any tutorial name to jump directly to it</em></p>
+
+</div>
+
+---
 
 | Navigation | |
 |---|---|
@@ -63,6 +153,93 @@ flowchart LR
 
     style Silver fill:#C0C0C0,stroke:#808080,stroke-width:2px
 ```
+
+---
+
+## 📊 Visual Overview
+
+The following flowchart illustrates the comprehensive data quality pipeline in the Silver layer, showing validation, cleansing, and quarantine logic for ensuring high-quality data.
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#C0C0C0','primaryTextColor':'#000','primaryBorderColor':'#808080','lineColor':'#4682B4','secondaryColor':'#F0F0F0','tertiaryColor':'#fff'}}}%%
+flowchart TD
+    START([📥 Bronze Layer<br/>Raw Data]) --> READ[Read Bronze Table<br/>bronze_slot_telemetry]
+    
+    READ --> VALIDATE{Data Quality<br/>Validation}
+    
+    subgraph QualityChecks["🔍 Quality Checks"]
+        VALIDATE --> CHK1{Required Fields<br/>Present?}
+        CHK1 -->|No| FAIL1[Mark: missing_required]
+        CHK1 -->|Yes| CHK2{Valid Data<br/>Types?}
+        
+        CHK2 -->|No| FAIL2[Mark: invalid_type]
+        CHK2 -->|Yes| CHK3{Business Rules<br/>Valid?}
+        
+        CHK3 -->|No| FAIL3[Mark: rule_violation]
+        CHK3 -->|Yes| CHK4{Duplicates<br/>Found?}
+        
+        CHK4 -->|Yes| DEDUP[Deduplicate<br/>Keep Latest]
+        CHK4 -->|No| PASS[✅ Quality Check<br/>PASSED]
+        DEDUP --> PASS
+    end
+    
+    FAIL1 --> QUARANTINE[(🚨 Quarantine Table<br/>silver_quarantine)]
+    FAIL2 --> QUARANTINE
+    FAIL3 --> QUARANTINE
+    
+    QUARANTINE --> ALERT[📧 Alert Data Team<br/>Quality Issues]
+    
+    PASS --> CLEANSE[Data Cleansing]
+    
+    subgraph CleanseOps["🧹 Cleansing Operations"]
+        CLEANSE --> OP1[Standardize Formats<br/>dates, strings, nulls]
+        OP1 --> OP2[Trim Whitespace<br/>& Normalize Text]
+        OP2 --> OP3[Handle Nulls<br/>defaults/imputation]
+        OP3 --> OP4[Type Conversions<br/>cast to proper types]
+    end
+    
+    OP4 --> ENRICH[Data Enrichment]
+    
+    subgraph EnrichOps["✨ Enrichment Operations"]
+        ENRICH --> ENR1[Calculate Derived<br/>net_win, hold_pct]
+        ENR1 --> ENR2[Add Metadata<br/>_silver_processed_at]
+        ENR2 --> ENR3[Quality Score<br/>completeness, accuracy]
+    end
+    
+    ENR3 --> SCHEMA{Schema<br/>Enforcement}
+    SCHEMA -->|Enforce| WRITE[Write to Delta<br/>mode: MERGE]
+    
+    WRITE --> SILVER[(🥈 Silver Table<br/>silver_slot_telemetry)]
+    
+    SILVER --> VERIFY{Verification}
+    VERIFY -->|Check Counts| METRICS[📊 Quality Metrics<br/>success rate, reject rate]
+    
+    METRICS --> END([✅ Silver Layer<br/>Quality Data])
+    
+    style START fill:#CD7F32,color:#fff
+    style SILVER fill:#C0C0C0,color:#000
+    style END fill:#C0C0C0,color:#000
+    style QUARANTINE fill:#FF6B6B,color:#fff
+    style PASS fill:#51CF66,color:#fff
+    style ALERT fill:#FAB005,color:#000
+    
+    style QualityChecks fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style CleanseOps fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px
+    style EnrichOps fill:#FFF3E0,stroke:#E65100,stroke-width:2px
+```
+
+**Key Quality Dimensions:**
+- **Completeness**: All required fields (event_id, machine_id, timestamp) must be present
+- **Validity**: Data types match schema, values within acceptable ranges (bet_amount > 0)
+- **Consistency**: Business rules enforced (event_type in allowed values)
+- **Uniqueness**: Duplicates removed using window functions, keeping most recent
+- **Accuracy**: Cross-validated against reference data where applicable
+
+**Quarantine Strategy:**
+- Invalid records routed to `silver_quarantine` table for investigation
+- Original Bronze data preserved for reprocessing
+- Alerts triggered for data quality issues exceeding thresholds
+- Quality scores tracked per batch for monitoring trends
 
 ---
 
@@ -788,16 +965,132 @@ def calculate_quality_score(df, rules):
 
 ## ✅ Validation Checklist
 
-Before proceeding to the Gold layer, verify:
+Before moving to the next tutorial, verify:
 
-| Check | Status | Notes |
-|-------|--------|-------|
-| All 6 Silver tables created | ☐ | Run verification notebook |
-| Data quality checks passing | ☐ | Score > 95% |
-| Deduplication applied | ☐ | No duplicate primary keys |
-| SCD Type 2 working | ☐ | History tracked for player master |
-| Silver metadata columns present | ☐ | `_silver_processed_at`, `_silver_batch_id` |
-| Partitioning configured | ☐ | Date-based partitions |
+- [ ] **All Silver Tables Created** - 6 cleansed tables exist in `lh_silver`
+- [ ] **Quality Rules Applied** - Data quality checks passing with > 95% success rate
+- [ ] **No Duplicates** - Primary key constraints verified, no duplicate records
+- [ ] **SCD Type 2 Working** - Player master history tracked correctly
+- [ ] **Metadata Columns Present** - All tables have `_silver_*` columns
+- [ ] **Quarantine Table Populated** - Failed records captured in quarantine table
+
+<details>
+<summary>🔍 How to verify each item</summary>
+
+### All Silver Tables Created
+```python
+# List all tables in Silver lakehouse
+tables = spark.sql("SHOW TABLES IN lh_silver").collect()
+table_names = [row.tableName for row in tables]
+
+expected_tables = [
+    "silver_slot_cleansed",
+    "silver_player_master",
+    "silver_financial_validated",
+    "silver_table_games",
+    "silver_security_events",
+    "silver_compliance"
+]
+
+for table in expected_tables:
+    status = "✅" if table in table_names else "❌"
+    print(f"{status} {table}")
+```
+
+### Quality Rules Applied
+```python
+# Check data quality scores
+df = spark.table("lh_silver.silver_slot_cleansed")
+
+# Calculate quality metrics
+from pyspark.sql.functions import count, when, col
+
+quality_report = df.select([
+    count("*").alias("total_records"),
+    sum(when(col("machine_id").isNull(), 1).otherwise(0)).alias("null_machine_id"),
+    sum(when(col("event_timestamp").isNull(), 1).otherwise(0)).alias("null_timestamp"),
+    sum(when(col("coin_in") < 0, 1).otherwise(0)).alias("negative_coin_in")
+])
+
+quality_report.show()
+
+# Quality score should be > 95%
+valid_records = total_records - (null_machine_id + null_timestamp + negative_coin_in)
+quality_score = (valid_records / total_records) * 100
+print(f"Quality Score: {quality_score:.2f}%")
+```
+
+### No Duplicates
+```python
+# Check for duplicate primary keys
+df = spark.table("lh_silver.silver_slot_cleansed")
+
+# Group by primary key and count
+duplicates = df.groupBy("event_id").count().filter(col("count") > 1)
+
+duplicate_count = duplicates.count()
+if duplicate_count == 0:
+    print("✅ No duplicates found")
+else:
+    print(f"❌ Found {duplicate_count} duplicate records")
+    duplicates.show()
+```
+
+### SCD Type 2 Working
+```sql
+-- Check player master history tracking
+SELECT 
+    player_id,
+    COUNT(*) as version_count,
+    MIN(effective_from) as first_seen,
+    MAX(effective_to) as last_updated,
+    SUM(CASE WHEN is_current = true THEN 1 ELSE 0 END) as current_records
+FROM lh_silver.silver_player_master
+GROUP BY player_id
+HAVING version_count > 1
+LIMIT 10;
+
+-- Should show players with multiple versions
+-- Each player should have exactly 1 current record (is_current = true)
+```
+
+### Metadata Columns Present
+```python
+# Verify metadata columns
+df = spark.table("lh_silver.silver_slot_cleansed")
+columns = df.columns
+
+required_metadata = [
+    "_silver_processed_at",
+    "_silver_batch_id",
+    "_silver_quality_score"
+]
+
+for col in required_metadata:
+    status = "✅" if col in columns else "❌"
+    print(f"{status} {col}")
+```
+
+### Quarantine Table Check
+```python
+# Check quarantine table for failed records
+df_quarantine = spark.table("lh_silver.silver_data_quality_quarantine")
+
+print(f"Total quarantined records: {df_quarantine.count():,}")
+
+# Show quarantine reasons
+df_quarantine.groupBy("failure_reason").count().orderBy(desc("count")).show()
+
+# Review sample failed records
+df_quarantine.select(
+    "table_name", 
+    "failure_reason", 
+    "failed_at", 
+    "record_json"
+).show(5, truncate=False)
+```
+
+</details>
 
 ---
 

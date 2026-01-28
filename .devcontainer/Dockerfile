@@ -59,7 +59,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && rm -rf /var/lib/apt/lists/*
 
 # Create working directory
-WORKDIR /workspaces/Suppercharge_Microsoft_Fabric
+WORKDIR /workspaces/Supercharge_Microsoft_Fabric
 
 # Copy requirements files
 COPY requirements.txt requirements-dev.txt ./
@@ -113,10 +113,10 @@ RUN mkdir -p /home/vscode/.jupyter \
     && echo "c.ServerApp.password = ''" >> /home/vscode/.jupyter/jupyter_notebook_config.py
 
 # Create directories for project artifacts
-RUN mkdir -p /workspaces/Suppercharge_Microsoft_Fabric/temp \
-    && mkdir -p /workspaces/Suppercharge_Microsoft_Fabric/.data/raw \
-    && mkdir -p /workspaces/Suppercharge_Microsoft_Fabric/.data/processed \
-    && mkdir -p /workspaces/Suppercharge_Microsoft_Fabric/.logs
+RUN mkdir -p /workspaces/Supercharge_Microsoft_Fabric/temp \
+    && mkdir -p /workspaces/Supercharge_Microsoft_Fabric/.data/raw \
+    && mkdir -p /workspaces/Supercharge_Microsoft_Fabric/.data/processed \
+    && mkdir -p /workspaces/Supercharge_Microsoft_Fabric/.logs
 
 # Set ownership to vscode user
 RUN chown -R vscode:vscode /home/vscode \
@@ -148,10 +148,10 @@ alias azlogin="az login --use-device-code"\n\
 alias azaccount="az account show"\n\
 \n\
 # Project navigation\n\
-alias cddata="cd /workspaces/Suppercharge_Microsoft_Fabric/data-generation"\n\
-alias cdinfra="cd /workspaces/Suppercharge_Microsoft_Fabric/infra"\n\
-alias cdnotebooks="cd /workspaces/Suppercharge_Microsoft_Fabric/notebooks"\n\
-alias cdvalidation="cd /workspaces/Suppercharge_Microsoft_Fabric/validation"\n\
+alias cddata="cd /workspaces/Supercharge_Microsoft_Fabric/data-generation"\n\
+alias cdinfra="cd /workspaces/Supercharge_Microsoft_Fabric/infra"\n\
+alias cdnotebooks="cd /workspaces/Supercharge_Microsoft_Fabric/notebooks"\n\
+alias cdvalidation="cd /workspaces/Supercharge_Microsoft_Fabric/validation"\n\
 ' >> /home/vscode/.bashrc
 
 # Set default shell to bash

@@ -147,8 +147,8 @@ The fastest way to generate sample data and explore the POC.
 
 ```bash
 # Clone the repository
-git clone https://github.com/frgarofa/Suppercharge_Microsoft_Fabric.git
-cd Suppercharge_Microsoft_Fabric
+git clone https://github.com/frgarofa/Supercharge_Microsoft_Fabric.git
+cd Supercharge_Microsoft_Fabric
 
 # Generate demo data (1000 events, 7 days)
 docker-compose run --rm demo-generator
@@ -158,6 +158,8 @@ docker-compose run --rm data-generator
 
 # Output will be in ./output directory
 ```
+
+> 💡 **Pro Tip:** Use the demo generator for quick testing (generates in ~2 minutes), or the full data generator for realistic POC scenarios with 30 days of data.
 
 See [Docker Support](#-docker-support) for more options.
 
@@ -177,11 +179,15 @@ One-click development environment with all tools pre-configured.
 2. Select "Codespaces" tab
 3. Click "Create codespace on main"
 
+> 💡 **Pro Tip:** GitHub Codespaces provides a cloud-based development environment with no local installation required. Perfect for team collaboration and workshops.
+
 See [Dev Container](#-dev-container) for configuration details.
 
 ---
 
 ### Azure Deployment
+
+> 📋 **Prerequisites:** Complete the full [Prerequisites Guide](docs/PREREQUISITES.md) before starting deployment. This includes Azure subscription setup, tool installation, and resource provider registration.
 
 #### Prerequisites Checklist
 
@@ -208,8 +214,8 @@ See [Dev Container](#-dev-container) for configuration details.
 **Clone the Repository**
 
 ```bash
-git clone https://github.com/frgarofa/Suppercharge_Microsoft_Fabric.git
-cd Suppercharge_Microsoft_Fabric
+git clone https://github.com/frgarofa/Supercharge_Microsoft_Fabric.git
+cd Supercharge_Microsoft_Fabric
 ```
 
 </td>
@@ -228,6 +234,8 @@ cd Suppercharge_Microsoft_Fabric
 cp .env.sample .env
 # Edit .env with your Azure subscription and tenant details
 ```
+
+> ⚠️ **Warning:** Ensure all required environment variables are populated. Missing values will cause deployment failures.
 
 </td>
 </tr>
@@ -264,6 +272,8 @@ az deployment sub create \
   --template-file infra/main.bicep \
   --parameters infra/environments/dev/dev.bicepparam
 ```
+
+> 💡 **Pro Tip:** Run `az deployment sub what-if` first to preview all resource changes before actual deployment.
 
 </td>
 </tr>
@@ -562,6 +572,8 @@ Understand Azure costs before deployment with our comprehensive cost guide.
 - **Implement storage lifecycle policies** (move cold data to Cool tier)
 - **Set up Azure Cost Management alerts**
 
+> 💡 **Pro Tip:** Enable auto-pause on dev/staging environments to automatically suspend compute during idle periods. This can reduce costs by up to 76% for non-production workloads.
+
 For detailed cost scenarios and optimization strategies, see [docs/COST_ESTIMATION.md](docs/COST_ESTIMATION.md).
 
 ---
@@ -601,6 +613,8 @@ Sample data includes matching schema definitions in `sample-data/schemas/` that 
 - Business descriptions
 - Valid value ranges
 - PII handling requirements
+
+> 💡 **Pro Tip:** Sample data is perfect for initial exploration and testing notebooks without waiting for data generation. Use it to validate your environment setup before generating full datasets.
 
 For generating larger custom datasets, see [data-generation/README.md](data-generation/README.md).
 
@@ -665,7 +679,7 @@ For generating larger custom datasets, see [data-generation/README.md](data-gene
 ## 📂 Repository Structure
 
 ```
-Suppercharge_Microsoft_Fabric/
+Supercharge_Microsoft_Fabric/
 │
 ├── 📁 .devcontainer/                  # 💻 Dev Container configuration
 │   ├── devcontainer.json              # VS Code/Codespaces config
@@ -802,64 +816,64 @@ flowchart LR
 
 <table>
 <tr>
-<th>Level</th>
-<th>Tutorial</th>
-<th>Description</th>
-<th>Duration</th>
+<th>🎯 Level</th>
+<th>📖 Tutorial</th>
+<th>📝 Description</th>
+<th>⏱️ Duration</th>
 </tr>
 <tr>
-<td rowspan="2"><b>🟢 Foundation</b></td>
-<td><a href="tutorials/00-environment-setup/README.md">00 - Environment Setup</a></td>
+<td rowspan="2"><b>🟢 Foundation</b><br/><sub>Start here</sub></td>
+<td><a href="tutorials/00-environment-setup/README.md"><b>00 - Environment Setup</b></a></td>
 <td>Azure & Fabric workspace provisioning</td>
-<td>~1 hour</td>
+<td><code>~1 hour</code></td>
 </tr>
 <tr>
-<td><a href="tutorials/01-bronze-layer/README.md">01 - Bronze Layer</a></td>
+<td><a href="tutorials/01-bronze-layer/README.md"><b>01 - Bronze Layer</b></a></td>
 <td>Raw data ingestion patterns</td>
-<td>~2 hours</td>
+<td><code>~2 hours</code></td>
 </tr>
 <tr>
-<td rowspan="2"><b>🟡 Core</b></td>
-<td><a href="tutorials/02-silver-layer/README.md">02 - Silver Layer</a></td>
+<td rowspan="2"><b>🟡 Core</b><br/><sub>Essential skills</sub></td>
+<td><a href="tutorials/02-silver-layer/README.md"><b>02 - Silver Layer</b></a></td>
 <td>Data cleansing & validation</td>
-<td>~2 hours</td>
+<td><code>~2 hours</code></td>
 </tr>
 <tr>
-<td><a href="tutorials/03-gold-layer/README.md">03 - Gold Layer</a></td>
+<td><a href="tutorials/03-gold-layer/README.md"><b>03 - Gold Layer</b></a></td>
 <td>Business aggregations & KPIs</td>
-<td>~2 hours</td>
+<td><code>~2 hours</code></td>
 </tr>
 <tr>
-<td rowspan="2"><b>🟠 Advanced</b></td>
-<td><a href="tutorials/04-real-time-analytics/README.md">04 - Real-Time Analytics</a></td>
+<td rowspan="2"><b>🟠 Advanced</b><br/><sub>Real-time & BI</sub></td>
+<td><a href="tutorials/04-real-time-analytics/README.md"><b>04 - Real-Time Analytics</b></a></td>
 <td>Eventstreams & Eventhouse</td>
-<td>~3 hours</td>
+<td><code>~3 hours</code></td>
 </tr>
 <tr>
-<td><a href="tutorials/05-direct-lake-powerbi/README.md">05 - Direct Lake & Power BI</a></td>
+<td><a href="tutorials/05-direct-lake-powerbi/README.md"><b>05 - Direct Lake & Power BI</b></a></td>
 <td>Semantic models & reports</td>
-<td>~2 hours</td>
+<td><code>~2 hours</code></td>
 </tr>
 <tr>
-<td rowspan="4"><b>🔴 Enterprise</b></td>
-<td><a href="tutorials/06-data-pipelines/README.md">06 - Data Pipelines</a></td>
+<td rowspan="4"><b>🔴 Enterprise</b><br/><sub>Production-ready</sub></td>
+<td><a href="tutorials/06-data-pipelines/README.md"><b>06 - Data Pipelines</b></a></td>
 <td>Orchestration & scheduling</td>
-<td>~2 hours</td>
+<td><code>~2 hours</code></td>
 </tr>
 <tr>
-<td><a href="tutorials/07-governance-purview/README.md">07 - Governance & Purview</a></td>
+<td><a href="tutorials/07-governance-purview/README.md"><b>07 - Governance & Purview</b></a></td>
 <td>Data catalog & lineage</td>
-<td>~2 hours</td>
+<td><code>~2 hours</code></td>
 </tr>
 <tr>
-<td><a href="tutorials/08-database-mirroring/README.md">08 - Database Mirroring</a></td>
+<td><a href="tutorials/08-database-mirroring/README.md"><b>08 - Database Mirroring</b></a></td>
 <td>SQL Server replication</td>
-<td>~1 hour</td>
+<td><code>~1 hour</code></td>
 </tr>
 <tr>
-<td><a href="tutorials/09-advanced-ai-ml/README.md">09 - Advanced AI/ML</a></td>
+<td><a href="tutorials/09-advanced-ai-ml/README.md"><b>09 - Advanced AI/ML</b></a></td>
 <td>Machine learning integration</td>
-<td>~3 hours</td>
+<td><code>~3 hours</code></td>
 </tr>
 </table>
 
@@ -978,7 +992,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 <sub>Made with ❤️ for the gaming industry</sub>
 
-[![GitHub stars](https://img.shields.io/github/stars/frgarofa/Suppercharge_Microsoft_Fabric?style=social)](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric)
-[![GitHub forks](https://img.shields.io/github/forks/frgarofa/Suppercharge_Microsoft_Fabric?style=social)](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric/fork)
+[![GitHub stars](https://img.shields.io/github/stars/frgarofa/Supercharge_Microsoft_Fabric?style=social)](https://github.com/frgarofa/Supercharge_Microsoft_Fabric)
+[![GitHub forks](https://img.shields.io/github/forks/frgarofa/Supercharge_Microsoft_Fabric?style=social)](https://github.com/frgarofa/Supercharge_Microsoft_Fabric/fork)
 
 </div>

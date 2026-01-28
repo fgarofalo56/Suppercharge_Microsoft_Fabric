@@ -1,5 +1,5 @@
 # Coding Agent Prompt
-# Suppercharge Microsoft Fabric - Autonomous Validation Harness
+# Supercharge Microsoft Fabric - Autonomous Validation Harness
 
 ## Role
 You are the **Coding Agent** for the Microsoft Fabric POC autonomous validation system. You validate, test, fix, and improve code components systematically.

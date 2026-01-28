@@ -28,18 +28,65 @@ Day 3:        ░░░░░░░░░░ 0%  📊 BI & Governance
 
 ## 🗓️ Workshop Overview
 
-| Day | Icon | Focus Area | Key Deliverables |
-|:---:|:----:|------------|------------------|
+| 📅 Day | 🎯 Icon | 🎓 Focus Area | 📦 Key Deliverables |
+|:------:|:-------:|:-------------|:-------------------|
 | **1** | 🏗️ | **Foundation** | Workspace, Bronze/Silver layers |
 | **2** | ⚡ | **Transformation** | Gold layer, Real-time analytics |
 | **3** | 📊 | **Analytics & Governance** | Power BI, Purview, Mirroring |
+
+### 3-Day Workshop Timeline
+
+```mermaid
+gantt
+    title Casino/Gaming Microsoft Fabric POC - 3-Day Workshop
+    dateFormat HH:mm
+    axisFormat %H:%M
+
+    section Day 1 🏗️
+    Welcome & Overview           :done, d1s1, 09:00, 30m
+    Environment Setup            :done, d1s2, 09:30, 1h
+    Break                        :crit, d1b1, 10:30, 15m
+    Bronze Layer Part 1          :active, d1s3, 10:45, 1h45m
+    Lunch                        :crit, d1l, 12:30, 1h
+    Bronze Layer Part 2          :d1s4, 13:30, 1h30m
+    Break                        :crit, d1b2, 15:00, 15m
+    Silver Layer Start           :d1s5, 15:15, 1h30m
+    Day 1 Wrap-up               :milestone, d1m, 16:45, 15m
+
+    section Day 2 ⚡
+    Day 1 Review                 :d2s1, 09:00, 15m
+    Silver Layer Complete        :d2s2, 09:15, 1h15m
+    Break                        :crit, d2b1, 10:30, 15m
+    Gold Layer                   :d2s3, 10:45, 1h45m
+    Lunch                        :crit, d2l, 12:30, 1h
+    Real-Time Analytics Setup    :d2s4, 13:30, 1h30m
+    Break                        :crit, d2b2, 15:00, 15m
+    Real-Time Dashboards         :d2s5, 15:15, 1h30m
+    Day 2 Wrap-up               :milestone, d2m, 16:45, 15m
+
+    section Day 3 📊
+    Day 2 Review                 :d3s1, 09:00, 15m
+    Direct Lake Setup            :d3s2, 09:15, 1h15m
+    Break                        :crit, d3b1, 10:30, 15m
+    Power BI Reports             :d3s3, 10:45, 1h45m
+    Lunch                        :crit, d3l, 12:30, 1h
+    Purview Governance           :d3s4, 13:30, 1h30m
+    Break                        :crit, d3b2, 15:00, 15m
+    Database Mirroring           :d3s5, 15:15, 1h15m
+    POC Summary & Next Steps     :milestone, d3m, 16:30, 30m
+```
+
+**Legend:**
+- 🟩 **Green bars**: Hands-on sessions
+- 🟥 **Red bars**: Breaks and lunch
+- 💎 **Milestones**: Day wrap-ups and completion
 
 ---
 
 ## 👥 Audience & Participants
 
-| Day | Participants | Count | Session Focus |
-|:---:|--------------|:-----:|---------------|
+| 📅 Day | 👤 Participants | 🔢 Count | 🎯 Session Focus |
+|:------:|:---------------|:--------:|:----------------|
 | Day 1-2 | Data Architects & Engineers | 4 | Technical Implementation |
 | Day 3 (AM) | + BI Developers | 6 | Analytics & Reporting |
 | Day 3 (PM) | + All Stakeholders | 10+ | Governance & Roadmap |
@@ -64,22 +111,22 @@ All participants should have:
 
 ### 🌅 Morning Schedule
 
-| Time | Duration | Session | Type | Facilitator |
-|------|:--------:|---------|:----:|-------------|
-| 9:00-9:30 | 30 min | Welcome & Overview | 🎤 | Lead Architect |
-| 9:30-10:30 | 1 hr | Environment Setup | 👥 | Hands-on |
-| 10:30-10:45 | 15 min | ☕ Break | - | - |
-| 10:45-12:30 | 1 hr 45 min | Bronze Layer Part 1 | 👥 | Hands-on |
+| ⏰ Time | ⏱️ Duration | 📋 Session | 🎭 Type | 👤 Facilitator |
+|:-------|:-----------:|:----------|:-------:|:--------------|
+| 9:00-9:30 | 30 min | **Welcome & Overview** | 🎤 | Lead Architect |
+| 9:30-10:30 | 1 hr | **Environment Setup** | 👥 | Hands-on |
+| 10:30-10:45 | 15 min | ☕ *Break* | — | — |
+| 10:45-12:30 | 1 hr 45 min | **Bronze Layer Part 1** | 👥 | Hands-on |
 
 ### ☀️ Afternoon Schedule
 
-| Time | Duration | Session | Type | Facilitator |
-|------|:--------:|---------|:----:|-------------|
-| 12:30-13:30 | 1 hr | 🍽️ Lunch | - | - |
-| 13:30-15:00 | 1 hr 30 min | Bronze Layer Part 2 | 👥 | Hands-on |
-| 15:00-15:15 | 15 min | ☕ Break | - | - |
-| 15:15-16:45 | 1 hr 30 min | Silver Layer Start | 👥 | Hands-on |
-| 16:45-17:00 | 15 min | Day 1 Wrap-up | 💬 | Discussion |
+| ⏰ Time | ⏱️ Duration | 📋 Session | 🎭 Type | 👤 Facilitator |
+|:-------|:-----------:|:----------|:-------:|:--------------|
+| 12:30-13:30 | 1 hr | 🍽️ *Lunch* | — | — |
+| 13:30-15:00 | 1 hr 30 min | **Bronze Layer Part 2** | 👥 | Hands-on |
+| 15:00-15:15 | 15 min | ☕ *Break* | — | — |
+| 15:15-16:45 | 1 hr 30 min | **Silver Layer Start** | 👥 | Hands-on |
+| 16:45-17:00 | 15 min | **Day 1 Wrap-up** | 💬 | Discussion |
 
 ### 🎯 Day 1 Learning Objectives
 
@@ -130,22 +177,22 @@ By end of Day 1, participants will have:
 
 ### 🌅 Morning Schedule
 
-| Time | Duration | Session | Type | Facilitator |
-|------|:--------:|---------|:----:|-------------|
-| 9:00-9:15 | 15 min | Day 1 Review | 💬 | Lead Architect |
-| 9:15-10:30 | 1 hr 15 min | Silver Layer Complete | 👥 | Hands-on |
-| 10:30-10:45 | 15 min | ☕ Break | - | - |
-| 10:45-12:30 | 1 hr 45 min | Gold Layer | 👥 | Hands-on |
+| ⏰ Time | ⏱️ Duration | 📋 Session | 🎭 Type | 👤 Facilitator |
+|:-------|:-----------:|:----------|:-------:|:--------------|
+| 9:00-9:15 | 15 min | **Day 1 Review** | 💬 | Lead Architect |
+| 9:15-10:30 | 1 hr 15 min | **Silver Layer Complete** | 👥 | Hands-on |
+| 10:30-10:45 | 15 min | ☕ *Break* | — | — |
+| 10:45-12:30 | 1 hr 45 min | **Gold Layer** | 👥 | Hands-on |
 
 ### ☀️ Afternoon Schedule
 
-| Time | Duration | Session | Type | Facilitator |
-|------|:--------:|---------|:----:|-------------|
-| 12:30-13:30 | 1 hr | 🍽️ Lunch | - | - |
-| 13:30-15:00 | 1 hr 30 min | Real-Time Analytics Setup | 👥 | Hands-on |
-| 15:00-15:15 | 15 min | ☕ Break | - | - |
-| 15:15-16:45 | 1 hr 30 min | Real-Time Dashboards | 👥 | Hands-on |
-| 16:45-17:00 | 15 min | Day 2 Wrap-up | 💬 | Discussion |
+| ⏰ Time | ⏱️ Duration | 📋 Session | 🎭 Type | 👤 Facilitator |
+|:-------|:-----------:|:----------|:-------:|:--------------|
+| 12:30-13:30 | 1 hr | 🍽️ *Lunch* | — | — |
+| 13:30-15:00 | 1 hr 30 min | **Real-Time Analytics Setup** | 👥 | Hands-on |
+| 15:00-15:15 | 15 min | ☕ *Break* | — | — |
+| 15:15-16:45 | 1 hr 30 min | **Real-Time Dashboards** | 👥 | Hands-on |
+| 16:45-17:00 | 15 min | **Day 2 Wrap-up** | 💬 | Discussion |
 
 ### 🎯 Day 2 Learning Objectives
 
@@ -198,22 +245,22 @@ By end of Day 2, participants will have:
 
 ### 🌅 Morning Schedule
 
-| Time | Duration | Session | Type | Facilitator |
-|------|:--------:|---------|:----:|-------------|
-| 9:00-9:15 | 15 min | Day 2 Review | 💬 | Lead Architect |
-| 9:15-10:30 | 1 hr 15 min | Direct Lake Setup | 👥 | Hands-on |
-| 10:30-10:45 | 15 min | ☕ Break | - | - |
-| 10:45-12:30 | 1 hr 45 min | Power BI Reports | 👥 | Hands-on |
+| ⏰ Time | ⏱️ Duration | 📋 Session | 🎭 Type | 👤 Facilitator |
+|:-------|:-----------:|:----------|:-------:|:--------------|
+| 9:00-9:15 | 15 min | **Day 2 Review** | 💬 | Lead Architect |
+| 9:15-10:30 | 1 hr 15 min | **Direct Lake Setup** | 👥 | Hands-on |
+| 10:30-10:45 | 15 min | ☕ *Break* | — | — |
+| 10:45-12:30 | 1 hr 45 min | **Power BI Reports** | 👥 | Hands-on |
 
 ### ☀️ Afternoon Schedule
 
-| Time | Duration | Session | Type | Facilitator |
-|------|:--------:|---------|:----:|-------------|
-| 12:30-13:30 | 1 hr | 🍽️ Lunch | - | - |
-| 13:30-15:00 | 1 hr 30 min | Purview Governance | 🎤👥 | Demo + Hands-on |
-| 15:00-15:15 | 15 min | ☕ Break | - | - |
-| 15:15-16:30 | 1 hr 15 min | Database Mirroring | 🎤 | Demo |
-| 16:30-17:00 | 30 min | POC Summary & Next Steps | 💬 | All |
+| ⏰ Time | ⏱️ Duration | 📋 Session | 🎭 Type | 👤 Facilitator |
+|:-------|:-----------:|:----------|:-------:|:--------------|
+| 12:30-13:30 | 1 hr | 🍽️ *Lunch* | — | — |
+| 13:30-15:00 | 1 hr 30 min | **Purview Governance** | 🎤👥 | Demo + Hands-on |
+| 15:00-15:15 | 15 min | ☕ *Break* | — | — |
+| 15:15-16:30 | 1 hr 15 min | **Database Mirroring** | 🎤 | Demo |
+| 16:30-17:00 | 30 min | **POC Summary & Next Steps** | 💬 | All |
 
 ### 🎯 Day 3 Learning Objectives
 
@@ -288,8 +335,8 @@ Upon completion, the team will have:
 
 ## 🎯 Success Criteria
 
-| Metric | Target | Status |
-|--------|--------|:------:|
+| 📊 Metric | 🎯 Target | ✅ Status |
+|:----------|:---------|:--------:|
 | Bronze tables populated | 6 tables, 500K+ records | ⬜ |
 | Silver transformations | All data cleansed | ⬜ |
 | Gold aggregations | KPIs calculated | ⬜ |
@@ -303,8 +350,8 @@ Upon completion, the team will have:
 
 ### Room Setup
 
-| Requirement | Status |
-|-------------|:------:|
+| 📋 Requirement | ✅ Status |
+|:--------------|:--------:|
 | Projector/large display | ⬜ |
 | Whiteboard | ⬜ |
 | Power outlets for all laptops | ⬜ |
@@ -312,8 +359,8 @@ Upon completion, the team will have:
 
 ### Accounts Required
 
-| Account | Status |
-|---------|:------:|
+| 🔑 Account | ✅ Status |
+|:----------|:--------:|
 | Azure AD accounts for all participants | ⬜ |
 | Fabric workspace access | ⬜ |
 | Purview access (Day 3) | ⬜ |
@@ -328,8 +375,8 @@ Upon completion, the team will have:
 
 ## 📅 Post-Workshop Roadmap
 
-| Timeline | Action Items |
-|----------|--------------|
+| 📅 Timeline | 📋 Action Items |
+|:-----------|:---------------|
 | **Week 1** | Review recordings, practice exercises |
 | **Week 2** | Implement with real data (subset) |
 | **Week 3** | Production planning meeting |
@@ -339,8 +386,8 @@ Upon completion, the team will have:
 
 ## 🔗 Quick Links
 
-| Resource | Link |
-|----------|------|
+| 📚 Resource | 🔗 Link |
+|:-----------|:-------|
 | 📘 Instructor Guide | [View Guide](./instructor-guide/README.md) |
 | 📖 Day 1 Details | [Medallion Foundation](./day1-medallion-foundation.md) |
 | 📖 Day 2 Details | [Transformations & Real-time](./day2-transformations-realtime.md) |

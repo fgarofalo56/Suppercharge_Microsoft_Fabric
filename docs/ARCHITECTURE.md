@@ -2,6 +2,20 @@
 
 > 🏠 [Home](../README.md) > 📚 [Docs](./) > 🏗️ Architecture
 
+<div align="center">
+
+# 🏗️ Architecture
+
+**System Design & Technical Foundation**
+
+![Category](https://img.shields.io/badge/Category-System_Design-orange?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Complete-success?style=for-the-badge)
+![Last Updated](https://img.shields.io/badge/Updated-January_2025-blue?style=for-the-badge)
+
+</div>
+
+---
+
 **Last Updated:** `2025-01-21` | **Version:** 1.0.0
 
 ---
@@ -28,7 +42,7 @@
 
 This document describes the architecture of the **Microsoft Fabric Casino/Gaming POC** environment. The solution implements a modern data lakehouse architecture using the **medallion pattern** (Bronze/Silver/Gold) with real-time analytics capabilities.
 
-> ℹ️ **Note:** This architecture is designed for a Proof of Concept (POC) environment. Production implementations may require additional security controls and capacity planning.
+> 📝 **Note:** This architecture is designed for a Proof of Concept (POC) environment. Production implementations may require additional security controls, compliance certifications, and capacity planning.
 
 ---
 
@@ -148,6 +162,9 @@ flowchart LR
 
 **Purpose:** Land raw data with minimal transformation for auditability and reprocessing.
 
+<details>
+<summary><b>🔍 Click to expand: Bronze Layer Table Details</b></summary>
+
 | Table | Source | Update Pattern | Retention |
 |-------|--------|----------------|-----------|
 | `bronze_slot_telemetry` | SAS Protocol / IoT | Streaming | 90 days |
@@ -157,11 +174,15 @@ flowchart LR
 | `bronze_security_events` | Surveillance | Streaming | 30 days |
 | `bronze_compliance` | Compliance systems | Batch | 7 years |
 
-> ℹ️ **Key Characteristics:**
+> 💡 **Pro Tip:** The Bronze layer acts as your "data insurance policy" - always preserve raw data for compliance audits and reprocessing scenarios.
+
+> 📝 **Note:** Key Characteristics:
 > - Schema-on-read approach
 > - Append-only inserts
 > - Full source fidelity preserved
 > - Metadata columns: `_ingested_at`, `_source_file`, `_batch_id`
+
+</details>
 
 ---
 
@@ -178,7 +199,9 @@ flowchart LR
 | `silver_security_enriched` | Event correlation, alert tagging | Type 1 |
 | `silver_compliance_validated` | Threshold checks, rule validation | Type 1 |
 
-> ℹ️ **Key Characteristics:**
+> 💡 **Pro Tip:** Implement data quality checks at the Silver layer to catch issues early. Use Great Expectations or Delta Lake constraints for automated validation.
+
+> 📝 **Note:** Key Characteristics:
 > - Schema enforcement (Delta Lake)
 > - Data quality rules applied
 > - Referential integrity checked
@@ -199,7 +222,9 @@ flowchart LR
 | `gold_security_dashboard` | Hour/Zone | Incidents, Alerts, Response time |
 | `gold_compliance_reporting` | Day/Type | CTR count, SAR count, W-2G count |
 
-> ℹ️ **Key Characteristics:**
+> 💡 **Pro Tip:** Design Gold tables with Power BI consumption in mind. Use proper partitioning and avoid wide tables to optimize Direct Lake performance.
+
+> 📝 **Note:** Key Characteristics:
 > - Star schema design
 > - Pre-aggregated metrics
 > - Direct Lake optimized
@@ -237,6 +262,9 @@ flowchart TB
     ALERT -->|"Machine Down"| FLOOR
 ```
 
+<details>
+<summary><b>🔍 Click to expand: Eventhouse Configuration & KQL Tables</b></summary>
+
 ### Eventhouse Configuration
 
 | Database | Purpose | Retention |
@@ -252,6 +280,8 @@ flowchart TB
 | `TableGameEvents` | Table game transactions |
 | `SecurityAlerts` | Security incident stream |
 | `FloorHeatmap` | Aggregated activity by zone |
+
+</details>
 
 ---
 
@@ -288,7 +318,9 @@ flowchart LR
 | 🟡 `Internal` | Operational metrics | Staff access |
 | 🟢 `Public` | Aggregated reports | Open access |
 
-> ⚠️ **Warning:** PII data must be handled according to gaming regulations and may be subject to audit. Never store unencrypted SSN or full card numbers in the Gold layer.
+> ⚠️ **Warning:** PII data must be handled according to gaming regulations (NIGC MICS, state regulations) and may be subject to audit. Never store unencrypted SSN or full card numbers in the Gold layer.
+
+> 💡 **Pro Tip:** Use dynamic data masking or column-level encryption for sensitive data. Purview can automatically discover and classify PII fields.
 
 ---
 
@@ -322,9 +354,14 @@ flowchart TB
 | **Key Vault** | All secrets and certificates |
 | **Conditional Access** | MFA required for admin operations |
 
+> 📋 **Prerequisites:** For production deployments, implement private endpoints and disable public network access to OneLake and Key Vault.
+
 ---
 
 ## 📈 Capacity Planning
+
+<details>
+<summary><b>🔍 Click to expand: F64 SKU Specifications & Resource Usage</b></summary>
 
 ### F64 SKU Specifications
 
@@ -345,7 +382,11 @@ flowchart TB
 | ⚡ Real-time analytics | 8-12 CUs |
 | 📊 Power BI Direct Lake | 4-8 CUs |
 
-> ℹ️ **Note:** Monitor CU consumption via Log Analytics and adjust capacity as needed.
+> 💡 **Pro Tip:** Monitor CU consumption via Fabric Capacity Metrics app and set up alerts for sustained usage above 80%. Consider auto-pause during off-hours to reduce costs.
+
+> 📝 **Note:** These are POC estimates. Production workloads may require additional capacity based on data volumes and concurrency.
+
+</details>
 
 ---
 
@@ -359,6 +400,8 @@ flowchart TB
 | 🥈🥇 Silver/Gold | 1 hour | 2 hours | Delta Lake time travel |
 | ⚡ Real-time | 5 minutes | 15 minutes | Eventhouse replication |
 | 📊 Reports | 1 day | 1 hour | Git version control |
+
+> 💡 **Pro Tip:** Test your disaster recovery procedures quarterly. Use Delta Lake time travel to practice point-in-time recovery scenarios.
 
 ---
 
@@ -413,4 +456,4 @@ flowchart TB
 ---
 
 > 📖 **Documentation maintained by:** Microsoft Fabric POC Team
-> 🔗 **Repository:** [Suppercharge_Microsoft_Fabric](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric)
+> 🔗 **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/frgarofa/Supercharge_Microsoft_Fabric)

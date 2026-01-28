@@ -1,0 +1,305 @@
+// Casino Analytics Semantic Model - TMDL Definition
+// =================================================
+// This file defines the semantic model structure for Direct Lake mode
+// Import into Power BI Desktop or deploy via XMLA endpoint
+
+model CasinoAnalytics
+  culture: en-US
+  defaultMode: import
+  discourageCompositeModels: true
+
+  // =============================================================================
+  // TABLES
+  // =============================================================================
+
+  table fact_daily_slot_performance
+    lineageTag: fact-slots-001
+    sourceExpression:
+      let
+        Source = Lakehouse.Contents(null),
+        Workspace = Source{[workspaceId="..."]}[Data],
+        Lakehouse = Workspace{[lakehouseId="..."]}[Data],
+        Table = Lakehouse{[Id="fact_daily_slot_performance", ItemKind="Table"]}[Data]
+      in
+        Table
+      M
+
+    partition 'fact_daily_slot_performance-partition'
+      mode: directLake
+      source:
+        table: fact_daily_slot_performance
+
+    column machine_id
+      dataType: string
+      isHidden: false
+      summarizeBy: none
+      lineageTag: col-machine-id
+
+    column casino_id
+      dataType: string
+      summarizeBy: none
+      lineageTag: col-casino-id
+
+    column floor_location
+      dataType: string
+      summarizeBy: none
+      lineageTag: col-floor-location
+
+    column denomination
+      dataType: double
+      formatString: \$#,##0.00
+      lineageTag: col-denomination
+
+    column play_date
+      dataType: dateTime
+      formatString: Short Date
+      isKey: true
+      lineageTag: col-play-date
+
+    column total_spins
+      dataType: int64
+      formatString: #,##0
+      lineageTag: col-total-spins
+
+    column total_coin_in
+      dataType: double
+      formatString: \$#,##0.00
+      lineageTag: col-coin-in
+
+    column total_coin_out
+      dataType: double
+      formatString: \$#,##0.00
+      lineageTag: col-coin-out
+
+    column net_revenue
+      dataType: double
+      formatString: \$#,##0.00
+      lineageTag: col-net-revenue
+
+    column hold_percentage
+      dataType: double
+      formatString: 0.00%
+      lineageTag: col-hold-pct
+
+    column unique_players
+      dataType: int64
+      formatString: #,##0
+      lineageTag: col-unique-players
+
+    column total_sessions
+      dataType: int64
+      formatString: #,##0
+      lineageTag: col-sessions
+
+    column jackpot_count
+      dataType: int64
+      formatString: #,##0
+      lineageTag: col-jackpots
+
+  // -------------------------------------------------------------------------
+
+  table dim_machine
+    lineageTag: dim-machine-001
+    sourceExpression:
+      let
+        Source = Lakehouse.Contents(null),
+        Table = Source{[Id="dim_machine"]}[Data]
+      in
+        Table
+      M
+
+    partition 'dim_machine-partition'
+      mode: directLake
+      source:
+        table: dim_machine
+
+    column machine_key
+      dataType: string
+      isHidden: true
+      lineageTag: col-machine-key
+
+    column machine_id
+      dataType: string
+      isKey: true
+      lineageTag: col-machine-id-dim
+
+    column casino_id
+      dataType: string
+      lineageTag: col-casino-id-dim
+
+    column floor_location
+      dataType: string
+      lineageTag: col-floor-dim
+
+    column denomination
+      dataType: double
+      formatString: \$#,##0.00
+      lineageTag: col-denom-dim
+
+  // -------------------------------------------------------------------------
+
+  table dim_player
+    lineageTag: dim-player-001
+
+    column player_key
+      dataType: string
+      isHidden: true
+
+    column player_id
+      dataType: string
+      isKey: true
+
+    column loyalty_tier
+      dataType: string
+
+    column is_vip
+      dataType: boolean
+
+    column home_casino
+      dataType: string
+
+  // -------------------------------------------------------------------------
+
+  table dim_date
+    lineageTag: dim-date-001
+
+    column Date
+      dataType: dateTime
+      isKey: true
+      formatString: Short Date
+
+    column Year
+      dataType: int64
+
+    column Quarter
+      dataType: string
+
+    column Month
+      dataType: string
+
+    column MonthNumber
+      dataType: int64
+
+    column Week
+      dataType: int64
+
+    column DayOfWeek
+      dataType: string
+
+    column DayOfWeekNumber
+      dataType: int64
+
+    column IsWeekend
+      dataType: boolean
+
+  // =============================================================================
+  // RELATIONSHIPS
+  // =============================================================================
+
+  relationship 'fact_to_dim_machine'
+    fromColumn: fact_daily_slot_performance.machine_id
+    toColumn: dim_machine.machine_id
+    crossFilteringBehavior: singleDirection
+
+  relationship 'fact_to_dim_date'
+    fromColumn: fact_daily_slot_performance.play_date
+    toColumn: dim_date.Date
+    crossFilteringBehavior: singleDirection
+
+  // =============================================================================
+  // MEASURES
+  // =============================================================================
+
+  table '_Measures'
+    lineageTag: measures-table
+
+    measure 'Total Coin In' =
+      SUM(fact_daily_slot_performance[total_coin_in])
+      formatString: \$#,##0
+      displayFolder: Revenue
+
+    measure 'Total Coin Out' =
+      SUM(fact_daily_slot_performance[total_coin_out])
+      formatString: \$#,##0
+      displayFolder: Revenue
+
+    measure 'Net Gaming Revenue' =
+      [Total Coin In] - [Total Coin Out]
+      formatString: \$#,##0
+      displayFolder: Revenue
+
+    measure 'Hold Percentage' =
+      DIVIDE([Net Gaming Revenue], [Total Coin In], 0)
+      formatString: 0.00%
+      displayFolder: Revenue
+
+    measure 'Total Spins' =
+      SUM(fact_daily_slot_performance[total_spins])
+      formatString: #,##0
+      displayFolder: Activity
+
+    measure 'Total Players' =
+      SUM(fact_daily_slot_performance[unique_players])
+      formatString: #,##0
+      displayFolder: Activity
+
+    measure 'Active Machines' =
+      DISTINCTCOUNT(fact_daily_slot_performance[machine_id])
+      formatString: #,##0
+      displayFolder: Activity
+
+    measure 'Revenue Per Machine' =
+      DIVIDE([Net Gaming Revenue], [Active Machines], 0)
+      formatString: \$#,##0.00
+      displayFolder: KPIs
+
+    measure 'Avg Bet Size' =
+      DIVIDE([Total Coin In], [Total Spins], 0)
+      formatString: \$#,##0.00
+      displayFolder: KPIs
+
+    measure 'Total Jackpots' =
+      SUM(fact_daily_slot_performance[jackpot_count])
+      formatString: #,##0
+      displayFolder: Compliance
+
+    measure 'Revenue YTD' =
+      TOTALYTD([Net Gaming Revenue], dim_date[Date])
+      formatString: \$#,##0
+      displayFolder: Time Intelligence
+
+    measure 'Revenue MTD' =
+      TOTALMTD([Net Gaming Revenue], dim_date[Date])
+      formatString: \$#,##0
+      displayFolder: Time Intelligence
+
+    measure 'Revenue PY' =
+      CALCULATE([Net Gaming Revenue], SAMEPERIODLASTYEAR(dim_date[Date]))
+      formatString: \$#,##0
+      displayFolder: Time Intelligence
+
+    measure 'Revenue YoY %' =
+      DIVIDE([Net Gaming Revenue] - [Revenue PY], [Revenue PY], 0)
+      formatString: 0.0%
+      displayFolder: Time Intelligence
+
+  // =============================================================================
+  // ROLES (Row-Level Security)
+  // =============================================================================
+
+  role 'Casino Manager'
+    modelPermission: read
+
+    tablePermission dim_machine
+      filterExpression: [casino_id] = USERPRINCIPALNAME()
+
+  role 'Floor Supervisor'
+    modelPermission: read
+
+    tablePermission fact_daily_slot_performance
+      filterExpression:
+        [floor_location] IN {"A1", "A2", "A3"}
+
+  role 'Executive'
+    modelPermission: read
+    // No row filters - sees all data

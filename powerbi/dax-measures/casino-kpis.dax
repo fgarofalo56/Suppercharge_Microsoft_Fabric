@@ -1,0 +1,411 @@
+/*
+=============================================================================
+Casino Analytics - DAX Measure Library
+=============================================================================
+Purpose: Standard DAX measures for casino gaming analytics
+Version: 1.0.0
+Last Updated: 2024-01-28
+
+Usage: Copy these measures into your Power BI semantic model
+=============================================================================
+*/
+
+-- =============================================================================
+-- REVENUE MEASURES
+-- =============================================================================
+
+-- Total Coin In (Handle)
+Total Coin In =
+SUM(fact_daily_slot_performance[total_coin_in])
+
+-- Total Coin Out
+Total Coin Out =
+SUM(fact_daily_slot_performance[total_coin_out])
+
+-- Net Gaming Revenue (Win)
+Net Gaming Revenue =
+[Total Coin In] - [Total Coin Out]
+
+-- Hold Percentage
+Hold Percentage =
+DIVIDE(
+    [Net Gaming Revenue],
+    [Total Coin In],
+    0
+) * 100
+
+-- Theoretical Hold
+Theoretical Hold =
+AVERAGE(fact_daily_slot_performance[theoretical_hold])
+
+-- Hold Variance (Actual vs Theoretical)
+Hold Variance =
+[Hold Percentage] - [Theoretical Hold]
+
+-- Hold Variance Status
+Hold Variance Status =
+SWITCH(
+    TRUE(),
+    ABS([Hold Variance]) > 3, "Alert",
+    ABS([Hold Variance]) > 1.5, "Warning",
+    "Normal"
+)
+
+-- =============================================================================
+-- PLAYER MEASURES
+-- =============================================================================
+
+-- Total Unique Players
+Total Players =
+DISTINCTCOUNT(fact_daily_slot_performance[unique_players])
+
+-- Total Sessions
+Total Sessions =
+SUM(fact_daily_slot_performance[total_sessions])
+
+-- Average Session Value
+Avg Session Value =
+DIVIDE(
+    [Net Gaming Revenue],
+    [Total Sessions],
+    0
+)
+
+-- Players by Tier
+Players Bronze =
+CALCULATE(
+    DISTINCTCOUNT(dim_player[player_id]),
+    dim_player[loyalty_tier] = "Bronze"
+)
+
+Players Silver =
+CALCULATE(
+    DISTINCTCOUNT(dim_player[player_id]),
+    dim_player[loyalty_tier] = "Silver"
+)
+
+Players Gold =
+CALCULATE(
+    DISTINCTCOUNT(dim_player[player_id]),
+    dim_player[loyalty_tier] = "Gold"
+)
+
+Players Platinum =
+CALCULATE(
+    DISTINCTCOUNT(dim_player[player_id]),
+    dim_player[loyalty_tier] = "Platinum"
+)
+
+Players Diamond =
+CALCULATE(
+    DISTINCTCOUNT(dim_player[player_id]),
+    dim_player[loyalty_tier] = "Diamond"
+)
+
+-- VIP Revenue Contribution
+VIP Revenue =
+CALCULATE(
+    [Net Gaming Revenue],
+    dim_player[is_vip] = TRUE()
+)
+
+VIP Revenue Percentage =
+DIVIDE(
+    [VIP Revenue],
+    [Net Gaming Revenue],
+    0
+) * 100
+
+-- =============================================================================
+-- MACHINE PERFORMANCE MEASURES
+-- =============================================================================
+
+-- Active Machines
+Active Machines =
+DISTINCTCOUNT(fact_daily_slot_performance[machine_id])
+
+-- Total Spins
+Total Spins =
+SUM(fact_daily_slot_performance[total_spins])
+
+-- Revenue Per Machine
+Revenue Per Machine =
+DIVIDE(
+    [Net Gaming Revenue],
+    [Active Machines],
+    0
+)
+
+-- Spins Per Machine
+Spins Per Machine =
+DIVIDE(
+    [Total Spins],
+    [Active Machines],
+    0
+)
+
+-- Average Bet Size
+Avg Bet Size =
+DIVIDE(
+    [Total Coin In],
+    [Total Spins],
+    0
+)
+
+-- Machine Utilization (requires time context)
+Machine Utilization =
+VAR TotalMachines = COUNTROWS(dim_machine)
+VAR ActiveMachines = [Active Machines]
+RETURN DIVIDE(ActiveMachines, TotalMachines, 0) * 100
+
+-- =============================================================================
+-- JACKPOT MEASURES
+-- =============================================================================
+
+-- Total Jackpots
+Total Jackpots =
+SUM(fact_daily_slot_performance[jackpot_count])
+
+-- Jackpot Amount (W-2G reportable)
+Jackpot Amount =
+SUMX(
+    fact_daily_slot_performance,
+    IF(fact_daily_slot_performance[max_single_win] >= 1200,
+       fact_daily_slot_performance[max_single_win],
+       0)
+)
+
+-- Progressive Contribution
+Progressive Contribution =
+SUM(fact_daily_slot_performance[total_jackpot_contribution])
+
+-- Jackpot Frequency
+Jackpot Frequency =
+DIVIDE(
+    [Total Jackpots],
+    [Total Spins],
+    0
+) * 1000000  -- Per million spins
+
+-- =============================================================================
+-- TIME INTELLIGENCE MEASURES
+-- =============================================================================
+
+-- Revenue YTD
+Revenue YTD =
+TOTALYTD(
+    [Net Gaming Revenue],
+    dim_date[date]
+)
+
+-- Revenue MTD
+Revenue MTD =
+TOTALMTD(
+    [Net Gaming Revenue],
+    dim_date[date]
+)
+
+-- Revenue Previous Month
+Revenue PM =
+CALCULATE(
+    [Net Gaming Revenue],
+    PREVIOUSMONTH(dim_date[date])
+)
+
+-- Revenue MoM Change
+Revenue MoM Change =
+DIVIDE(
+    [Net Gaming Revenue] - [Revenue PM],
+    [Revenue PM],
+    0
+) * 100
+
+-- Revenue Previous Year
+Revenue PY =
+CALCULATE(
+    [Net Gaming Revenue],
+    SAMEPERIODLASTYEAR(dim_date[date])
+)
+
+-- Revenue YoY Change
+Revenue YoY Change =
+DIVIDE(
+    [Net Gaming Revenue] - [Revenue PY],
+    [Revenue PY],
+    0
+) * 100
+
+-- Rolling 7-Day Revenue
+Revenue R7D =
+CALCULATE(
+    [Net Gaming Revenue],
+    DATESINPERIOD(
+        dim_date[date],
+        MAX(dim_date[date]),
+        -7,
+        DAY
+    )
+)
+
+-- Rolling 30-Day Revenue
+Revenue R30D =
+CALCULATE(
+    [Net Gaming Revenue],
+    DATESINPERIOD(
+        dim_date[date],
+        MAX(dim_date[date]),
+        -30,
+        DAY
+    )
+)
+
+-- =============================================================================
+-- FLOOR SECTION MEASURES
+-- =============================================================================
+
+-- Revenue by Floor Location
+Revenue by Location =
+CALCULATE(
+    [Net Gaming Revenue],
+    ALLEXCEPT(fact_daily_slot_performance, fact_daily_slot_performance[floor_location])
+)
+
+-- Top Performing Floor Section
+Top Floor Section =
+TOPN(
+    1,
+    SUMMARIZE(
+        fact_daily_slot_performance,
+        fact_daily_slot_performance[floor_location],
+        "Revenue", [Net Gaming Revenue]
+    ),
+    [Revenue],
+    DESC
+)
+
+-- Floor Revenue Rank
+Floor Revenue Rank =
+RANKX(
+    ALL(fact_daily_slot_performance[floor_location]),
+    [Net Gaming Revenue],
+    ,
+    DESC,
+    DENSE
+)
+
+-- =============================================================================
+-- COMPLIANCE MEASURES
+-- =============================================================================
+
+-- CTR Candidates (Cash > $10,000)
+CTR Candidates =
+CALCULATE(
+    DISTINCTCOUNT(bronze_financial_transactions[player_id]),
+    bronze_financial_transactions[amount] >= 10000,
+    bronze_financial_transactions[transaction_type] IN {"CASH_IN", "CASH_OUT"}
+)
+
+-- W-2G Required (Wins >= $1,200)
+W2G Required =
+CALCULATE(
+    COUNTROWS(silver_slot_telemetry),
+    silver_slot_telemetry[is_large_win] = TRUE()
+)
+
+-- Self-Excluded Players Active
+Self Exclusion Violations =
+CALCULATE(
+    DISTINCTCOUNT(silver_slot_telemetry[player_id]),
+    FILTER(
+        dim_player,
+        dim_player[self_exclusion_status] = TRUE()
+    )
+)
+
+-- =============================================================================
+-- KPI CARDS
+-- =============================================================================
+
+-- Revenue Status Indicator
+Revenue Status =
+VAR CurrentRevenue = [Net Gaming Revenue]
+VAR TargetRevenue = [Revenue PY] * 1.05  -- 5% growth target
+RETURN
+SWITCH(
+    TRUE(),
+    CurrentRevenue >= TargetRevenue, "Above Target",
+    CurrentRevenue >= TargetRevenue * 0.95, "On Track",
+    "Below Target"
+)
+
+-- Revenue Status Color
+Revenue Status Color =
+SWITCH(
+    [Revenue Status],
+    "Above Target", "#107C10",
+    "On Track", "#FFB900",
+    "Below Target", "#D83B01",
+    "#767676"
+)
+
+-- Daily Revenue Target
+Daily Revenue Target =
+VAR AnnualTarget = 500000000  -- $500M annual target
+VAR DaysInYear = 365
+RETURN AnnualTarget / DaysInYear
+
+-- Daily Revenue vs Target
+Daily Revenue vs Target =
+DIVIDE(
+    [Net Gaming Revenue],
+    [Daily Revenue Target],
+    0
+) * 100
+
+-- =============================================================================
+-- FORMATTING MEASURES
+-- =============================================================================
+
+-- Revenue Formatted
+Revenue Formatted =
+VAR Revenue = [Net Gaming Revenue]
+RETURN
+SWITCH(
+    TRUE(),
+    Revenue >= 1000000000, FORMAT(Revenue / 1000000000, "$#,##0.0B"),
+    Revenue >= 1000000, FORMAT(Revenue / 1000000, "$#,##0.0M"),
+    Revenue >= 1000, FORMAT(Revenue / 1000, "$#,##0.0K"),
+    FORMAT(Revenue, "$#,##0")
+)
+
+-- Hold Formatted
+Hold Formatted =
+FORMAT([Hold Percentage], "#,##0.00") & "%"
+
+-- =============================================================================
+-- TOOLTIPS
+-- =============================================================================
+
+-- Machine Performance Tooltip
+Machine Tooltip =
+VAR MachineName = SELECTEDVALUE(dim_machine[machine_id])
+VAR Revenue = [Net Gaming Revenue]
+VAR Hold = [Hold Percentage]
+VAR Spins = [Total Spins]
+RETURN
+"Machine: " & MachineName & UNICHAR(10) &
+"Revenue: " & FORMAT(Revenue, "$#,##0") & UNICHAR(10) &
+"Hold: " & FORMAT(Hold, "0.00") & "%" & UNICHAR(10) &
+"Spins: " & FORMAT(Spins, "#,##0")
+
+-- Player Tooltip
+Player Tooltip =
+VAR PlayerID = SELECTEDVALUE(dim_player[player_id])
+VAR Tier = SELECTEDVALUE(dim_player[loyalty_tier])
+VAR Visits = [Total Sessions]
+VAR Spend = [Total Coin In]
+RETURN
+"Player: " & PlayerID & UNICHAR(10) &
+"Tier: " & Tier & UNICHAR(10) &
+"Sessions: " & FORMAT(Visits, "#,##0") & UNICHAR(10) &
+"Total Play: " & FORMAT(Spend, "$#,##0")

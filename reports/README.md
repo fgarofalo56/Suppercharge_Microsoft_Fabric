@@ -65,15 +65,10 @@ reports/
 | Player Distribution | Loyalty tier breakdown |
 
 **Screenshot Placeholder:**
-```
-+-------------------------------------------------------+
-|                                                       |
-|         [ Executive Dashboard Screenshot ]            |
-|                                                       |
-|    Save screenshot as: screenshots/exec-dashboard.png |
-|                                                       |
-+-------------------------------------------------------+
-```
+
+> 📸 **Screenshot**: Executive Dashboard showing KPI cards, revenue trends, and player distribution
+> 
+> _To add: Capture the main dashboard view from Power BI Service after publishing_
 
 **Key Filters:**
 - Date Range (default: Last 30 days)
@@ -97,15 +92,10 @@ reports/
 | Manufacturer Comparison | Performance by machine manufacturer |
 
 **Screenshot Placeholder:**
-```
-+-------------------------------------------------------+
-|                                                       |
-|         [ Slot Operations Screenshot ]                |
-|                                                       |
-|    Save screenshot as: screenshots/slot-ops.png       |
-|                                                       |
-+-------------------------------------------------------+
-```
+
+> 📸 **Screenshot**: Slot Operations dashboard with floor map and performance metrics
+> 
+> _To add: Capture the slot operations view showing machine status and KPIs_
 
 **Key Filters:**
 - Date Range
@@ -131,15 +121,10 @@ reports/
 | Audit Trail | Recent compliance activities |
 
 **Screenshot Placeholder:**
-```
-+-------------------------------------------------------+
-|                                                       |
-|         [ Compliance Dashboard Screenshot ]           |
-|                                                       |
-|    Save screenshot as: screenshots/compliance.png     |
-|                                                       |
-+-------------------------------------------------------+
-```
+
+> 📸 **Screenshot**: Compliance Monitoring dashboard with filing status and deadline tracking
+> 
+> _To add: Capture the compliance view showing CTR/SAR/W-2G metrics_
 
 **Key Filters:**
 - Date Range

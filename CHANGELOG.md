@@ -14,6 +14,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.0] - 2025-01-28
+
+### Added
+
+#### New Tutorials
+- **Tutorial 12: CI/CD & DevOps** - Git integration, deployment pipelines, automation scripts
+- **Tutorial 13: Migration Planning** - 6-month enterprise migration guide, POC to production
+
+#### Notebook Documentation
+- **notebooks/bronze/README.md** - Raw ingestion layer documentation
+- **notebooks/silver/README.md** - Data cleansing layer documentation
+- **notebooks/gold/README.md** - Business aggregation layer documentation
+- **notebooks/real-time/README.md** - Streaming analytics documentation
+- **notebooks/ml/README.md** - Machine learning documentation
+
+#### Quick Reference Documents
+- **docs/QUICK_START.md** - 5-minute getting started guide
+- **tutorials/CHEAT_SHEET.md** - Printable PySpark/KQL/DAX reference card
+
+#### MkDocs Documentation Site
+- **mkdocs.yml** - Material theme with dark/light toggle, search, Mermaid support
+- **.github/workflows/docs.yml** - GitHub Actions for auto-deploy to GitHub Pages
+- **docs/stylesheets/extra.css** - Custom styling for documentation site
+
+#### Infrastructure Documentation
+- **infra/README.md** - Comprehensive Bicep deployment guide with Mermaid diagrams
+
+### Changed
+- Reorganized repository structure (moved review files to docs/archive/)
+- Updated tutorials/README.md to include all 14 tutorials
+- Enhanced main README.md with new documentation links
+
+### Fixed
+- Fixed 10 broken icons8.com image links (replaced with emoji)
+- Fixed GitHub badge URLs (corrected username)
+- Fixed markdown rendering issues in docs/STYLE_GUIDE.md
+- Fixed broken image reference in tutorials/08-database-mirroring
+
+---
+
 ## [1.1.0] - 2025-01-21
 
 ### Added

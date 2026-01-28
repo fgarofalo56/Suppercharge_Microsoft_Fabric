@@ -1427,6 +1427,20 @@ Continue to **[Tutorial 13: Migration Planning & Delivery](../13-migration-plann
 
 ---
 
+## 📁 Included Resources
+
+This tutorial includes the following deployment scripts:
+
+| Script | Description |
+|--------|-------------|
+| [`scripts/deploy-fabric.ps1`](./scripts/deploy-fabric.ps1) | Trigger Fabric Deployment Pipeline deployments |
+| [`scripts/rollback-deployment.ps1`](./scripts/rollback-deployment.ps1) | Rollback deployments to previous versions |
+| [`scripts/backup-workspace.ps1`](./scripts/backup-workspace.ps1) | Backup workspace items before deployment |
+| [`scripts/validate-deployment.ps1`](./scripts/validate-deployment.ps1) | Post-deployment validation checks |
+| [`scripts/validate_notebooks.py`](./scripts/validate_notebooks.py) | Python script to validate notebook syntax |
+
+---
+
 ## 📚 Additional Resources
 
 - [Fabric Git Integration](https://learn.microsoft.com/fabric/cicd/git-integration/intro-to-git-integration)

@@ -337,4 +337,4 @@ Gold layer tables are pre-aggregated for optimal Direct Lake performance:
 ---
 
 > **Documentation maintained by:** Microsoft Fabric POC Team
-> **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/frgarofa/Supercharge_Microsoft_Fabric)
+> **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/fgarofalo56/Supercharge_Microsoft_Fabric)

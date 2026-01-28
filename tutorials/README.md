@@ -144,6 +144,7 @@ Before starting the tutorials, ensure you have:
 | [🚀 Deployment Guide](../docs/DEPLOYMENT.md) | Infrastructure deployment |
 | [📋 Prerequisites](../docs/PREREQUISITES.md) | Setup requirements |
 | [📅 POC Agenda](../poc-agenda/README.md) | 3-Day workshop schedule |
+| [📋 Templates](./templates/README.md) | Progress tracker templates |
 
 ---
 
@@ -152,4 +153,4 @@ Before starting the tutorials, ensure you have:
 ---
 
 > 📖 **Documentation maintained by:** Microsoft Fabric POC Team
-> 🔗 **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/frgarofa/Supercharge_Microsoft_Fabric)
+> 🔗 **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric)

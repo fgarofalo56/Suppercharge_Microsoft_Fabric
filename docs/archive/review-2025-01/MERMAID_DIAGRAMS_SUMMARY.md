@@ -240,4 +240,4 @@ A -->> B   # Sequence response
 
 **Created:** 2025-01-21  
 **Documentation maintained by:** Microsoft Fabric POC Team  
-**Repository:** [Suppercharge_Microsoft_Fabric](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric)
+**Repository:** [Suppercharge_Microsoft_Fabric](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric)

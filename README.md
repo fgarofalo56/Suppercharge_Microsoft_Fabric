@@ -147,7 +147,7 @@ The fastest way to generate sample data and explore the POC.
 
 ```bash
 # Clone the repository
-git clone https://github.com/frgarofa/Supercharge_Microsoft_Fabric.git
+git clone https://github.com/fgarofalo56/Supercharge_Microsoft_Fabric.git
 cd Supercharge_Microsoft_Fabric
 
 # Generate demo data (1000 events, 7 days)
@@ -214,7 +214,7 @@ See [Dev Container](#-dev-container) for configuration details.
 **Clone the Repository**
 
 ```bash
-git clone https://github.com/frgarofa/Supercharge_Microsoft_Fabric.git
+git clone https://github.com/fgarofalo56/Supercharge_Microsoft_Fabric.git
 cd Supercharge_Microsoft_Fabric
 ```
 

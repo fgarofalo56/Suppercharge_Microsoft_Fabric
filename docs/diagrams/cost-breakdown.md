@@ -307,4 +307,4 @@ flowchart TB
 ---
 
 > **Documentation maintained by:** Microsoft Fabric POC Team
-> **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/frgarofa/Supercharge_Microsoft_Fabric)
+> **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/fgarofalo56/Supercharge_Microsoft_Fabric)

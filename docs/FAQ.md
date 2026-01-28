@@ -1419,8 +1419,8 @@ docker-compose pull
 ### Where do I report issues or contribute?
 
 **GitHub Repository:**
-- 🐛 **Report bugs**: [Open an issue](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric/issues)
-- 💡 **Feature requests**: [Start a discussion](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric/discussions)
+- 🐛 **Report bugs**: [Open an issue](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric/issues)
+- 💡 **Feature requests**: [Start a discussion](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric/discussions)
 - 🔧 **Pull requests**: See [Contributing Guide](../CONTRIBUTING.md)
 
 **Before Opening an Issue:**
@@ -1489,9 +1489,9 @@ az group delete --name "rg-fabric-poc-dev" --yes
 **Need help?** Try these resources in order:
 
 1. 📖 Check this FAQ
-2. 🔍 Search [existing issues](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric/issues)
-3. 💬 Ask in [GitHub Discussions](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric/discussions)
-4. 🐛 [Open a new issue](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric/issues/new)
+2. 🔍 Search [existing issues](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric/issues)
+3. 💬 Ask in [GitHub Discussions](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric/discussions)
+4. 🐛 [Open a new issue](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric/issues/new)
 
 ---
 
@@ -1500,5 +1500,5 @@ az group delete --name "rg-fabric-poc-dev" --yes
 ---
 
 > 📖 **Documentation maintained by:** Microsoft Fabric POC Team
-> 🔗 **Repository:** [Suppercharge_Microsoft_Fabric](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric)
+> 🔗 **Repository:** [Suppercharge_Microsoft_Fabric](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric)
 > 🔄 **Last Updated:** 2025-01-21

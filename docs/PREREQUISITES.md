@@ -203,7 +203,7 @@ All other tools (Python, Azure CLI, Bicep, etc.) are pre-installed in the contai
 
 ```bash
 # Quick start with Dev Container
-git clone https://github.com/frgarofa/Supercharge_Microsoft_Fabric.git
+git clone https://github.com/fgarofalo56/Supercharge_Microsoft_Fabric.git
 code Supercharge_Microsoft_Fabric
 # Then click "Reopen in Container" when prompted
 ```
@@ -567,4 +567,4 @@ After completing prerequisites:
 ---
 
 > 📖 **Documentation maintained by:** Microsoft Fabric POC Team
-> 🔗 **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/frgarofa/Supercharge_Microsoft_Fabric)
+> 🔗 **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/fgarofalo56/Supercharge_Microsoft_Fabric)

@@ -245,7 +245,7 @@ docs/diagrams/
 
 For questions about diagram implementation:
 1. Check [MERMAID_DIAGRAM_OPPORTUNITIES.md](./MERMAID_DIAGRAM_OPPORTUNITIES.md) for detailed guidance
-2. Reference existing diagrams in `docs/diagrams/architecture-overview.md`
+2. Reference existing diagrams in `../../diagrams/architecture-overview.md`
 3. Use [Mermaid Live Editor](https://mermaid.live/) to prototype
 4. Submit issues for clarification or suggestions
 
@@ -253,4 +253,4 @@ For questions about diagram implementation:
 
 **Quick Reference Created:** 2025-01-21  
 **Related Document:** [MERMAID_DIAGRAM_OPPORTUNITIES.md](./MERMAID_DIAGRAM_OPPORTUNITIES.md)  
-**Repository:** [Supercharge_Microsoft_Fabric](https://github.com/frgarofa/Supercharge_Microsoft_Fabric)
+**Repository:** [Supercharge_Microsoft_Fabric](https://github.com/fgarofalo56/Supercharge_Microsoft_Fabric)

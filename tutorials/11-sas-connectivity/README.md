@@ -1066,6 +1066,19 @@ You have completed all tutorials in this series! Consider:
 
 ---
 
+## 📁 Included Resources
+
+This tutorial includes the following supplementary files:
+
+| Resource | Description |
+|----------|-------------|
+| [`macros/fabric_connection_macros.sas`](./macros/fabric_connection_macros.sas) | Reusable SAS macros for Fabric connectivity |
+| [`examples/casino_analytics_example.sas`](./examples/casino_analytics_example.sas) | Complete casino analytics workflow |
+| [`templates/odbc_dsn_templates.md`](./templates/odbc_dsn_templates.md) | ODBC DSN configuration templates |
+| [`diagrams/connectivity-architecture.md`](./diagrams/connectivity-architecture.md) | Connectivity architecture diagrams |
+
+---
+
 ## 📚 Additional Resources
 
 - [Microsoft Fabric Warehouse Connectivity](https://learn.microsoft.com/en-us/fabric/data-warehouse/connectivity)

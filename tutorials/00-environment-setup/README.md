@@ -179,6 +179,10 @@ Before starting, ensure you have:
 3. Navigate to **Capacity settings**
 4. Confirm your Fabric capacity is available and running
 
+> 📸 **Screenshot**: Azure Portal - Fabric Capacity Creation
+> 
+> _To be added: Navigate to Azure Portal > Create a resource > Microsoft Fabric > Capacity and capture the capacity creation blade showing SKU selection (F64), region, and capacity name fields_
+
 > ⚠️ **Warning:** If your capacity is paused, notebooks and data processing will not work. Ensure the capacity is in "Active" state before proceeding. Resume can take 2-3 minutes.
 
 ---
@@ -199,6 +203,10 @@ Before starting, ensure you have:
    | Capacity | Select your Fabric capacity |
 
 4. Click **Apply**
+
+> 📸 **Screenshot**: Fabric Portal - Workspace Creation
+> 
+> _To be added: Navigate to Fabric portal > Workspaces > + New workspace and capture the workspace creation dialog showing Name, Description, License mode, and Capacity dropdown fields_
 
 ### Configure Workspace Settings
 
@@ -321,6 +329,10 @@ For local development and data generation, install these tools:
 ### Python Environment Setup
 
 > 💡 **Pro Tip:** Use a virtual environment to isolate project dependencies and avoid conflicts with system Python packages.
+
+> 📸 **Screenshot**: VS Code - Extension Installation
+> 
+> _To be added: Open VS Code > Extensions panel and capture the installed extensions including Python, Jupyter, Azure Account, and Microsoft Fabric extensions with their enabled status_
 
 ```bash
 # Create virtual environment

@@ -1,0 +1,157 @@
+/* Extra styles for MkDocs Material theme */
+
+/* Primary color customization for Microsoft Fabric branding */
+:root {
+  --md-primary-fg-color: #0078d4;
+  --md-primary-fg-color--light: #106ebe;
+  --md-primary-fg-color--dark: #005a9e;
+  --md-accent-fg-color: #ffb900;
+}
+
+/* Dark mode adjustments */
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #3b82f6;
+  --md-accent-fg-color: #fbbf24;
+}
+
+/* Admonition customization */
+.md-typeset .admonition.casino,
+.md-typeset details.casino {
+  border-color: #10b981;
+}
+.md-typeset .casino > .admonition-title,
+.md-typeset .casino > summary {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+.md-typeset .casino > .admonition-title::before,
+.md-typeset .casino > summary::before {
+  background-color: #10b981;
+  -webkit-mask-image: var(--md-admonition-icon--tip);
+  mask-image: var(--md-admonition-icon--tip);
+}
+
+/* Gaming/Compliance admonition */
+.md-typeset .admonition.compliance,
+.md-typeset details.compliance {
+  border-color: #ef4444;
+}
+.md-typeset .compliance > .admonition-title,
+.md-typeset .compliance > summary {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+.md-typeset .compliance > .admonition-title::before,
+.md-typeset .compliance > summary::before {
+  background-color: #ef4444;
+  -webkit-mask-image: var(--md-admonition-icon--warning);
+  mask-image: var(--md-admonition-icon--warning);
+}
+
+/* Better table styling */
+.md-typeset table:not([class]) {
+  font-size: 0.85rem;
+}
+
+.md-typeset table:not([class]) th {
+  background-color: var(--md-primary-fg-color);
+  color: white;
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background-color: var(--md-primary-fg-color--dark);
+}
+
+/* Code block improvements */
+.md-typeset pre > code {
+  font-size: 0.8rem;
+}
+
+/* Mermaid diagram sizing */
+.mermaid {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+/* Navigation improvements */
+.md-nav__link {
+  font-size: 0.75rem;
+}
+
+/* Footer styling */
+.md-footer-meta {
+  background-color: var(--md-primary-fg-color--dark);
+}
+
+/* Hero section styling (for home page) */
+.md-typeset .hero {
+  text-align: center;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.md-typeset .hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Card grid for features */
+.md-typeset .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.md-typeset .card {
+  padding: 1.5rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  transition: box-shadow 0.2s;
+}
+
+.md-typeset .card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Badge styling */
+.md-typeset .badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  margin-right: 0.25rem;
+}
+
+.md-typeset .badge-fabric {
+  background-color: #0078d4;
+  color: white;
+}
+
+.md-typeset .badge-casino {
+  background-color: #10b981;
+  color: white;
+}
+
+.md-typeset .badge-compliance {
+  background-color: #ef4444;
+  color: white;
+}
+
+/* Tutorial duration badges */
+.md-typeset .duration {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background-color: var(--md-accent-fg-color);
+  color: black;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 76.1875em) {
+  .md-typeset .hero h1 {
+    font-size: 1.75rem;
+  }
+}

@@ -1,0 +1,93 @@
+# GitHub Actions workflow to build and deploy MkDocs to GitHub Pages
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - 'docs/**'
+      - 'tutorials/**'
+      - 'poc-agenda/**'
+      - 'infra/README.md'
+      - 'mkdocs.yml'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'CONTRIBUTING.md'
+      - '.github/workflows/docs.yml'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN for GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for git info
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install \
+            mkdocs-material>=9.5.0 \
+            mkdocs-minify-plugin>=0.8.0 \
+            pymdown-extensions>=10.0 \
+            pillow \
+            cairosvg
+      
+      - name: Prepare documentation structure
+        run: |
+          # Copy external folders into docs/ for MkDocs to find them
+          cp -r tutorials docs/tutorials
+          cp -r poc-agenda docs/poc-agenda
+          mkdir -p docs/infra
+          cp infra/README.md docs/infra/README.md
+          
+          # Copy root-level files into docs/
+          cp CHANGELOG.md docs/CHANGELOG.md
+          cp CONTRIBUTING.md docs/CONTRIBUTING.md
+          
+          # Create homepage from index.md if it exists, otherwise use README
+          if [ -f index.md ]; then
+            cp index.md docs/index.md
+          fi
+      
+      - name: Build documentation
+        run: mkdocs build --strict
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

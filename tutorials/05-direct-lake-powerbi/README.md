@@ -163,6 +163,10 @@ Before starting this tutorial, ensure you have:
 
 6. Click **Create**
 
+> 📸 **Screenshot**: Semantic Model Configuration
+> 
+> _To be added: Navigate to lh_gold Lakehouse > New semantic model and capture the configuration dialog showing selected tables (gold_slot_performance, gold_player_360, dim_date, dim_machine) and model name "Casino Analytics Model"_
+
 ### 1.2 Verify Direct Lake Mode
 
 After creation, verify the model is using Direct Lake:
@@ -275,6 +279,10 @@ DAX measures provide calculated metrics that respond to filter context in report
 
 1. In the model view, click **New measure**
 2. Create a "Measures" display folder to organize measures
+
+> 📸 **Screenshot**: DAX Measure Editor
+> 
+> _To be added: Open the semantic model in Model view, click New measure, and capture the DAX formula bar showing a measure like "Hold % = DIVIDE([Net Win], [Total Coin In], 0) * 100" with the measure properties panel visible_
 
 ### 3.2 Slot Performance Measures
 
@@ -595,6 +603,10 @@ AVERAGEX(
 ```
 
 #### Create Visuals
+
+> 📸 **Screenshot**: Report Canvas with Visualizations
+> 
+> _To be added: Open the Casino Analytics Model report in edit mode and capture the report canvas showing KPI cards (Net Win, Hold %, Players, Games), a line chart for Net Win trend, a bar chart for zone performance, and a table showing top machines_
 
 **1. KPI Cards (Top Row)**
 

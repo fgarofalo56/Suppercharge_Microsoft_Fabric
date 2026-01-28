@@ -199,17 +199,16 @@ For tracking document or feature status:
 
 **Basic Flow:**
 
-````markdown
-````mermaid
+~~~markdown
+```mermaid
 flowchart LR
     A[Start] --> B{Decision?}
     B -->|Yes| C[Action 1]
     B -->|No| D[Action 2]
     C --> E[End]
     D --> E
-```​
-````
-````
+```
+~~~
 
 ```mermaid
 flowchart LR
@@ -222,8 +221,8 @@ flowchart LR
 
 **Styled Flow with Colors:**
 
-````markdown
-````mermaid
+~~~markdown
+```mermaid
 flowchart TD
     A[📥 Input] --> B[🔄 Process]
     B --> C{✅ Valid?}
@@ -238,9 +237,8 @@ flowchart TD
     style D fill:#e8f5e9
     style E fill:#ffebee
     style F fill:#e0f7fa
-```​
-````
-````
+```
+~~~
 
 ```mermaid
 flowchart TD
@@ -261,8 +259,8 @@ flowchart TD
 
 ### Sequence Diagram Example
 
-````markdown
-````mermaid
+~~~markdown
+```mermaid
 sequenceDiagram
     participant U as 👤 User
     participant C as 💻 Client
@@ -275,9 +273,8 @@ sequenceDiagram
     D-->>A: User Record
     A-->>C: JWT Token
     C-->>U: Logged In ✅
-```​
-````
-````
+```
+~~~
 
 ```mermaid
 sequenceDiagram
@@ -296,8 +293,8 @@ sequenceDiagram
 
 ### Architecture Diagram
 
-````markdown
-````mermaid
+~~~markdown
+```mermaid
 graph TB
     subgraph Frontend["🖥️ Frontend"]
         R[React App]
@@ -322,9 +319,8 @@ graph TB
     S1 --> DB
     S2 --> DB
     S2 --> C
-```​
-````
-````
+```
+~~~
 
 ```mermaid
 graph TB
@@ -355,8 +351,8 @@ graph TB
 
 ### Git Graph Example
 
-````markdown
-````mermaid
+~~~markdown
+```mermaid
 gitGraph
     commit id: "Initial"
     branch develop
@@ -368,9 +364,8 @@ gitGraph
     merge feature/auth tag: "v0.1.0"
     checkout main
     merge develop tag: "v1.0.0"
-```​
-````
-````
+```
+~~~
 
 ---
 
@@ -693,7 +688,7 @@ Content...
 
 ### API Endpoint Template
 
-````markdown
+~~~markdown
 ### `POST /api/v1/users`
 
 Creates a new user account.
@@ -709,7 +704,6 @@ Creates a new user account.
   "name": "John Doe"
 }
 ```
-````
 
 **Response:**
 
@@ -729,12 +723,11 @@ Creates a new user account.
   "createdAt": "2025-01-22T10:30:00Z"
 }
 ```
-
-````
+~~~
 
 ### Troubleshooting Entry Template
 
-```markdown
+~~~markdown
 ### ❌ Error: Connection Refused
 
 **Symptoms:**
@@ -749,10 +742,9 @@ Database server is not running or not accessible.
 1. Check if database is running:
    ```bash
    docker ps | grep postgres
-````
+   ```
 
 2. Start the database if needed:
-
    ```bash
    docker-compose up -d db
    ```
@@ -766,8 +758,7 @@ Database server is not running or not accessible.
 
 - [Database Setup](./database-setup.md)
 - [Docker Configuration](./docker.md)
-
-```
+~~~
 
 ---
 

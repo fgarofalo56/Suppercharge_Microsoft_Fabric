@@ -113,6 +113,21 @@ az deployment sub create \
 | [🛠️ Infrastructure](infra/README.md) | Bicep IaC modules |
 | [🏢 Best Practices](BEST_PRACTICES.md) | Workspace organization, folder structures, environments |
 | [🌐 Networking](NETWORKING.md) | Private endpoints, ExpressRoute, VPN, gateways |
+| [🔄 Disaster Recovery](DISASTER_RECOVERY.md) | Multi-region architecture, RTO/RPO, failover procedures |
+| [📋 Data Dictionary](data-dictionary/README.md) | Complete schema documentation for all layers |
+| [📕 Runbooks](runbooks/README.md) | Operational procedures and incident response |
+| [📜 Compliance Templates](compliance-templates/README.md) | CTR, SAR, W-2G, MICS reporting templates |
+
+---
+
+## 🛠️ Developer Resources
+
+| Resource | Description |
+|:---------|:------------|
+| [📓 Notebooks](../notebooks/) | Ready-to-import Fabric notebooks (Bronze, Silver, Gold, ML) |
+| [📊 Power BI Assets](../powerbi/) | DAX measures and TMDL semantic models |
+| [🔌 SDK Examples](../sdk-examples/) | Fabric REST API and Semantic Link code samples |
+| [⚡ Benchmarks](../benchmarks/) | Performance baselines and load testing scripts |
 
 ---
 

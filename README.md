@@ -95,32 +95,32 @@ This repository provides a **complete, production-ready proof-of-concept** envir
 <table>
 <tr>
 <td align="center" width="16%">
-<img src="https://img.icons8.com/fluency/48/architect.png" width="48"/><br/>
+<h2>🏗️</h2>
 <b>Data Architects</b><br/>
 <sub>Evaluating Fabric</sub>
 </td>
 <td align="center" width="16%">
-<img src="https://img.icons8.com/fluency/48/database-administrator.png" width="48"/><br/>
+<h2>⚙️</h2>
 <b>Data Engineers</b><br/>
 <sub>Medallion patterns</sub>
 </td>
 <td align="center" width="16%">
-<img src="https://img.icons8.com/fluency/48/combo-chart.png" width="48"/><br/>
+<h2>📊</h2>
 <b>BI Developers</b><br/>
 <sub>Direct Lake solutions</sub>
 </td>
 <td align="center" width="16%">
-<img src="https://img.icons8.com/fluency/48/blueprint.png" width="48"/><br/>
+<h2>📐</h2>
 <b>Solution Architects</b><br/>
 <sub>Enterprise platforms</sub>
 </td>
 <td align="center" width="16%">
-<img src="https://img.icons8.com/fluency/48/slot-machine.png" width="48"/><br/>
+<h2>🎰</h2>
 <b>Gaming Industry</b><br/>
 <sub>Regulated operations</sub>
 </td>
 <td align="center" width="16%">
-<img src="https://img.icons8.com/fluency/48/hotel-building.png" width="48"/><br/>
+<h2>🏨</h2>
 <b>Hospitality</b><br/>
 <sub>Guest analytics</sub>
 </td>
@@ -962,19 +962,19 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 <table>
 <tr>
 <td align="center">
-<img src="https://img.icons8.com/fluency/48/microsoft.png" width="32"/><br/>
+<h3>🪟</h3>
 <sub><b>Microsoft Fabric Team</b></sub>
 </td>
 <td align="center">
-<img src="https://img.icons8.com/fluency/48/cloud.png" width="32"/><br/>
+<h3>☁️</h3>
 <sub><b>Azure Architecture Center</b></sub>
 </td>
 <td align="center">
-<img src="https://img.icons8.com/fluency/48/slot-machine.png" width="32"/><br/>
+<h3>🎰</h3>
 <sub><b>Gaming Industry Experts</b></sub>
 </td>
 <td align="center">
-<img src="https://img.icons8.com/fluency/48/certificate.png" width="32"/><br/>
+<h3>📜</h3>
 <sub><b>Compliance Specialists</b></sub>
 </td>
 </tr>
@@ -992,7 +992,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 <sub>Made with ❤️ for the gaming industry</sub>
 
-[![GitHub stars](https://img.shields.io/github/stars/frgarofa/Supercharge_Microsoft_Fabric?style=social)](https://github.com/frgarofa/Supercharge_Microsoft_Fabric)
-[![GitHub forks](https://img.shields.io/github/forks/frgarofa/Supercharge_Microsoft_Fabric?style=social)](https://github.com/frgarofa/Supercharge_Microsoft_Fabric/fork)
+[![GitHub stars](https://img.shields.io/github/stars/fgarofalo56/Suppercharge_Microsoft_Fabric?style=social)](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric)
+[![GitHub forks](https://img.shields.io/github/forks/fgarofalo56/Suppercharge_Microsoft_Fabric?style=social)](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric/fork)
 
 </div>

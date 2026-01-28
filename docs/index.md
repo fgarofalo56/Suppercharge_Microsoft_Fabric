@@ -1,120 +1,256 @@
-# 📚 Documentation
+---
+title: Home
+description: Supercharge Microsoft Fabric - Casino & Gaming Industry POC
+hide:
+  - navigation
+  - toc
+---
 
-> 🏠 [Home](../README.md) > 📚 Docs
+# 🎰 Supercharge Microsoft Fabric
 
-**Last Updated:** `2025-01-28` | **Version:** 1.1.0
+<div class="hero" markdown>
+
+**Transform your casino operations with enterprise-grade analytics powered by Microsoft Fabric**
+
+*Real-time insights • Medallion Architecture • Regulatory Compliance • Direct Lake BI*
+
+[🚀 Quick Start](PREREQUISITES.md){ .md-button .md-button--primary }
+[📖 Tutorials](tutorials/README.md){ .md-button }
+
+</div>
 
 ---
 
-## 📑 Table of Contents
+## 🎯 Overview
 
-- [📖 Core Documentation](#-core-documentation)
-- [🎓 Tutorials](#-tutorials)
-- [📊 Reference](#-reference)
-- [📐 Standards](#-standards)
+This repository provides a **complete, production-ready proof-of-concept** environment for Microsoft Fabric, purpose-built for the casino and gaming industry.
 
----
+<div class="grid" markdown>
 
-## 📖 Core Documentation
+<div class="card" markdown>
 
-Essential documentation for understanding and deploying this POC:
+### 🏛️ Medallion Architecture
 
-| Document | Description | Audience |
-|:---------|:------------|:---------|
-| [🏗️ Architecture](./ARCHITECTURE.md) | System architecture, medallion pattern, component design | Architects, Engineers |
-| [🚀 Deployment](./DEPLOYMENT.md) | Infrastructure deployment procedures and options | DevOps, Engineers |
-| [📋 Prerequisites](./PREREQUISITES.md) | Setup requirements, tools, and permissions | All |
-| [🔐 Security](./SECURITY.md) | Security controls, compliance, and best practices | Security, Compliance |
-| [💰 Cost Estimation](./COST_ESTIMATION.md) | Azure cost planning and optimization | Architects, Finance |
+Bronze/Silver/Gold Lakehouse pattern with Delta Lake tables
 
----
+</div>
 
-## 🎓 Tutorials
+<div class="card" markdown>
 
-Hands-on learning content for building the platform:
+### ⚡ Real-Time Intelligence
 
-| Tutorial | Description | Duration |
-|:---------|:------------|:---------|
-| [📖 Tutorial Index](../tutorials/README.md) | Complete tutorial listing and learning path | - |
-| [00 - Environment Setup](../tutorials/00-environment-setup/README.md) | Azure & Fabric workspace provisioning | ~1 hour |
-| [01 - Bronze Layer](../tutorials/01-bronze-layer/README.md) | Raw data ingestion patterns | ~2 hours |
-| [02 - Silver Layer](../tutorials/02-silver-layer/README.md) | Data cleansing & validation | ~2 hours |
-| [03 - Gold Layer](../tutorials/03-gold-layer/README.md) | Business aggregations & KPIs | ~2 hours |
+Casino floor monitoring with Eventstreams and Eventhouse
 
-> 💡 **Tip:** Start with the [Tutorial Index](../tutorials/README.md) to see the complete learning path.
+</div>
 
----
+<div class="card" markdown>
 
-## 📊 Reference
+### 📊 Direct Lake
 
-Reference materials and specifications:
+Sub-second Power BI analytics with semantic models
 
-| Document | Description |
-|:---------|:------------|
-| [📖 Glossary](./GLOSSARY.md) | 150+ terms across 8 categories (Fabric, Gaming, Compliance) |
-| [💬 FAQ](./FAQ.md) | Frequently asked questions and answers |
-| [📊 Architecture Diagrams](./diagrams/architecture-overview.md) | Detailed Mermaid diagrams |
-| [💰 Cost Breakdown](./diagrams/cost-breakdown.md) | Detailed cost scenarios |
+</div>
+
+<div class="card" markdown>
+
+### 🔐 Data Governance
+
+Microsoft Purview integration for compliance
+
+</div>
+
+</div>
 
 ---
 
-## 📐 Standards
+## 👥 Target Audience
 
-Documentation and development standards:
-
-| Document | Description |
-|:---------|:------------|
-| [📝 Style Guide](./STYLE_GUIDE.md) | Documentation visual and structural standards |
-| [📐 Visual Standards](./VISUAL_STANDARDS.md) | Diagram and formatting conventions |
+| Role | Focus Areas |
+|:-----|:------------|
+| 🏗️ **Data Architects** | System design, medallion pattern, scalability |
+| 💻 **Data Engineers** | PySpark notebooks, pipelines, ETL |
+| 📊 **BI Developers** | Direct Lake, Power BI, DAX |
+| 🔐 **Security/Compliance** | Purview, MICS, regulatory reporting |
+| 💼 **Solution Architects** | End-to-end integration, infrastructure |
 
 ---
 
-## 🗄️ Archive
+## 🚀 Quick Start
 
-Historical documentation and review materials:
+### Prerequisites
 
-| Archive | Description |
+- Azure subscription with Fabric capacity (F64 or trial)
+- Azure CLI and Bicep tools
+- Power BI Desktop
+
+### One-Click Deployment
+
+```bash
+# Clone the repository
+git clone https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric.git
+cd Suppercharge_Microsoft_Fabric
+
+# Deploy infrastructure
+az deployment sub create \
+  --location eastus2 \
+  --template-file infra/main.bicep \
+  --parameters infra/environments/dev/dev.bicepparam
+```
+
+[➡️ Full Deployment Guide](DEPLOYMENT.md){ .md-button }
+
+---
+
+## 📂 Documentation Structure
+
+| Section | Description |
 |:--------|:------------|
-| [📁 Review 2025-01](./archive/review-2025-01/README.md) | Documentation review artifacts from January 2025 |
+| [📖 Getting Started](PREREQUISITES.md) | Prerequisites, setup, and configuration |
+| [🏗️ Architecture](ARCHITECTURE.md) | System design and component overview |
+| [📚 Tutorials](tutorials/README.md) | 12 hands-on learning modules |
+| [📅 POC Agenda](poc-agenda/README.md) | 3-day workshop materials |
+| [📊 Reference](GLOSSARY.md) | FAQ, glossary, and standards |
+| [🛠️ Infrastructure](infra/README.md) | Bicep IaC modules |
 
 ---
 
-## 🗂️ Quick Links
+## 📊 3-Day POC Agenda
 
-### By Role
+| Day | Focus | Topics |
+|:---:|:------|:-------|
+| 1️⃣ | **Foundation** | Medallion architecture, Bronze layer, ingestion patterns |
+| 2️⃣ | **Transformation** | Silver/Gold layers, real-time analytics, Eventstreams |
+| 3️⃣ | **BI & Governance** | Direct Lake, Power BI, Purview, database mirroring |
 
-| Role | Start Here |
-|:-----|:-----------|
-| 🏗️ **Data Architect** | [Architecture](./ARCHITECTURE.md) → [Tutorials](../tutorials/README.md) |
-| 💻 **Data Engineer** | [Prerequisites](./PREREQUISITES.md) → [Tutorial 01](../tutorials/01-bronze-layer/README.md) |
-| 🔐 **Security Team** | [Security](./SECURITY.md) → [Compliance sections](./SECURITY.md#-compliance-requirements) |
-| 📊 **BI Developer** | [Tutorial 05](../tutorials/05-direct-lake-powerbi/README.md) → [Architecture](./ARCHITECTURE.md) |
-| 💰 **Finance/Planning** | [Cost Estimation](./COST_ESTIMATION.md) |
-
-### By Task
-
-| Task | Document |
-|:-----|:---------|
-| Set up environment | [Prerequisites](./PREREQUISITES.md) → [Deployment](./DEPLOYMENT.md) |
-| Learn the architecture | [Architecture](./ARCHITECTURE.md) |
-| Understand security | [Security](./SECURITY.md) |
-| Estimate costs | [Cost Estimation](./COST_ESTIMATION.md) |
-| Find a term | [Glossary](./GLOSSARY.md) |
+[📅 View Full Agenda](poc-agenda/README.md){ .md-button }
 
 ---
 
-## 📚 Related Resources
+## 🎰 Casino/Gaming Data Domains
 
-- [🏠 Project README](../README.md)
-- [📅 POC Agenda](../poc-agenda/README.md)
-- [🐳 Docker Guide](../docker/README.md)
-- [🎲 Data Generation](../data-generation/README.md)
+```mermaid
+flowchart LR
+    subgraph Bronze["🥉 Bronze Layer"]
+        A[Slot Telemetry]
+        B[Table Games]
+        C[Player Activity]
+        D[Compliance Events]
+    end
+    
+    subgraph Silver["🥈 Silver Layer"]
+        E[Cleansed Slots]
+        F[Validated Tables]
+        G[Player Profiles]
+        H[Compliance Records]
+    end
+    
+    subgraph Gold["🥇 Gold Layer"]
+        I[Machine KPIs]
+        J[Game Analytics]
+        K[Player 360]
+        L[Regulatory Reports]
+    end
+    
+    A --> E --> I
+    B --> F --> J
+    C --> G --> K
+    D --> H --> L
+```
 
 ---
 
-[⬆️ Back to top](#-documentation) | [🏠 Home](../README.md)
+## 📜 Compliance Frameworks
+
+This POC addresses key gaming industry regulations:
+
+| Framework | Coverage |
+|:----------|:---------|
+| **NIGC MICS** | Minimal Internal Control Standards |
+| **Title 31/BSA** | Anti-money laundering, CTR/SAR |
+| **IRS Gaming** | W-2G, 1042-S reporting |
+| **State Gaming Commissions** | Jurisdiction-specific requirements |
+
+[🛡️ Security Documentation](SECURITY.md){ .md-button }
 
 ---
 
-> 📖 **Documentation maintained by:** Microsoft Fabric POC Team
-> 🔗 **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric)
+## 📚 Tutorials
+
+| # | Tutorial | Duration |
+|:-:|:---------|:--------:|
+| 00 | [Environment Setup](tutorials/00-environment-setup/README.md) | ~1 hour |
+| 01 | [Bronze Layer](tutorials/01-bronze-layer/README.md) | ~2 hours |
+| 02 | [Silver Layer](tutorials/02-silver-layer/README.md) | ~2 hours |
+| 03 | [Gold Layer](tutorials/03-gold-layer/README.md) | ~2 hours |
+| 04 | [Real-Time Analytics](tutorials/04-real-time-analytics/README.md) | ~2 hours |
+| 05 | [Direct Lake & Power BI](tutorials/05-direct-lake-powerbi/README.md) | ~2 hours |
+| 06 | [Data Pipelines](tutorials/06-data-pipelines/README.md) | ~2 hours |
+| 07 | [Governance & Purview](tutorials/07-governance-purview/README.md) | ~2 hours |
+| 08 | [Database Mirroring](tutorials/08-database-mirroring/README.md) | ~2 hours |
+| 09 | [Advanced AI/ML](tutorials/09-advanced-ai-ml/README.md) | ~3 hours |
+| 10 | [Teradata Migration](tutorials/10-teradata-migration/README.md) | ~2 hours |
+| 11 | [SAS Connectivity](tutorials/11-sas-connectivity/README.md) | ~2 hours |
+| 12 | [CI/CD & DevOps](tutorials/12-cicd-devops/README.md) | ~2 hours |
+
+---
+
+## 💰 Cost Estimation
+
+| Component | Monthly Cost (F64) |
+|:----------|-------------------:|
+| Fabric Capacity (F64) | ~$5,700 |
+| Azure Storage | ~$200 |
+| Purview | ~$500 |
+| **Total Estimate** | **~$6,400/month** |
+
+[💰 Detailed Cost Analysis](COST_ESTIMATION.md){ .md-button }
+
+---
+
+## 🔗 Quick Links
+
+<div class="grid" markdown>
+
+<div class="card" markdown>
+
+### [:fontawesome-brands-github: GitHub Repository](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric)
+
+Source code and issues
+
+</div>
+
+<div class="card" markdown>
+
+### [:material-file-document: Documentation](index.md)
+
+Complete documentation index
+
+</div>
+
+<div class="card" markdown>
+
+### [:material-school: Tutorials](tutorials/README.md)
+
+Hands-on learning path
+
+</div>
+
+<div class="card" markdown>
+
+### [:material-cog: Infrastructure](infra/README.md)
+
+Bicep IaC modules
+
+</div>
+
+</div>
+
+---
+
+<div align="center" markdown>
+
+**License:** MIT | **Maintained by:** Microsoft Fabric POC Team
+
+[:material-github: View on GitHub](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric){ .md-button }
+
+</div>

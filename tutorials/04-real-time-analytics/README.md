@@ -407,6 +407,10 @@ An **Eventstream** captures, transforms, and routes streaming data to destinatio
 2. Name: `es_slot_telemetry`
 3. Click **Create**
 
+> 📸 **Screenshot**: Eventstream Creation
+> 
+> _To be added: Navigate to workspace > + New > Eventstream and capture the Eventstream designer canvas showing the source node, transformation node, and Eventhouse destination connected together_
+
 ### 3.2 Add Data Source
 
 Choose the appropriate source for your scenario:
@@ -484,6 +488,10 @@ flowchart LR
 ## 🛠️ Step 4: KQL Queries for Monitoring
 
 Now write KQL queries to analyze the streaming data.
+
+> 📸 **Screenshot**: Eventhouse with KQL Query
+> 
+> _To be added: Open the casino_floor_monitoring database in Eventhouse, run a KQL query (e.g., SlotEvents | take 10), and capture the query editor showing both the query and the results table with slot machine events_
 
 ### 4.1 Real-Time Slot Activity by Zone
 
@@ -628,6 +636,10 @@ by player_id
 1. In your workspace, click **+ New** > **Real-Time Dashboard**
 2. Name: `Casino Floor Monitor`
 3. Click **Create**
+
+> 📸 **Screenshot**: Real-Time Dashboard
+> 
+> _To be added: Open the "Casino Floor Monitor" real-time dashboard and capture the dashboard showing stat cards (active machines, players, games/minute), an area chart of zone activity, a jackpot table, and auto-refresh enabled (visible in top toolbar)_
 
 ### 5.2 Configure Dashboard Tiles
 

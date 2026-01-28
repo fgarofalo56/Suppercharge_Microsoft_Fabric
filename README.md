@@ -35,6 +35,8 @@
 | [🎯 Overview](#-overview) | What this POC delivers |
 | [👥 Target Audience](#-target-audience) | Who should use this |
 | [🚀 Quick Start](#-quick-start) | Get up and running |
+| [⚡ 5-Minute Quick Start](docs/QUICK_START.md) | Fastest path to first results |
+| [📋 Cheat Sheet](tutorials/CHEAT_SHEET.md) | Quick reference & commands |
 | [🐳 Docker Support](#-docker-support) | Container-based deployment |
 | [💻 Dev Container](#-dev-container) | One-click development setup |
 | [📊 Power BI Reports](#-power-bi-reports) | Pre-built report templates |
@@ -45,6 +47,7 @@
 | [📂 Repository Structure](#-repository-structure) | What's included |
 | [📊 POC Agenda](#-3-day-poc-agenda) | Workshop schedule |
 | [📖 Tutorials](#-tutorials) | Learning path |
+| [📚 Documentation Site](#-documentation-site) | Full docs with search |
 | [📜 Compliance](#-compliance-frameworks) | Regulatory coverage |
 
 ---
@@ -876,6 +879,43 @@ flowchart LR
 <td><code>~3 hours</code></td>
 </tr>
 </table>
+
+---
+
+## 📚 Documentation Site
+
+This repository includes a full **MkDocs Material** documentation site with search, dark mode, and comprehensive navigation.
+
+### Local Preview
+
+```bash
+# Install documentation dependencies
+pip install -r requirements-docs.txt
+
+# Start local documentation server
+mkdocs serve
+```
+
+Then open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
+
+### Quick References
+
+| Resource | Description |
+|:---------|:------------|
+| [⚡ 5-Minute Quick Start](docs/QUICK_START.md) | Fastest path to generating data and exploring the POC |
+| [📋 Cheat Sheet](tutorials/CHEAT_SHEET.md) | Commands, shortcuts, and quick reference for all components |
+
+### Build Documentation
+
+```bash
+# Build static site
+mkdocs build
+
+# Deploy to GitHub Pages
+mkdocs gh-deploy
+```
+
+**Live Site:** *Coming soon via GitHub Pages*
 
 ---
 

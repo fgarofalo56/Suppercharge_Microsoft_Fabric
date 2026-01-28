@@ -304,6 +304,10 @@ Before starting, ensure you have:
 3. In **Files** section, click **Upload** > **Upload folder**
 4. Upload the `output` folder
 
+> 📸 **Screenshot**: Lakehouse Files Upload Dialog
+> 
+> _To be added: Navigate to lh_bronze Lakehouse > Files section, click Upload > Upload folder, and capture the upload dialog or the files section after upload showing the output folder_
+
 ### Option B: Use Shortcut to ADLS
 
 If you configured ADLS shortcut in Tutorial 00:
@@ -324,6 +328,10 @@ Files/
 │   ├── bronze_security_events.parquet
 │   └── bronze_compliance.parquet
 ```
+
+> 📸 **Screenshot**: File Explorer Showing Uploaded Files
+> 
+> _To be added: Navigate to lh_bronze Lakehouse > Files > output folder and capture the file explorer showing all uploaded parquet files with their sizes and timestamps_
 
 > ℹ️ **Note:** File names may vary based on your data generation configuration. Adjust the notebook paths accordingly.
 
@@ -455,6 +463,10 @@ delta_table.history(5).select(
 1. Click **Run all** to execute all cells
 2. Verify the table appears in the **Tables** section of `lh_bronze`
 3. Check the row count matches expected
+
+> 📸 **Screenshot**: Notebook Execution Output
+> 
+> _To be added: Capture the notebook after running all cells, showing the successful output with record counts, table statistics, and the "✅ Successfully wrote" confirmation message_
 
 ---
 

@@ -68,12 +68,20 @@ flowchart LR
         T19[19-Copilot]
     end
 
+    subgraph L9["🟡 Infrastructure & GeoAnalytics"]
+        T20[20-Workspace]
+        T21[21-GeoAnalytics]
+        T22[22-Networking]
+        T23[23-Gateways]
+    end
+
     T00 --> T01 --> T02 --> T03 --> T04 --> T05
     T05 --> T06 --> T07 --> T08 --> T09
     T09 --> T10 --> T11
     T11 --> T12 --> T13
     T13 --> T14 --> T15 --> T16 --> T17
     T17 --> T18 --> T19
+    T19 --> T20 --> T21 --> T22 --> T23
 ```
 
 ---
@@ -98,6 +106,13 @@ Complete tutorials in sequence for the best learning experience:
 ╠════════╬════════╬════════╬════════╬════════╬════════╬════════╬════════╬════════╬════════╣
 ║ ⭐⭐⭐ ║  ⭐⭐  ║  ⭐⭐  ║ ⭐⭐⭐ ║ ⭐⭐⭐ ║  ⭐⭐  ║ ⭐⭐⭐ ║  ⭐⭐  ║  ⭐⭐  ║   ⭐   ║
 ╚════════╩════════╩════════╩════════╩════════╩════════╩════════╩════════╩════════╩════════╝
+
+╔════════╦════════╦════════╦════════╗
+║   20   ║   21   ║   22   ║   23   ║
+║WKSPACE ║  GEO   ║NETWORK ║GATEWAY ║
+╠════════╬════════╬════════╬════════╣
+║  ⭐⭐  ║ ⭐⭐⭐ ║ ⭐⭐⭐ ║ ⭐⭐⭐ ║
+╚════════╩════════╩════════╩════════╝
  Beginner ──────────────────────────────────────────────────────────────────────► Advanced
 ```
 
@@ -135,6 +150,11 @@ Complete tutorials in sequence for the best learning experience:
 | 🟤 **Collaboration & AI** | | | |
 | | [18 - Data Sharing](./18-data-sharing/README.md) | OneLake shortcuts, cross-workspace, multi-tenant | ~1.5 hours |
 | | [19 - Copilot & AI](./19-copilot-ai/README.md) | AI-assisted development across all Fabric workloads | ~1.5 hours |
+| 🟡 **Infrastructure & GeoAnalytics** | | | |
+| | [20 - Workspace Best Practices](./20-workspace-best-practices/README.md) | Workspace organization, folder structures, environments | ~2.5 hours |
+| | [21 - GeoAnalytics & ArcGIS](./21-geoanalytics-arcgis/README.md) | Geospatial analytics, ArcGIS integration, maps | ~3.5 hours |
+| | [22 - Networking Connectivity](./22-networking-connectivity/README.md) | Private endpoints, ExpressRoute, VPN, multi-cloud | ~3.5 hours |
+| | [23 - SHIR & Data Gateways](./23-shir-data-gateways/README.md) | Self-hosted runtime, on-premises gateways, hybrid | ~2.5 hours |
 
 ---
 
@@ -152,7 +172,8 @@ Complete tutorials in sequence for the best learning experience:
 | 🔵 DevOps & Planning | 12-13 | ~6.5 hours |
 | ⚪ Operations & Governance | 14-17 | ~9 hours |
 | 🟤 Collaboration & AI | 18-19 | ~3 hours |
-| **Total** | All 20 | **~43 hours** |
+| 🟡 Infrastructure & GeoAnalytics | 20-23 | ~12 hours |
+| **Total** | All 24 | **~55 hours** |
 
 ### By Format
 

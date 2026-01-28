@@ -107,10 +107,12 @@ az deployment sub create \
 |:--------|:------------|
 | [📖 Getting Started](PREREQUISITES.md) | Prerequisites, setup, and configuration |
 | [🏗️ Architecture](ARCHITECTURE.md) | System design and component overview |
-| [📚 Tutorials](tutorials/README.md) | 14 hands-on learning modules |
+| [📚 Tutorials](tutorials/README.md) | 24 hands-on learning modules |
 | [📅 POC Agenda](poc-agenda/README.md) | 3-day workshop materials |
 | [📊 Reference](GLOSSARY.md) | FAQ, glossary, and standards |
 | [🛠️ Infrastructure](infra/README.md) | Bicep IaC modules |
+| [🏢 Best Practices](BEST_PRACTICES.md) | Workspace organization, folder structures, environments |
+| [🌐 Networking](NETWORKING.md) | Private endpoints, ExpressRoute, VPN, gateways |
 
 ---
 
@@ -192,6 +194,16 @@ This POC addresses key gaming industry regulations:
 | 11 | [SAS Connectivity](tutorials/11-sas-connectivity/README.md) | ~2 hours |
 | 12 | [CI/CD & DevOps](tutorials/12-cicd-devops/README.md) | ~2 hours |
 | 13 | [Migration Planning](tutorials/13-migration-planning/README.md) | ~2 hours |
+| 14 | [Security & Networking](tutorials/14-security-networking/README.md) | ~2.5 hours |
+| 15 | [Cost Optimization](tutorials/15-cost-optimization/README.md) | ~2 hours |
+| 16 | [Performance Tuning](tutorials/16-performance-tuning/README.md) | ~2.5 hours |
+| 17 | [Monitoring & Alerting](tutorials/17-monitoring-alerting/README.md) | ~2 hours |
+| 18 | [Data Sharing](tutorials/18-data-sharing/README.md) | ~1.5 hours |
+| 19 | [Copilot & AI](tutorials/19-copilot-ai/README.md) | ~1.5 hours |
+| 20 | [Workspace Best Practices](tutorials/20-workspace-best-practices/README.md) | ~2.5 hours |
+| 21 | [GeoAnalytics & ArcGIS](tutorials/21-geoanalytics-arcgis/README.md) | ~3.5 hours |
+| 22 | [Networking Connectivity](tutorials/22-networking-connectivity/README.md) | ~3.5 hours |
+| 23 | [SHIR & Data Gateways](tutorials/23-shir-data-gateways/README.md) | ~2.5 hours |
 
 ---
 

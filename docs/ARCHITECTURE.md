@@ -48,6 +48,24 @@ This document describes the architecture of the **Microsoft Fabric Casino/Gaming
 
 ## 🏛️ High-Level Architecture
 
+### Microsoft Fabric Platform Architecture
+
+Microsoft Fabric provides a unified SaaS experience that integrates all data and analytics workloads. The diagram below shows how Fabric's core components work together:
+
+![Microsoft Fabric Architecture](https://learn.microsoft.com/en-us/fabric/get-started/media/microsoft-fabric-overview/fabric-architecture.png)
+
+*Source: [Microsoft Fabric Overview](https://learn.microsoft.com/en-us/fabric/get-started/microsoft-fabric-overview)*
+
+### OneLake: The Foundation
+
+OneLake serves as the single, unified data lake for your entire organization. All Fabric workloads automatically store data in OneLake using the Delta Lake format:
+
+![OneLake Architecture](https://learn.microsoft.com/en-us/fabric/onelake/media/onelake-overview/onelake-architecture.png)
+
+*Source: [OneLake Overview](https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview)*
+
+### Casino/Gaming POC Architecture
+
 ```mermaid
 flowchart TB
     subgraph Sources["🎰 Data Sources"]
@@ -127,7 +145,13 @@ flowchart TB
 
 ## 🥉🥈🥇 Medallion Architecture
 
-The medallion architecture provides a structured approach to data refinement:
+The medallion architecture provides a structured approach to data refinement. This pattern is a recommended best practice for organizing data in a lakehouse:
+
+![Medallion Architecture in OneLake](https://learn.microsoft.com/en-us/fabric/onelake/media/onelake-medallion-lakehouse-architecture/onelake-medallion-lakehouse-architecture-example.png)
+
+*Source: [Implement medallion lakehouse architecture in Fabric](https://learn.microsoft.com/en-us/fabric/onelake/onelake-medallion-lakehouse-architecture)*
+
+### Medallion Layer Flow
 
 ```mermaid
 flowchart LR
@@ -234,6 +258,14 @@ flowchart LR
 
 ## ⚡ Real-Time Intelligence Architecture
 
+Microsoft Fabric Real-Time Intelligence provides end-to-end streaming analytics capabilities. The architecture below shows how real-time data flows through the platform:
+
+![Real-Time Intelligence Overview](https://learn.microsoft.com/en-us/fabric/real-time-intelligence/media/overview/product-view.png)
+
+*Source: [Real-Time Intelligence Overview](https://learn.microsoft.com/en-us/fabric/real-time-intelligence/overview)*
+
+### Casino Floor Real-Time Architecture
+
 ```mermaid
 flowchart TB
     subgraph Sources["📡 Real-Time Sources"]
@@ -286,6 +318,12 @@ flowchart TB
 ---
 
 ## 📊 Data Governance
+
+Microsoft Purview provides unified data governance across your entire data estate. The Purview hub in Fabric gives you a central place to manage data discovery, lineage, and access policies.
+
+![Microsoft Purview Hub](https://learn.microsoft.com/en-us/fabric/governance/media/use-microsoft-purview-hub/microsoft-purview-hub-general-view.png)
+
+*Source: [Use Microsoft Purview hub in Fabric](https://learn.microsoft.com/en-us/fabric/governance/use-microsoft-purview-hub)*
 
 ### Purview Integration
 
@@ -437,6 +475,14 @@ flowchart TB
 | BI Connectivity | Direct Lake | Sub-second queries, no import |
 | Governance | Purview | Unified catalog, native integration |
 | IaC | Bicep | Azure native, type-safe |
+
+### Direct Lake Mode
+
+Direct Lake is the recommended connectivity mode for Power BI in Fabric. It provides the performance of import mode with the freshness of DirectQuery:
+
+![Direct Lake Overview](https://learn.microsoft.com/en-us/fabric/get-started/media/direct-lake-overview/direct-lake-overview.svg)
+
+*Source: [Direct Lake Overview](https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview)*
 
 ---
 

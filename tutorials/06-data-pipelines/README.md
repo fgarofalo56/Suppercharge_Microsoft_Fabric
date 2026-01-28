@@ -47,6 +47,14 @@
 
 This tutorial covers creating orchestrated data pipelines in Microsoft Fabric. You will build end-to-end pipelines that automate the Bronze-Silver-Gold data flow with error handling, monitoring, and alerting.
 
+### Data Factory in Microsoft Fabric
+
+Microsoft Fabric Data Factory provides data integration capabilities to orchestrate your data workflows:
+
+![Data Factory in Fabric](https://learn.microsoft.com/en-us/fabric/data-factory/media/data-factory-overview/data-factory-overview.png)
+
+*Source: [What is Data Factory in Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/data-factory/data-factory-overview)*
+
 ```mermaid
 flowchart LR
     subgraph Sources["Data Sources"]

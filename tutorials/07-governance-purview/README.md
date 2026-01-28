@@ -47,6 +47,14 @@
 
 This tutorial covers implementing data governance using Microsoft Purview integration with Fabric. You will catalog data assets, apply classifications, track data lineage, and establish compliance controls for the regulated casino/gaming environment.
 
+### Microsoft Purview Hub in Fabric
+
+The Purview hub in Fabric provides centralized governance capabilities for your data estate:
+
+![Microsoft Purview Hub](https://learn.microsoft.com/en-us/fabric/governance/media/use-microsoft-purview-hub/microsoft-purview-hub-general-view.png)
+
+*Source: [Use Microsoft Purview hub in Fabric](https://learn.microsoft.com/en-us/fabric/governance/use-microsoft-purview-hub)*
+
 ```mermaid
 flowchart TB
     subgraph Fabric["Microsoft Fabric"]

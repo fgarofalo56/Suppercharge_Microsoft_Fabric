@@ -241,6 +241,10 @@ By the end of this tutorial, you will be able to:
 
 The Bronze layer is the foundation of the medallion architecture. Understanding these principles is critical for building a robust data platform.
 
+![Lakehouse End-to-End Architecture](https://learn.microsoft.com/en-us/fabric/data-engineering/media/tutorial-lakehouse-introduction/lakehouse-end-to-end-architecture.png)
+
+*Source: [Lakehouse End-to-End Scenario in Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/data-engineering/tutorial-lakehouse-introduction)*
+
 | Principle | Description | Why It Matters |
 |-----------|-------------|----------------|
 | **Raw Data** | Store data as-is from source systems | Enables reprocessing if business logic changes |

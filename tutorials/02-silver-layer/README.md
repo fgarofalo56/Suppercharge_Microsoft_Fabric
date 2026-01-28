@@ -133,6 +133,14 @@
 
 This tutorial covers implementing the **Silver layer** - the heart of data cleansing, validation, and transformation. The Silver layer transforms raw Bronze data into validated, high-quality datasets ready for business use.
 
+### Microsoft Fabric Data Engineering
+
+The Silver layer is built using Microsoft Fabric's data engineering capabilities with PySpark notebooks:
+
+![Data Engineering Overview](https://learn.microsoft.com/en-us/fabric/data-engineering/media/data-engineering-overview/data-engineering-overview.png)
+
+*Source: [What is Data Engineering in Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/data-engineering/data-engineering-overview)*
+
 ```mermaid
 flowchart LR
     subgraph Bronze["🥉 Bronze Layer"]

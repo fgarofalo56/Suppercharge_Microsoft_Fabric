@@ -37,6 +37,14 @@
 
 ## 🛡️ Security Architecture
 
+### Microsoft Fabric Security Overview
+
+Microsoft Fabric provides comprehensive security features built on Azure's enterprise-grade security foundation:
+
+![Fabric Security Overview](https://learn.microsoft.com/en-us/fabric/security/media/security-overview/fabric-security-layers.svg)
+
+*Source: [Security in Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/security/security-overview)*
+
 ### Defense in Depth
 
 Our security architecture implements multiple layers of protection:
@@ -256,6 +264,12 @@ sequenceDiagram
 > 🔒 **Security Note:** This flow implements defense-in-depth with multiple validation points: token signature, RBAC permissions, and row-level security filters.
 
 ### Role-Based Access Control (RBAC)
+
+Fabric implements a layered permission model that controls access at the workspace, item, and data levels:
+
+![Fabric Permissions Model](https://learn.microsoft.com/en-us/fabric/security/media/permission-model/permission-model-overview.svg)
+
+*Source: [Permission model in Fabric](https://learn.microsoft.com/en-us/fabric/security/permission-model)*
 
 #### Fabric Workspace Roles
 

@@ -40,6 +40,22 @@
 
 ## 📊 Visual Overview
 
+### Microsoft Fabric Deployment Architecture
+
+Before diving into deployment steps, it's helpful to understand how Fabric integrates with Azure services:
+
+![Fabric Capacity Architecture](https://learn.microsoft.com/en-us/fabric/enterprise/media/licenses/fabric-capacities.png)
+
+*Source: [Microsoft Fabric licenses](https://learn.microsoft.com/en-us/fabric/enterprise/licenses)*
+
+### Lakehouse End-to-End Architecture
+
+This POC deploys a complete lakehouse solution following Microsoft's recommended architecture pattern:
+
+![Lakehouse End-to-End Architecture](https://learn.microsoft.com/en-us/fabric/data-engineering/media/tutorial-lakehouse-introduction/lakehouse-end-to-end-architecture.png)
+
+*Source: [Lakehouse Tutorial Introduction](https://learn.microsoft.com/en-us/fabric/data-engineering/tutorial-lakehouse-introduction)*
+
 ### Deployment Decision Flowchart
 
 This flowchart guides you through the deployment process from prerequisites to verification:
@@ -278,7 +294,11 @@ az deployment sub create \
 
 ## 🐳 Docker Deployment
 
-Use Docker to run data generators without installing Python dependencies locally.
+Use Docker to run data generators without installing Python dependencies locally. The generated data will be ingested into your Fabric Lakehouse following this pattern:
+
+![Data Engineering in Fabric](https://learn.microsoft.com/en-us/fabric/data-engineering/media/data-engineering-overview/data-engineering-overview.png)
+
+*Source: [What is Data Engineering in Fabric](https://learn.microsoft.com/en-us/fabric/data-engineering/data-engineering-overview)*
 
 ### Quick Start with Docker
 

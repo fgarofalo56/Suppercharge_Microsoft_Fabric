@@ -70,6 +70,10 @@ By the end of this tutorial, you will be able to:
 
 Database Mirroring provides **near real-time replication** of data into Fabric OneLake using Change Data Capture (CDC) technology.
 
+![Fabric Database Mirroring Architecture](https://learn.microsoft.com/en-us/fabric/database/mirrored-database/media/overview/mirroring-flow.png)
+
+*Source: [What is Mirroring in Microsoft Fabric?](https://learn.microsoft.com/en-us/fabric/database/mirrored-database/overview)*
+
 ```mermaid
 flowchart LR
     subgraph Sources["Source Databases"]

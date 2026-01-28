@@ -229,6 +229,10 @@ Before starting, ensure you have:
 
 We'll create three Lakehouses for the medallion architecture.
 
+![Microsoft Fabric Lakehouse Overview](https://learn.microsoft.com/en-us/fabric/data-engineering/media/lakehouse-overview/lakehouse-overview.gif)
+
+*Source: [What is a Lakehouse in Microsoft Fabric?](https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview)*
+
 ```mermaid
 graph TB
     subgraph "Medallion Architecture"

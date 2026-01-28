@@ -70,6 +70,10 @@ By the end of this tutorial, you will be able to:
 
 Microsoft Fabric Data Science provides an integrated environment for the complete ML lifecycle:
 
+![Microsoft Fabric Data Science End-to-End Scenario](https://learn.microsoft.com/en-us/fabric/data-science/media/tutorial-data-science-introduction/data-science-scenario.png)
+
+*Source: [Data Science End-to-End Scenario in Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/data-science/tutorial-data-science-introduction)*
+
 ```mermaid
 flowchart LR
     subgraph DataPrep["Data Preparation"]

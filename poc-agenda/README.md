@@ -6,6 +6,10 @@
 
 ## Casino/Gaming Microsoft Fabric POC Workshop
 
+![Microsoft Fabric Overview](https://learn.microsoft.com/en-us/fabric/get-started/media/microsoft-fabric-overview/fabric-architecture.png)
+
+*Source: [What is Microsoft Fabric?](https://learn.microsoft.com/en-us/fabric/get-started/microsoft-fabric-overview)*
+
 **Date:** `[INSERT DATE]`
 **Location:** `[INSERT LOCATION]`
 **Duration:** 3 Days (8 hours/day)

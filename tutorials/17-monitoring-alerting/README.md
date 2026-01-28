@@ -81,6 +81,10 @@ By the end of this tutorial, you will be able to:
 
 ## Monitoring Architecture
 
+![Microsoft Fabric Capacity Metrics App](https://learn.microsoft.com/en-us/fabric/enterprise/media/metrics-app/metrics-compute-ribbon-chart.png)
+
+*Source: [Microsoft Fabric Capacity Metrics App](https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app)*
+
 ```mermaid
 flowchart TB
     subgraph Fabric["Microsoft Fabric Workloads"]

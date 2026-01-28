@@ -14,6 +14,10 @@
 
 ## Tutorial 15: Cost Management & Capacity Optimization
 
+![Microsoft Fabric Capacity SKUs](https://learn.microsoft.com/en-us/fabric/enterprise/media/licenses/fabric-capacities.png)
+
+*Source: [Microsoft Fabric Licenses](https://learn.microsoft.com/en-us/fabric/enterprise/licenses)*
+
 | | |
 |---|---|
 | **Difficulty** | Intermediate |

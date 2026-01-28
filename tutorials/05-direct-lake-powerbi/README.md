@@ -75,6 +75,10 @@ By the end of this tutorial, you will be able to:
 
 ## 🏗️ Direct Lake Architecture
 
+![Direct Lake Overview](https://learn.microsoft.com/en-us/fabric/get-started/media/direct-lake-overview/direct-lake-overview.svg)
+
+*Source: [Direct Lake Overview in Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview)*
+
 ```mermaid
 flowchart TB
     subgraph OneLake["☁️ OneLake"]

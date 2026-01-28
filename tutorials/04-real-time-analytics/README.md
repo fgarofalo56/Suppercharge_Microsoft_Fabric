@@ -188,6 +188,10 @@ By the end of this tutorial, you will be able to:
 
 ## 🏗️ Real-Time Intelligence Architecture
 
+![Microsoft Fabric Real-Time Intelligence](https://learn.microsoft.com/en-us/fabric/real-time-intelligence/media/overview/product-view.png)
+
+*Source: [What is Real-Time Intelligence in Microsoft Fabric?](https://learn.microsoft.com/en-us/fabric/real-time-intelligence/overview)*
+
 ```mermaid
 flowchart LR
     subgraph Sources["📡 Data Sources"]

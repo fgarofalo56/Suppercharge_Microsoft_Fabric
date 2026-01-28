@@ -133,6 +133,14 @@
 
 This tutorial covers implementing the **Gold layer** - the crown jewel of the medallion architecture. The Gold layer provides business-ready aggregations, pre-computed KPIs, and star schema structures optimized for analytics and reporting.
 
+### Medallion Architecture in Microsoft Fabric
+
+The Gold layer represents the business-ready, aggregated data tier in the medallion lakehouse architecture:
+
+![Medallion Architecture](https://learn.microsoft.com/en-us/fabric/onelake/media/onelake-medallion-lakehouse-architecture/onelake-medallion-lakehouse-architecture-example.png)
+
+*Source: [Implement medallion lakehouse architecture in Fabric](https://learn.microsoft.com/en-us/fabric/onelake/onelake-medallion-lakehouse-architecture)*
+
 ```mermaid
 flowchart LR
     subgraph Silver["🥈 Silver Layer"]
@@ -1292,6 +1300,12 @@ print("=" * 70)
 ---
 
 ## ⚡ Direct Lake Optimization
+
+Direct Lake mode connects Power BI directly to Delta tables in OneLake for the best of both import and DirectQuery modes:
+
+![Direct Lake Overview](https://learn.microsoft.com/en-us/fabric/get-started/media/direct-lake-overview/direct-lake-overview.svg)
+
+*Source: [Direct Lake overview](https://learn.microsoft.com/en-us/fabric/get-started/direct-lake-overview)*
 
 For optimal Power BI Direct Lake performance, follow these guidelines:
 

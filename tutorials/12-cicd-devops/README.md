@@ -73,6 +73,10 @@ By the end of this tutorial, you will be able to:
 
 ## 🏗️ CI/CD Architecture for Microsoft Fabric
 
+![Fabric CI/CD Workspace Git Status](https://learn.microsoft.com/en-us/fabric/data-factory/media/cicd-data-pipelines/workspace-git-status.png)
+
+*Source: [CI/CD for Pipelines in Data Factory in Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/data-factory/cicd-pipelines)*
+
 ```mermaid
 flowchart TB
     subgraph Dev["👨‍💻 Development"]

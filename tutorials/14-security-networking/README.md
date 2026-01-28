@@ -14,6 +14,10 @@
 
 ## Tutorial 14: Security & Network Configuration
 
+![Microsoft Fabric Security Layers](https://learn.microsoft.com/en-us/fabric/security/media/security-overview/fabric-security-layers.svg)
+
+*Source: [Security in Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/security/security-overview)*
+
 | | |
 |---|---|
 | **Difficulty** | Advanced |

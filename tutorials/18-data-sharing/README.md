@@ -51,6 +51,10 @@
 
 ## Overview
 
+![OneLake Architecture](https://learn.microsoft.com/en-us/fabric/onelake/media/onelake-overview/onelake-architecture.png)
+
+*Source: [What is OneLake?](https://learn.microsoft.com/en-us/fabric/onelake/onelake-overview)*
+
 This tutorial explores **OneLake shortcuts** and **data sharing patterns** in Microsoft Fabric. You will learn how to share data across workspaces, integrate with external data sources (ADLS Gen2, Amazon S3, Google Cloud Storage), and implement multi-tenant data architectures for enterprise scenarios.
 
 OneLake serves as Microsoft Fabric's unified data lake, providing a single logical storage layer across all Fabric workloads. Shortcuts enable data virtualization, allowing you to reference data from internal Fabric locations or external cloud storage without data duplication.

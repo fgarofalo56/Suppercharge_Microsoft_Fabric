@@ -61,6 +61,74 @@ Before starting, ensure the following are ready:
 
 ---
 
+### Day 3 Timeline
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'cScale0':'#4CAF50','cScale1':'#2196F3','cScale2':'#FFD700','cScale3':'#CD7F32','cScale4':'#C0C0C0'}}}%%
+timeline
+    title Day 3: BI, Governance & Mirroring Journey
+    
+    section Morning Session 1<br/>9:00-10:30<br/>👥 Data Architects + BI Devs (6)
+        Create Semantic Model : Direct Lake mode
+                               : No refresh needed
+        Define Relationships : Star schema
+                            : Player-Slot linkage
+        Implement DAX : Casino KPIs
+                      : Time intelligence
+                      : 20+ measures
+    
+    section Morning Session 2<br/>10:45-12:30<br/>👥 Data Architects + BI Devs (6)
+        Executive Dashboard : Net Win
+                           : Hold %
+                           : Zone Performance
+        Slot Operations Report : Performance matrix
+                              : Hourly activity
+                              : Hold variance
+        Player Analytics : Player 360
+                        : Churn risk
+                        : Value scoring
+    
+    section Afternoon Session 3<br/>13:30-15:00<br/>👥 All Participants (10+)
+        Connect Purview : Register Fabric source
+                       : Configure scan
+        Review Classifications : PII detection
+                              : Financial data
+                              : Auto-classification
+        Business Glossary : Create terms
+                         : Gaming metrics
+                         : Compliance definitions
+        Data Lineage : Bronze to Gold flow
+                    : Impact analysis
+                    : Transformation tracking
+    
+    section Afternoon Session 4<br/>15:15-16:30<br/>👥 All Participants (10+)
+        Mirroring Concepts : Near real-time sync
+                          : No ETL code
+                          : Auto schema sync
+        SQL Server Demo : Enable CDC
+                       : Configure mirror
+                       : Query mirrored data
+        Hybrid Architecture : Multi-source strategy
+                           : OneLake integration
+                           : Production patterns
+    
+    section Wrap-up<br/>16:30-17:00<br/>🎉 All Participants
+        POC Review : 3 days complete
+                  : Medallion built
+                  : Reports delivered
+        Next Steps : Production planning
+                  : Week 1-4 roadmap
+                  : Go/No-Go decision
+```
+
+**Key Milestones:**
+- ☕ **9:00 AM**: BI Developers join (6 total participants)
+- 🍽️ **12:30 PM**: Lunch break
+- 👥 **1:30 PM**: Governance team joins (10+ participants)
+- 🎉 **4:30 PM**: POC completion celebration!
+
+---
+
 ## 👥 Audience Expansion Schedule
 
 ```

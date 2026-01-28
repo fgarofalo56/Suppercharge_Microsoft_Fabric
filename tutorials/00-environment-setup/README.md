@@ -4,6 +4,16 @@
 
 ---
 
+<div align="center">
+
+![Difficulty](https://img.shields.io/badge/⭐_Difficulty-Beginner-brightgreen?style=for-the-badge)
+![Duration](https://img.shields.io/badge/⏱️_Duration-45--60_mins-blue?style=for-the-badge)
+![Prerequisites](https://img.shields.io/badge/📋_Prerequisites-Azure_Subscription-orange?style=for-the-badge)
+
+</div>
+
+---
+
 ## 🎓 Tutorial 00: Environment Setup
 
 | | |
@@ -16,22 +26,102 @@
 
 ### 📍 Progress Tracker
 
-```
-╔════════╦════════╦════════╦════════╦════════╦════════╦════════╦════════╦════════╦════════╗
-║   00   ║   01   ║   02   ║   03   ║   04   ║   05   ║   06   ║   07   ║   08   ║   09   ║
-║ SETUP  ║ BRONZE ║ SILVER ║  GOLD  ║  RT    ║  PBI   ║ PIPES  ║  GOV   ║ MIRROR ║  AI/ML ║
-╠════════╬════════╬════════╬════════╬════════╬════════╬════════╬════════╬════════╬════════╣
-║   ●    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║
-╚════════╩════════╩════════╩════════╩════════╩════════╩════════╩════════╩════════╩════════╝
-     ▲
-     │
- YOU ARE HERE
-```
+<div align="center">
+
+<table>
+<thead>
+<tr>
+<th align="center" width="10%">Tutorial</th>
+<th align="left" width="45%">Name</th>
+<th align="center" width="15%">Status</th>
+<th align="center" width="15%">Duration</th>
+<th align="center" width="15%">Difficulty</th>
+</tr>
+</thead>
+<tbody>
+<tr style="background-color: #e8f5e9;">
+<td align="center"><strong>00</strong></td>
+<td><strong>👉 <a href="../00-environment-setup/README.md">Environment Setup</a></strong></td>
+<td align="center"><img src="https://img.shields.io/badge/●-CURRENT-blue?style=flat-square" alt="Current"></td>
+<td align="center">45-60 min</td>
+<td align="center">⭐ Beginner</td>
+</tr>
+<tr>
+<td align="center">01</td>
+<td><a href="../01-bronze-layer/README.md">🥉 Bronze Layer</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐ Beginner</td>
+</tr>
+<tr>
+<td align="center">02</td>
+<td><a href="../02-silver-layer/README.md">🥈 Silver Layer</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">03</td>
+<td><a href="../03-gold-layer/README.md">🥇 Gold Layer</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">90-120 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">04</td>
+<td><a href="../04-real-time-analytics/README.md">⚡ Real-Time Analytics</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">90-120 min</td>
+<td align="center">⭐⭐⭐ Advanced</td>
+</tr>
+<tr>
+<td align="center">05</td>
+<td><a href="../05-direct-lake-powerbi/README.md">📊 Direct Lake & Power BI</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">06</td>
+<td><a href="../06-data-pipelines/README.md">🔄 Data Pipelines</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">07</td>
+<td><a href="../07-governance-purview/README.md">🛡️ Governance & Purview</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">08</td>
+<td><a href="../08-database-mirroring/README.md">🔄 Database Mirroring</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">09</td>
+<td><a href="../09-advanced-ai-ml/README.md">🤖 Advanced AI/ML</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">90-120 min</td>
+<td align="center">⭐⭐⭐ Advanced</td>
+</tr>
+</tbody>
+</table>
+
+<p><em>💡 Tip: Click any tutorial name to jump directly to it</em></p>
+
+</div>
+
+---
 
 | Navigation | |
 |---|---|
 | **Previous** | N/A - This is the first tutorial |
-| **Next** | [01-Bronze Layer](../01-bronze-layer/README.md) |
+| **Next** | [01-Bronze Layer](../01-bronze-layer/README.md) ➡️ |
 
 ---
 
@@ -72,7 +162,7 @@ Before starting, ensure you have:
 - [ ] Azure CLI installed locally (optional)
 - [ ] Access to Fabric portal (app.fabric.microsoft.com)
 
-> ℹ️ **Note:** If you don't have a Fabric capacity, you can start a free trial at [app.fabric.microsoft.com](https://app.fabric.microsoft.com).
+> 📋 **Prerequisites:** If you don't have a Fabric capacity, you can start a free trial at [app.fabric.microsoft.com](https://app.fabric.microsoft.com). Trial capacity provides 60 days of limited compute units.
 
 ---
 
@@ -89,7 +179,7 @@ Before starting, ensure you have:
 3. Navigate to **Capacity settings**
 4. Confirm your Fabric capacity is available and running
 
-> ⚠️ **Warning:** If your capacity is paused, notebooks and data processing will not work. Ensure the capacity is in "Active" state before proceeding.
+> ⚠️ **Warning:** If your capacity is paused, notebooks and data processing will not work. Ensure the capacity is in "Active" state before proceeding. Resume can take 2-3 minutes.
 
 ---
 
@@ -123,7 +213,7 @@ Before starting, ensure you have:
    - License mode: Fabric capacity
    - Default storage format: Delta/Parquet
 
-> ℹ️ **Note:** Using Delta format enables time travel, ACID transactions, and schema evolution - all critical features for our medallion architecture.
+> 💡 **Pro Tip:** Using Delta format enables time travel, ACID transactions, and schema evolution - all critical features for our medallion architecture. Always choose Delta over Parquet for production workloads.
 
 ---
 
@@ -193,7 +283,7 @@ If you deployed the ADLS Gen2 storage account via Bicep, connect it as a shortcu
 7. Name the shortcut: `landing_zone`
 8. Click **Create**
 
-> ℹ️ **Note:** Shortcuts allow you to access external data without copying it, reducing storage costs and keeping data in sync.
+> 💡 **Pro Tip:** Shortcuts allow you to access external data without copying it, reducing storage costs and keeping data in sync. Use shortcuts for large archives or shared data sources.
 
 ---
 
@@ -229,6 +319,8 @@ For local development and data generation, install these tools:
 | Azure CLI | Azure management | [docs.microsoft.com](https://docs.microsoft.com/cli/azure/install-azure-cli) |
 
 ### Python Environment Setup
+
+> 💡 **Pro Tip:** Use a virtual environment to isolate project dependencies and avoid conflicts with system Python packages.
 
 ```bash
 # Create virtual environment
@@ -275,6 +367,8 @@ df.write.format("delta").mode("overwrite").save("Tables/test_connection")
 print("✅ Success! Lakehouse is configured correctly.")
 ```
 
+> 💡 **Pro Tip:** First-time notebook execution can take 2-3 minutes while Fabric provisions a Spark cluster. Subsequent runs will be faster.
+
 4. Verify the `test_connection` table appears in the Tables folder
 5. Delete the test table when done:
 
@@ -288,15 +382,66 @@ print("✅ Test table cleaned up.")
 
 ## ✅ Validation Checklist
 
-Before proceeding to the next tutorial, verify:
+Before moving to the next tutorial, verify:
 
-- [ ] Workspace `casino-fabric-poc` created
-- [ ] All three Lakehouses created (lh_bronze, lh_silver, lh_gold)
-- [ ] Capacity assigned correctly
-- [ ] ADLS shortcut configured (if applicable)
-- [ ] Team access permissions set
-- [ ] Test notebook executed successfully
-- [ ] Test table created and deleted
+- [ ] **Workspace Created** - `casino-fabric-poc` workspace exists and is accessible
+- [ ] **Capacity Assigned** - Fabric capacity is active and assigned to workspace
+- [ ] **Bronze Lakehouse** - `lh_bronze` created successfully
+- [ ] **Silver Lakehouse** - `lh_silver` created successfully
+- [ ] **Gold Lakehouse** - `lh_gold` created successfully
+- [ ] **Shortcut Configuration** - ADLS shortcut accessible (if configured)
+- [ ] **Test Notebook Runs** - Successfully executed test notebook without errors
+- [ ] **Table Operations Work** - Created and deleted test table successfully
+
+<details>
+<summary>🔍 How to verify each item</summary>
+
+### Workspace Created
+```powershell
+# Navigate to app.fabric.microsoft.com
+# Verify workspace appears in left navigation
+```
+
+### Capacity Assigned
+1. Click Settings (gear icon) > Admin portal
+2. Go to Capacity settings
+3. Verify capacity status = "Active"
+
+### Lakehouses Created
+```python
+# In any notebook, run:
+spark.sql("SHOW DATABASES").show()
+# Should list: lh_bronze, lh_silver, lh_gold
+```
+
+### Test Notebook Runs
+```python
+# Run this verification cell:
+from pyspark.sql import SparkSession
+
+# Create test data
+data = [("environment", "ready"), ("setup", "complete")]
+df = spark.createDataFrame(data, ["key", "value"])
+
+# Write to Bronze
+df.write.format("delta").mode("overwrite").save("Tables/env_test")
+
+# Read back
+df_check = spark.read.format("delta").load("Tables/env_test")
+print(f"✅ Environment test passed: {df_check.count()} records")
+
+# Cleanup
+spark.sql("DROP TABLE IF EXISTS env_test")
+```
+
+### Capacity Check
+```bash
+# Check capacity CU usage in Fabric portal:
+# Settings > Admin portal > Capacity settings > Usage
+# Verify CUs available and not at 100%
+```
+
+</details>
 
 ---
 
@@ -325,6 +470,8 @@ Before proceeding to the next tutorial, verify:
 | "Capacity not available" | Verify capacity is running (not paused) |
 | "Spark pool error" | Wait 2-3 minutes for first-time Spark startup |
 | "Out of memory" | Reduce data size or upgrade capacity |
+
+> 💡 **Pro Tip:** If Spark startup fails repeatedly, try detaching and reattaching the Lakehouse to the notebook. This forces a fresh cluster provisioning.
 
 ---
 

@@ -1,10 +1,16 @@
 # 🔄 Tutorial 08: Database Mirroring
 
-![Tutorial 08](https://img.shields.io/badge/Tutorial-08-blue?style=for-the-badge)
-![Advanced](https://img.shields.io/badge/Level-Advanced-red?style=for-the-badge)
-![Data Integration](https://img.shields.io/badge/Focus-Data%20Integration-green?style=for-the-badge)
+> **🏠 [Home](../../README.md)** > **📖 [Tutorials](../README.md)** > **🔄 Database Mirroring**
 
-> 🏠 **[Home](../../README.md)** > 📖 **[Tutorials](../README.md)** > 🔄 **Database Mirroring**
+---
+
+<div align="center">
+
+![Difficulty](https://img.shields.io/badge/⭐_Difficulty-Advanced-red?style=for-the-badge)
+![Duration](https://img.shields.io/badge/⏱️_Duration-90--120_mins-blue?style=for-the-badge)
+![Prerequisites](https://img.shields.io/badge/📋_Prerequisites-Tutorial_00-orange?style=for-the-badge)
+
+</div>
 
 ---
 
@@ -555,16 +561,135 @@ flowchart TB
 
 ## ✅ Validation Checklist
 
-Verify your implementation is complete:
+Before moving to the next tutorial, verify:
 
-- [ ] Source database CDC enabled and verified
-- [ ] Mirrored database created in Fabric workspace
-- [ ] Initial sync completed successfully (100%)
-- [ ] Ongoing replication active with acceptable lag (< 5 min)
-- [ ] Data queryable via Spark notebooks
-- [ ] Data queryable via SQL Analytics Endpoint
-- [ ] Monitoring dashboard reviewed and understood
-- [ ] At least one join with existing Gold layer data tested
+- [ ] **CDC Enabled** - Source database CDC enabled and verified
+- [ ] **Mirrored Database Created** - Database exists in Fabric workspace
+- [ ] **Initial Sync Complete** - 100% of data synchronized successfully
+- [ ] **Replication Active** - Ongoing sync with lag < 5 minutes
+- [ ] **Data Queryable via Spark** - Can read tables in PySpark notebooks
+- [ ] **SQL Endpoint Working** - Can query via SQL Analytics Endpoint
+
+<details>
+<summary>🔍 Verification Commands</summary>
+
+### Verify CDC Enabled on Source
+
+```sql
+-- Check CDC is enabled at database level
+SELECT name, is_cdc_enabled
+FROM sys.databases
+WHERE name = DB_NAME();
+-- Expected: is_cdc_enabled = 1
+
+-- Verify CDC enabled on tables
+SELECT
+    t.name AS table_name,
+    ct.capture_instance,
+    ct.start_lsn
+FROM sys.tables t
+JOIN cdc.change_tables ct ON t.object_id = ct.source_object_id
+ORDER BY t.name;
+-- Expected: List of mirrored tables with capture instances
+```
+
+### Verify Mirrored Database Created
+
+```python
+# List all mirrored databases in workspace
+# In Fabric UI: Navigate to workspace > Filter by "Mirrored database"
+# Expected: Your mirrored database appears in the list
+```
+
+### Check Initial Sync Status
+
+```python
+# In Fabric portal:
+# 1. Open mirrored database
+# 2. Go to "Monitor" tab
+# 3. Check "Initial sync status"
+# Expected: All tables show 100% complete
+
+# Or via notebook:
+tables = ["slot_transactions", "player_sessions", "cage_operations"]
+for table in tables:
+    try:
+        count = spark.table(f"lh_mirrored.{table}").count()
+        print(f"✅ {table}: {count:,} rows")
+    except Exception as e:
+        print(f"❌ {table}: {e}")
+```
+
+### Verify Replication Lag
+
+```python
+# Check replication lag in Fabric portal
+# Monitor tab > Replication lag metric
+# Expected: < 5 minutes for all tables
+
+# Compare timestamps
+from pyspark.sql.functions import max as spark_max
+
+df_mirrored = spark.table("lh_mirrored.slot_transactions")
+latest_timestamp = df_mirrored.select(spark_max("transaction_timestamp")).collect()[0][0]
+print(f"Latest mirrored transaction: {latest_timestamp}")
+# Compare to current time - should be within 5 minutes
+```
+
+### Query Mirrored Data with Spark
+
+```python
+# Read mirrored table
+df = spark.table("lh_mirrored.slot_transactions")
+
+# Verify data
+print(f"Row count: {df.count():,}")
+print(f"Columns: {len(df.columns)}")
+
+# Show sample
+df.show(5)
+# Expected: Data displays successfully
+```
+
+### Query via SQL Analytics Endpoint
+
+```sql
+-- Open SQL Analytics Endpoint in Fabric
+-- Run test query
+SELECT TOP 10
+    transaction_id,
+    machine_id,
+    amount,
+    transaction_timestamp
+FROM lh_mirrored.slot_transactions
+ORDER BY transaction_timestamp DESC;
+-- Expected: Query returns recent transactions
+```
+
+### Test Join with Gold Layer
+
+```python
+# Join mirrored data with Gold analytics
+df_mirrored = spark.table("lh_mirrored.player_sessions")
+df_gold = spark.table("lh_gold.gold_player_360")
+
+df_joined = df_mirrored.join(
+    df_gold,
+    df_mirrored.player_id == df_gold.player_id,
+    "inner"
+).select(
+    df_mirrored.session_id,
+    df_mirrored.player_id,
+    df_gold.loyalty_tier,
+    df_gold.lifetime_value
+)
+
+print(f"Joined records: {df_joined.count():,}")
+df_joined.show(5)
+# Expected: Successfully joined records display
+```
+
+</details>
 
 ---
 

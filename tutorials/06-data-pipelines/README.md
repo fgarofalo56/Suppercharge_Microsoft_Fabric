@@ -1,12 +1,20 @@
-# Tutorial 06: Data Pipelines
+# 🔧 Tutorial 06: Data Pipelines
 
-![Tutorial 06](https://img.shields.io/badge/Tutorial-06-blue?style=for-the-badge) ![Data Pipelines](https://img.shields.io/badge/Data-Pipelines-orange?style=for-the-badge)
-
-> **[Home](../../README.md)** > **[Tutorials](../README.md)** > **Data Pipelines**
+> **🏠 [Home](../../README.md)** > **📖 [Tutorials](../README.md)** > **🔧 Data Pipelines**
 
 ---
 
-## Tutorial 06: Data Pipelines - Orchestrated ETL
+<div align="center">
+
+![Difficulty](https://img.shields.io/badge/⭐_Difficulty-Intermediate-yellow?style=for-the-badge)
+![Duration](https://img.shields.io/badge/⏱️_Duration-60--90_mins-blue?style=for-the-badge)
+![Prerequisites](https://img.shields.io/badge/📋_Prerequisites-Tutorial_01-orange?style=for-the-badge)
+
+</div>
+
+---
+
+## 🔧 Tutorial 06: Data Pipelines - Orchestrated ETL
 
 | | |
 |---|---|
@@ -583,18 +591,241 @@ To run with custom parameters:
 
 ---
 
-## Validation Checklist
+## ✅ Validation Checklist
 
 Before moving to the next tutorial, verify:
 
-- [ ] Bronze pipeline runs successfully with parallel notebooks
-- [ ] Silver pipeline implements incremental load with watermarks
-- [ ] Gold pipeline includes optimization and semantic model refresh
-- [ ] Error handling configured with retry logic
-- [ ] Master orchestration pipeline coordinates all layers
-- [ ] Schedule trigger created and activated
-- [ ] Monitoring dashboard accessible
-- [ ] Alert notifications working
+- [ ] **Bronze Pipeline Runs Successfully** - All notebooks execute in parallel without errors
+- [ ] **Silver Pipeline Implements Watermark** - Incremental load working correctly
+- [ ] **Gold Pipeline Completes** - Aggregations and optimizations finish successfully
+- [ ] **Master Pipeline Orchestrates** - All sub-pipelines coordinate correctly
+- [ ] **Schedule Trigger Active** - Daily refresh configured and enabled
+- [ ] **Error Handling Works** - Retry logic and alerts configured
+- [ ] **Monitoring Accessible** - Pipeline runs visible in Monitor hub
+
+<details>
+<summary>🔍 How to verify each item</summary>
+
+### Bronze Pipeline Runs Successfully
+```
+1. Navigate to workspace > Pipelines
+2. Open "pl_bronze_ingestion"
+3. Click "Run" button (or use existing run)
+4. Monitor execution:
+   ✅ "Set Batch ID" activity completes
+   ✅ All 6 Bronze notebook activities run in parallel
+   ✅ All complete with green checkmarks (success)
+   ✅ "Verify Bronze Load" activity runs last
+   ✅ Total run time < 10 minutes
+
+5. Click on "Output" tab of any notebook activity
+6. Verify: "status": "Succeeded"
+```
+
+### Silver Pipeline Implements Watermark
+```
+1. Open "pl_silver_transformation"
+2. Check pipeline structure:
+   ✅ "Get Last Watermark" activity exists
+   ✅ Lookup activity queries watermark table
+   ✅ Notebook activities receive watermark parameter
+   ✅ "Update Watermark" activity runs last
+
+3. Run the pipeline
+4. Check watermark table:
+```
+
+```sql
+SELECT * FROM watermarks
+WHERE table_name LIKE 'silver_%'
+ORDER BY last_processed DESC;
+
+-- Should show recent timestamps for all Silver tables
+```
+
+### Gold Pipeline Completes
+```
+1. Open "pl_gold_aggregation"
+2. Verify pipeline structure:
+   ✅ Sequential execution order
+   ✅ Slot Performance → Player 360 → Compliance
+   ✅ Optimization activity at end
+   ✅ Optional: Semantic model refresh
+
+3. Run the pipeline
+4. Check outputs:
+```
+
+```python
+# Verify Gold tables updated
+from pyspark.sql.functions import max as spark_max
+
+tables = ["gold_slot_performance", "gold_player_360", "gold_compliance_reporting"]
+for table in tables:
+    df = spark.table(f"lh_gold.{table}")
+    last_update = df.select(spark_max("_gold_computed_at")).collect()[0][0]
+    print(f"✅ {table}: Last updated at {last_update}")
+```
+
+### Master Pipeline Orchestrates
+```
+1. Open "pl_casino_daily_refresh" (or your master pipeline)
+2. Verify structure:
+   ✅ "Execute Bronze Pipeline" activity
+   ✅ "Execute Silver Pipeline" activity
+   ✅ "Execute Gold Pipeline" activity
+   ✅ Dependencies: Bronze → Silver → Gold (sequential)
+   ✅ Error paths to alert activities
+
+3. Test full run:
+   - Click "Run" or "Add trigger" > "Trigger now"
+   - Provide parameters if needed
+   - Monitor in Monitor hub
+
+4. Verify:
+   ✅ Bronze pipeline executes first
+   ✅ Silver pipeline waits for Bronze to complete
+   ✅ Gold pipeline waits for Silver to complete
+   ✅ Total end-to-end runtime reasonable (< 30 min)
+```
+
+### Schedule Trigger Active
+```
+1. Open master pipeline
+2. Click "Add trigger" > "New/Edit"
+3. Verify trigger configuration:
+   ✅ Trigger name: "tr_daily_refresh" (or similar)
+   ✅ Type: Schedule
+   ✅ Recurrence: Daily at 6:00 AM (or your time)
+   ✅ Status: Started (toggle should be ON)
+
+4. Check trigger history:
+   - Go to Monitor hub > Pipeline runs
+   - Filter by pipeline name
+   - Look for runs with "Trigger" type = "tr_daily_refresh"
+   - Should see scheduled runs if time has passed
+```
+
+### Error Handling Works
+```
+Test error handling and retry logic:
+
+1. Introduce intentional error:
+   - Edit a Bronze notebook
+   - Add: raise Exception("Test error")
+   - Save notebook
+
+2. Run Bronze pipeline
+3. Verify error handling:
+   ✅ Activity fails (red X)
+   ✅ Retry attempts (if configured)
+   ✅ Error path activates
+   ✅ Alert activity runs
+   ✅ Error logged
+
+4. Check pipeline output:
+```
+
+```json
+{
+  "status": "Failed",
+  "error": {
+    "errorCode": "NotebookExecutionFailed",
+    "message": "Test error",
+    "failureType": "UserError"
+  }
+}
+```
+
+```
+5. Remove test error and re-run to verify recovery
+```
+
+### Monitoring Accessible
+```
+1. Navigate to Monitor hub (left navigation)
+2. Click "Pipeline runs"
+3. Verify you can see:
+   ✅ All recent pipeline runs
+   ✅ Status (Succeeded, Failed, Running)
+   ✅ Start and end times
+   ✅ Duration
+   ✅ Run ID
+
+4. Click on a run to see details:
+   ✅ Activity-level status
+   ✅ Input/Output for each activity
+   ✅ Error messages (for failures)
+
+5. Test filtering:
+   - Filter by pipeline name
+   - Filter by status
+   - Filter by date range
+```
+
+### Parameter Passing Verification
+```
+Test parameter functionality:
+
+1. Open Bronze pipeline
+2. Define a test parameter (if not exists):
+   - Parameter name: "test_date"
+   - Default value: "2024-01-01"
+
+3. Use parameter in notebook:
+```
+
+```python
+# In notebook, get parameter
+test_date = ""  # Will be overridden by pipeline
+print(f"Received parameter: test_date = {test_date}")
+```
+
+```
+4. Run pipeline:
+   - "Add trigger" > "Trigger now"
+   - Enter custom value: "2024-12-31"
+   - Click OK
+
+5. Check notebook output:
+   - Should print: "Received parameter: test_date = 2024-12-31"
+```
+
+### Performance Validation
+```
+Check pipeline performance metrics:
+
+1. In Monitor hub, select a completed pipeline run
+2. Review metrics:
+   ✅ Bronze pipeline: < 10 minutes
+   ✅ Silver pipeline: < 15 minutes
+   ✅ Gold pipeline: < 10 minutes
+   ✅ Master pipeline total: < 35 minutes
+
+3. If performance is slow:
+   - Check Fabric capacity utilization
+   - Review notebook Spark configurations
+   - Consider parallelization opportunities
+   - Check table sizes and partitioning
+```
+
+### Alert Verification (If Configured)
+```
+If you configured email/Teams alerts:
+
+1. Trigger a test failure
+2. Wait for alert notification
+3. Verify:
+   ✅ Email/Teams message received
+   ✅ Message includes pipeline name
+   ✅ Error details included
+   ✅ Link to Monitor hub (if applicable)
+
+4. Fix the error and re-run
+5. Optional: Configure success alerts too
+```
+
+</details>
 
 ---
 

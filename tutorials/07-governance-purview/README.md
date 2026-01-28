@@ -1,12 +1,20 @@
-# Tutorial 07: Governance & Purview
+# 🛡️ Tutorial 07: Governance & Purview
 
-![Tutorial 07](https://img.shields.io/badge/Tutorial-07-blue?style=for-the-badge) ![Governance](https://img.shields.io/badge/Governance-Purview-purple?style=for-the-badge)
-
-> **[Home](../../README.md)** > **[Tutorials](../README.md)** > **Governance & Purview**
+> **🏠 [Home](../../README.md)** > **📖 [Tutorials](../README.md)** > **🛡️ Governance & Purview**
 
 ---
 
-## Tutorial 07: Governance & Purview - Data Catalog & Lineage
+<div align="center">
+
+![Difficulty](https://img.shields.io/badge/⭐_Difficulty-Intermediate-yellow?style=for-the-badge)
+![Duration](https://img.shields.io/badge/⏱️_Duration-60--90_mins-blue?style=for-the-badge)
+![Prerequisites](https://img.shields.io/badge/📋_Prerequisites-Tutorial_00-orange?style=for-the-badge)
+
+</div>
+
+---
+
+## 🛡️ Tutorial 07: Governance & Purview - Data Catalog & Lineage
 
 | | |
 |---|---|
@@ -778,23 +786,19 @@ regulatory_assets = response.json()
 
 ---
 
-## Validation Checklist
+## ✅ Validation Checklist
 
 Before moving to the next tutorial, verify:
 
-- [ ] Purview connected to Fabric workspace
-- [ ] Initial scan completed successfully
-- [ ] All lakehouses and tables cataloged
-- [ ] Auto-classifications reviewed and corrected
-- [ ] Custom classifications created for casino data
-- [ ] Business glossary terms created (minimum 10)
-- [ ] Glossary terms assigned to key columns
-- [ ] Data lineage visible for Gold tables
-- [ ] Sensitivity labels applied
-- [ ] Access policies configured
-- [ ] Compliance report generated
+- [ ] **Purview Catalog Populated** - All Fabric assets scanned and cataloged
+- [ ] **Lineage Visible** - End-to-end data flow mapped from Bronze to Reports
+- [ ] **Classifications Applied** - Auto and custom classifications on sensitive data
+- [ ] **Glossary Terms Created** - Casino business terminology defined (min 10 terms)
+- [ ] **Access Policies Active** - Data access policies configured and enforced
+- [ ] **Compliance Report Generated** - Regulatory assets documented
 
----
+<details>
+<parameter name="summary">🔍 How to verify each item
 
 ## Best Practices
 

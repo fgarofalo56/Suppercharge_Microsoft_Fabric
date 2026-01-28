@@ -1,11 +1,16 @@
 # 🤖 Tutorial 09: Advanced AI/ML
 
-![Tutorial 09](https://img.shields.io/badge/Tutorial-09-blue?style=for-the-badge)
-![Advanced](https://img.shields.io/badge/Level-Advanced-red?style=for-the-badge)
-![Machine Learning](https://img.shields.io/badge/Focus-Machine%20Learning-purple?style=for-the-badge)
-![Final Tutorial](https://img.shields.io/badge/FINAL-TUTORIAL-gold?style=for-the-badge)
+> **🏠 [Home](../../README.md)** > **📖 [Tutorials](../README.md)** > **🤖 Advanced AI/ML**
 
-> 🏠 **[Home](../../README.md)** > 📖 **[Tutorials](../README.md)** > 🤖 **Advanced AI/ML**
+---
+
+<div align="center">
+
+![Difficulty](https://img.shields.io/badge/⭐_Difficulty-Advanced-red?style=for-the-badge)
+![Duration](https://img.shields.io/badge/⏱️_Duration-120--180_mins-blue?style=for-the-badge)
+![Prerequisites](https://img.shields.io/badge/📋_Prerequisites-Tutorial_03-orange?style=for-the-badge)
+
+</div>
 
 ---
 
@@ -29,13 +34,13 @@
 │   ✅   │   ✅   │   ✅   │   ✅   │   ✅   │   ✅   │   ✅   │   ✅   │   ✅   │  🔵   │
 └────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┴────────┘
                                                                                     ▲
-                                                                               FINAL TUTORIAL
+                                                                               YOU ARE HERE
 ```
 
 | Navigation | |
 |---|---|
 | ⬅️ **Previous** | [08-Database Mirroring](../08-database-mirroring/README.md) |
-| 🏁 **Next** | [POC Agenda](../../poc-agenda/README.md) - Workshop Preparation |
+| ➡️ **Next** | [10-Teradata Migration](../10-teradata-migration/README.md) |
 
 ---
 
@@ -43,7 +48,7 @@
 
 This tutorial covers implementing **machine learning solutions** for casino analytics using Microsoft Fabric Data Science. You will build predictive models for player churn prediction, fraud detection, and jackpot forecasting, leveraging MLflow for experiment tracking and model management.
 
-This is the **final tutorial** in the series, bringing together all previous concepts to deliver advanced predictive analytics capabilities for your casino/gaming analytics platform.
+This tutorial brings together all previous concepts to deliver advanced predictive analytics capabilities for your casino/gaming analytics platform. After completing this, you can continue with the **Migration & Integration** tutorials (10-11) for Teradata migration and SAS connectivity.
 
 ---
 
@@ -950,18 +955,229 @@ display(monitoring_df)
 
 ## ✅ Validation Checklist
 
-Verify your ML implementation is complete:
+Before moving to the next tutorial, verify:
 
-- [ ] MLflow experiment created and tracking runs
-- [ ] Churn prediction model trained with AUC > 0.80
-- [ ] Feature importance analysis completed
-- [ ] Fraud detection model identifying anomalies
-- [ ] Jackpot forecasting generating predictions
-- [ ] Model registered in MLflow Model Registry
-- [ ] Production stage model deployed
-- [ ] Batch scoring pipeline operational
-- [ ] Results saved to Gold layer tables
-- [ ] Responsible AI considerations documented
+- [ ] **MLflow Experiment** - Experiment created and tracking all runs
+- [ ] **Churn Model Trained** - Model AUC > 0.80 on test set
+- [ ] **Feature Importance** - Top features identified and analyzed
+- [ ] **Fraud Detection Working** - Anomalies detected in test data
+- [ ] **Predictions Accurate** - Model evaluation metrics meet targets
+- [ ] **Model Registered** - Production model in MLflow registry
+
+<details>
+<summary>🔍 Verification Commands</summary>
+
+### Verify MLflow Experiment Created
+
+```python
+import mlflow
+
+# List all experiments
+experiments = mlflow.search_experiments()
+for exp in experiments:
+    print(f"Experiment: {exp.name}")
+    print(f"  ID: {exp.experiment_id}")
+    print(f"  Artifact Location: {exp.artifact_location}")
+    print()
+
+# Expected: Your experiment(s) listed with IDs
+```
+
+### Check Churn Model Performance
+
+```python
+# Load the trained model
+model_uri = "runs:/<run_id>/model"
+loaded_model = mlflow.sklearn.load_model(model_uri)
+
+# Or load from registry
+loaded_model = mlflow.pyfunc.load_model("models:/player_churn_predictor/Production")
+
+# Verify metrics
+run_id = "<your_run_id>"
+run = mlflow.get_run(run_id)
+metrics = run.data.metrics
+
+print(f"AUC: {metrics.get('auc', 0):.4f}")
+print(f"Accuracy: {metrics.get('accuracy', 0):.4f}")
+print(f"Precision: {metrics.get('precision', 0):.4f}")
+print(f"Recall: {metrics.get('recall', 0):.4f}")
+
+# Expected: AUC > 0.80
+```
+
+### Verify Feature Importance
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Get feature importance from model
+if hasattr(loaded_model, 'feature_importances_'):
+    importances = loaded_model.feature_importances_
+    feature_names = X_train.columns
+    
+    # Create DataFrame
+    importance_df = pd.DataFrame({
+        'feature': feature_names,
+        'importance': importances
+    }).sort_values('importance', ascending=False)
+    
+    print("Top 10 Most Important Features:")
+    print(importance_df.head(10))
+    
+    # Expected: Features ranked by importance
+```
+
+### Test Fraud Detection
+
+```python
+from sklearn.ensemble import IsolationForest
+
+# Load or retrain fraud model
+fraud_model = IsolationForest(contamination=0.01, random_state=42)
+fraud_model.fit(X_transactions)
+
+# Predict anomalies
+predictions = fraud_model.predict(X_test)
+anomaly_count = (predictions == -1).sum()
+
+print(f"Total test transactions: {len(predictions)}")
+print(f"Anomalies detected: {anomaly_count}")
+print(f"Anomaly rate: {anomaly_count/len(predictions)*100:.2f}%")
+
+# Expected: 0.5-2% anomaly rate is typical
+```
+
+### Verify Jackpot Predictions
+
+```python
+# Load forecasting model
+forecast_model = mlflow.prophet.load_model("models:/jackpot_forecasting/Production")
+
+# Generate future predictions
+from prophet import Prophet
+future = forecast_model.make_future_dataframe(periods=30)
+forecast = forecast_model.predict(future)
+
+# Check predictions
+print("Next 7 Days Jackpot Forecast:")
+print(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail(7))
+
+# Expected: Reasonable predictions with confidence intervals
+```
+
+### Check Model Registry
+
+```python
+from mlflow.tracking import MlflowClient
+
+client = MlflowClient()
+
+# List registered models
+models = client.search_registered_models()
+for model in models:
+    print(f"\nModel: {model.name}")
+    
+    # Get latest versions
+    for version in model.latest_versions:
+        print(f"  Version {version.version}: {version.current_stage}")
+        print(f"    Run ID: {version.run_id}")
+
+# Expected: Models with "Production" stage
+```
+
+### Verify Batch Scoring Pipeline
+
+```python
+# Load test data
+df_test = spark.table("lh_silver.silver_player_profile")
+
+# Apply model (using pandas UDF or broadcast)
+predictions_df = loaded_model.transform(df_test)
+
+# Check predictions
+print(f"Scored records: {predictions_df.count():,}")
+predictions_df.select("player_id", "churn_probability", "churn_prediction").show(10)
+
+# Expected: All records have predictions
+```
+
+### Verify Results Saved to Gold Layer
+
+```python
+# Check that predictions are saved
+df_churn_scores = spark.table("lh_gold.gold_churn_scores")
+
+print(f"Total churn scores: {df_churn_scores.count():,}")
+print(f"Latest score date: {df_churn_scores.agg({'score_date': 'max'}).collect()[0][0]}")
+
+# Show sample
+df_churn_scores.select(
+    "player_id",
+    "churn_probability",
+    "churn_risk_segment",
+    "score_date"
+).orderBy("churn_probability", ascending=False).show(10)
+
+# Expected: Recent predictions stored in Gold layer
+```
+
+### Validate Model Metrics Summary
+
+```python
+# Comprehensive validation report
+def validate_ml_pipeline():
+    results = {
+        "experiment_exists": False,
+        "model_registered": False,
+        "auc_threshold": False,
+        "predictions_saved": False
+    }
+    
+    try:
+        # Check experiment
+        exp = mlflow.get_experiment_by_name("casino-ml-experiments")
+        results["experiment_exists"] = exp is not None
+        
+        # Check model registry
+        client = MlflowClient()
+        models = client.search_registered_models()
+        results["model_registered"] = len(models) > 0
+        
+        # Check model performance
+        latest_run = mlflow.search_runs(experiment_ids=[exp.experiment_id], order_by=["start_time DESC"], max_results=1)
+        if not latest_run.empty:
+            auc = latest_run.iloc[0]["metrics.auc"]
+            results["auc_threshold"] = auc > 0.80
+        
+        # Check predictions exist
+        count = spark.table("lh_gold.gold_churn_scores").count()
+        results["predictions_saved"] = count > 0
+        
+    except Exception as e:
+        print(f"Error: {e}")
+    
+    # Print results
+    print("\n" + "="*50)
+    print("ML PIPELINE VALIDATION REPORT")
+    print("="*50)
+    for check, passed in results.items():
+        status = "✅" if passed else "❌"
+        print(f"{status} {check.replace('_', ' ').title()}")
+    print("="*50)
+    
+    return all(results.values())
+
+# Run validation
+validation_passed = validate_ml_pipeline()
+if validation_passed:
+    print("\n🎉 All validations passed!")
+else:
+    print("\n⚠️ Some validations failed. Review the checklist.")
+```
+
+</details>
 
 ---
 
@@ -1012,7 +1228,7 @@ mlflow.set_experiment("/Experiments/player_churn_prediction")
 
 ## 🎉 Summary
 
-Congratulations! You have completed Tutorial 09 - the final tutorial in this series. You have successfully:
+Congratulations! You have completed Tutorial 09. You have successfully:
 
 - ✅ Set up MLflow experiment tracking in Fabric
 - ✅ Built a player churn prediction model with Spark ML
@@ -1068,7 +1284,9 @@ You now have hands-on experience with:
 
 ## ➡️ Next Steps
 
-Review the **[POC Agenda](../../poc-agenda/README.md)** for workshop preparation, presentation materials, and stakeholder demonstrations.
+Continue to **[Tutorial 10: Teradata Migration](../10-teradata-migration/README.md)** to learn how to migrate from Teradata to Microsoft Fabric.
+
+Or review the **[POC Agenda](../../poc-agenda/README.md)** for workshop preparation, presentation materials, and stakeholder demonstrations.
 
 ---
 
@@ -1094,9 +1312,9 @@ Review the **[POC Agenda](../../poc-agenda/README.md)** for workshop preparation
 
 ## 🧭 Navigation
 
-| ⬅️ Previous | ⬆️ Up | 🏁 Next |
+| ⬅️ Previous | ⬆️ Up | ➡️ Next |
 |------------|------|--------|
-| [08-Database Mirroring](../08-database-mirroring/README.md) | [Tutorials Index](../README.md) | [POC Agenda](../../poc-agenda/README.md) |
+| [08-Database Mirroring](../08-database-mirroring/README.md) | [Tutorials Index](../README.md) | [10-Teradata Migration](../10-teradata-migration/README.md) |
 
 ---
 

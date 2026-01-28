@@ -1,5 +1,5 @@
 # Autonomous Agent Harness - Initialization Script
-# Suppercharge Microsoft Fabric - Validation System
+# Supercharge Microsoft Fabric - Validation System
 # Run this script to initialize or resume an autonomous validation session
 
 param(

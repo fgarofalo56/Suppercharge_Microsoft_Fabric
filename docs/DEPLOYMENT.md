@@ -2,12 +2,27 @@
 
 > 🏠 [Home](../README.md) > 📚 [Docs](./) > 🚀 Deployment
 
+<div align="center">
+
+# 🚀 Deployment Guide
+
+**Step-by-Step Deployment Instructions**
+
+![Category](https://img.shields.io/badge/Category-Deployment-blueviolet?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Complete-success?style=for-the-badge)
+![Last Updated](https://img.shields.io/badge/Updated-January_2025-blue?style=for-the-badge)
+
+</div>
+
+---
+
 **Last Updated:** `2025-01-21` | **Version:** 1.0.0
 
 ---
 
 ## 📑 Table of Contents
 
+- [📊 Visual Overview](#-visual-overview)
 - [📋 Prerequisites](#-prerequisites)
 - [🛠️ Quick Deployment](#️-quick-deployment)
 - [🐳 Docker Deployment](#-docker-deployment)
@@ -20,6 +35,135 @@
 - [🗑️ Cleanup](#️-cleanup)
 - [💰 Cost Optimization](#-cost-optimization)
 - [📚 Next Steps](#-next-steps)
+
+---
+
+## 📊 Visual Overview
+
+### Deployment Decision Flowchart
+
+This flowchart guides you through the deployment process from prerequisites to verification:
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#2196F3','primaryTextColor':'#fff','primaryBorderColor':'#1976D2','lineColor':'#FFD700','secondaryColor':'#4CAF50','tertiaryColor':'#CD7F32','fontSize':'14px'}}}%%
+flowchart TD
+    Start([Start Deployment]) --> CheckPrereq{Prerequisites<br/>Complete?}
+    
+    CheckPrereq -->|No| InstallTools[Install Required Tools:<br/>- Azure CLI 2.50+<br/>- Bicep 0.22+<br/>- PowerShell 7.0+]
+    InstallTools --> AzureAccess{Azure Access<br/>Ready?}
+    AzureAccess -->|No| SetupAccess[Setup Azure Subscription<br/>& Resource Providers]
+    SetupAccess --> CheckPrereq
+    AzureAccess -->|Yes| CheckPrereq
+    
+    CheckPrereq -->|Yes| ChooseMethod{Choose Deployment<br/>Method}
+    
+    ChooseMethod -->|Quick Start| QuickDeploy[Azure CLI Deployment]
+    ChooseMethod -->|Containerized| DockerDeploy[Docker Deployment]
+    ChooseMethod -->|Automated| ScriptDeploy[Script-Based Deployment]
+    ChooseMethod -->|CI/CD| GHActions[GitHub Actions]
+    
+    QuickDeploy --> AzLogin[az login]
+    DockerDeploy --> DataGen[Generate Sample Data<br/>with Docker Compose]
+    ScriptDeploy --> RunScript[Execute deploy.ps1]
+    GHActions --> SetupOIDC[Configure OIDC<br/>Authentication]
+    
+    AzLogin --> Validate[Run What-If Analysis]
+    DataGen --> UploadData[Upload to Azure Storage]
+    RunScript --> Validate
+    SetupOIDC --> TriggerWorkflow[Trigger Workflow]
+    
+    Validate --> ValidateOK{Validation<br/>Passed?}
+    ValidateOK -->|No| FixIssues[Review & Fix Issues]
+    FixIssues --> Validate
+    ValidateOK -->|Yes| Deploy[Deploy Infrastructure<br/>via Bicep]
+    
+    UploadData --> Deploy
+    TriggerWorkflow --> Deploy
+    
+    Deploy --> PostConfig[Post-Deployment<br/>Configuration:<br/>- Create Lakehouses<br/>- Import Notebooks<br/>- Configure Access]
+    
+    PostConfig --> Verify[Run Verification Script]
+    Verify --> VerifyOK{All Checks<br/>Passed?}
+    
+    VerifyOK -->|No| Troubleshoot[Troubleshooting:<br/>- Check Logs<br/>- Verify Permissions<br/>- Review Resources]
+    Troubleshoot --> Verify
+    
+    VerifyOK -->|Yes| Complete([Deployment Complete!<br/>Ready for Tutorials])
+    
+    style Start fill:#4CAF50,stroke:#2E7D32,color:#fff
+    style Complete fill:#FFD700,stroke:#F57F17,color:#000
+    style CheckPrereq fill:#2196F3,stroke:#1976D2,color:#fff
+    style AzureAccess fill:#2196F3,stroke:#1976D2,color:#fff
+    style ChooseMethod fill:#2196F3,stroke:#1976D2,color:#fff
+    style ValidateOK fill:#2196F3,stroke:#1976D2,color:#fff
+    style VerifyOK fill:#2196F3,stroke:#1976D2,color:#fff
+    style Deploy fill:#CD7F32,stroke:#8B5A2B,color:#fff
+    style Troubleshoot fill:#ff9800,stroke:#f57c00,color:#fff
+```
+
+### Deployment State Diagram
+
+Track your deployment progress through these states:
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#C0C0C0','primaryTextColor':'#000','primaryBorderColor':'#999','lineColor':'#2196F3','secondaryColor':'#4CAF50','tertiaryColor':'#CD7F32','fontSize':'14px'}}}%%
+stateDiagram-v2
+    [*] --> NotStarted: Initialize
+    
+    NotStarted --> PreparingEnvironment: Start Deployment
+    
+    PreparingEnvironment --> ValidatingPrerequisites: Tools Installed
+    ValidatingPrerequisites --> PreparingEnvironment: Missing Requirements
+    ValidatingPrerequisites --> Deploying: Prerequisites Met
+    
+    Deploying --> DeploymentFailed: Error Occurred
+    DeploymentFailed --> Deploying: Retry
+    DeploymentFailed --> RollingBack: Critical Failure
+    RollingBack --> NotStarted: Rollback Complete
+    
+    Deploying --> Deployed: Bicep Deployment Success
+    
+    Deployed --> Configuring: Start Post-Config
+    Configuring --> ConfigurationFailed: Config Error
+    ConfigurationFailed --> Configuring: Fix & Retry
+    
+    Configuring --> Verifying: Configuration Complete
+    
+    Verifying --> VerificationFailed: Tests Failed
+    VerificationFailed --> Troubleshooting: Investigate
+    Troubleshooting --> Verifying: Issues Resolved
+    
+    Verifying --> Verified: All Tests Passed
+    
+    Verified --> ProductionReady: Final Sign-off
+    ProductionReady --> [*]: Complete
+    
+    note right of NotStarted
+        Prerequisites ready
+        Tools installed
+        Azure access configured
+    end note
+    
+    note right of Deploying
+        Bicep template execution
+        Resource provisioning
+        Network configuration
+    end note
+    
+    note right of Verified
+        All checks passed:
+        ✓ Fabric capacity
+        ✓ Storage & networking
+        ✓ Security & monitoring
+    end note
+    
+    note right of ProductionReady
+        Ready for:
+        - Data ingestion
+        - Pipeline execution
+        - Tutorial walkthroughs
+    end note
+```
 
 ---
 
@@ -79,8 +223,8 @@ Follow these steps for a rapid deployment to the development environment.
 
 ```bash
 # Clone repository
-git clone https://github.com/frgarofa/Suppercharge_Microsoft_Fabric.git
-cd Suppercharge_Microsoft_Fabric
+git clone https://github.com/frgarofa/Supercharge_Microsoft_Fabric.git
+cd Supercharge_Microsoft_Fabric
 
 # Copy environment template
 cp .env.sample .env
@@ -89,7 +233,7 @@ cp .env.sample .env
 code .env  # or your preferred editor
 ```
 
-> ℹ️ **Note:** Ensure all required values in `.env` are populated before proceeding.
+> 📝 **Note:** Ensure all required values in `.env` are populated before proceeding.
 
 ### Step 2: Login to Azure
 
@@ -117,7 +261,7 @@ az deployment sub what-if \
   --parameters infra/environments/dev/dev.bicepparam
 ```
 
-> ℹ️ **Note:** Always run what-if analysis before deployment to review changes.
+> 💡 **Pro Tip:** Always run what-if analysis before deployment to preview resource changes and catch potential issues early.
 
 ### Step 4: Deploy
 
@@ -157,6 +301,9 @@ docker-compose run --rm data-generator
 | `streaming-generator` | Real-time event streaming | Event Hub integration |
 | `data-validator` | Data quality validation | Verify generated data |
 
+<details>
+<summary><b>🔍 Click to expand: Docker Commands & Environment Variables</b></summary>
+
 ### Docker Commands
 
 ```bash
@@ -186,6 +333,10 @@ Configure via `.env` file or command line:
 | `EVENTHUB_CONNECTION_STRING` | - | Event Hub connection |
 | `EVENTHUB_NAME` | `slot-telemetry` | Event Hub name |
 | `STREAMING_RATE` | `10` | Events per second |
+
+> 💡 **Pro Tip:** Use Parquet format for better compression and query performance. It's 10-100x faster than CSV for analytical workloads.
+
+</details>
 
 ### Using Docker with Fabric Upload
 
@@ -318,7 +469,98 @@ az deployment sub create \
 
 ## 🔄 GitHub Actions Deployment
 
+### Azure Deployment Sequence
+
+This sequence diagram illustrates the Azure deployment process flow:
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'actorBkg':'#2196F3','actorBorder':'#1976D2','actorTextColor':'#fff','actorLineColor':'#FFD700','signalColor':'#CD7F32','signalTextColor':'#000','labelBoxBkgColor':'#C0C0C0','labelBoxBorderColor':'#999','labelTextColor':'#000','loopTextColor':'#000','noteBkgColor':'#FFD700','noteTextColor':'#000','noteBorderColor':'#F57F17','activationBkgColor':'#4CAF50','activationBorderColor':'#2E7D32','sequenceNumberColor':'#fff','fontSize':'14px'}}}%%
+sequenceDiagram
+    autonumber
+    actor User
+    participant CLI as Azure CLI
+    participant AAD as Azure AD
+    participant ARM as Azure Resource Manager
+    participant Fabric as Fabric Capacity
+    participant Storage as Storage Account
+    participant Lakehouse as Fabric Lakehouses
+    participant Purview as Purview Account
+    
+    Note over User,Purview: 🔐 Authentication Phase
+    User->>CLI: az login
+    CLI->>AAD: Authenticate User
+    AAD-->>CLI: Return Token
+    CLI-->>User: Login Successful
+    
+    User->>CLI: az account set --subscription
+    CLI->>AAD: Verify Subscription Access
+    AAD-->>CLI: Access Confirmed
+    
+    Note over User,Purview: ✅ Validation Phase
+    User->>CLI: az deployment sub what-if
+    CLI->>ARM: Validate Template
+    ARM->>ARM: Check Resource Providers
+    ARM->>ARM: Validate Parameters
+    ARM-->>CLI: Validation Results
+    CLI-->>User: Display Changes Preview
+    
+    Note over User,Purview: 🚀 Deployment Phase
+    User->>CLI: az deployment sub create
+    CLI->>ARM: Submit Deployment
+    ARM->>ARM: Create Resource Group
+    
+    par Parallel Resource Deployment
+        ARM->>Fabric: Provision Fabric Capacity
+        Fabric-->>ARM: Capacity Created (F4/F16/F64)
+    and
+        ARM->>Storage: Create Storage Account
+        Storage->>Storage: Enable ADLS Gen2
+        Storage->>Storage: Create Containers (bronze/silver/gold)
+        Storage-->>ARM: Storage Ready
+    and
+        ARM->>Purview: Deploy Purview Account
+        Purview->>Purview: Initialize Catalog
+        Purview-->>ARM: Purview Ready
+    end
+    
+    ARM-->>CLI: Deployment Status
+    CLI-->>User: Deployment Complete
+    
+    Note over User,Purview: ⚙️ Post-Configuration Phase
+    User->>Fabric: Navigate to Fabric Portal
+    User->>Fabric: Create Workspace
+    Fabric->>Fabric: Link to Capacity
+    User->>Lakehouse: Create Bronze Lakehouse
+    User->>Lakehouse: Create Silver Lakehouse
+    User->>Lakehouse: Create Gold Lakehouse
+    Lakehouse-->>User: Lakehouses Created
+    
+    User->>Storage: Connect Lakehouses to Storage
+    Storage-->>Lakehouse: Link Established
+    
+    User->>Purview: Configure Data Catalog
+    Purview->>Lakehouse: Scan Lakehouses
+    Lakehouse-->>Purview: Metadata Indexed
+    
+    Note over User,Purview: ✔️ Verification Phase
+    User->>CLI: ./scripts/verify-deployment.sh
+    CLI->>Fabric: Check Capacity Status
+    Fabric-->>CLI: ✓ Active
+    CLI->>Storage: Verify Containers
+    Storage-->>CLI: ✓ bronze, silver, gold
+    CLI->>Purview: Test Connectivity
+    Purview-->>CLI: ✓ Accessible
+    CLI->>Lakehouse: Validate Configuration
+    Lakehouse-->>CLI: ✓ Ready
+    CLI-->>User: ✅ All Checks Passed
+    
+    Note over User,Purview: 🎉 Deployment Complete - Ready for Data Ingestion
+```
+
 ### Setting Up OIDC Authentication
+
+<details>
+<summary><b>🔍 Click to expand: OIDC Setup Commands</b></summary>
 
 #### 1. Create Azure AD Application
 
@@ -352,7 +594,7 @@ az ad app federated-credential create \
   --parameters '{
     "name": "github-main",
     "issuer": "https://token.actions.githubusercontent.com",
-    "subject": "repo:<your-org>/Suppercharge_Microsoft_Fabric:ref:refs/heads/main",
+    "subject": "repo:<your-org>/Supercharge_Microsoft_Fabric:ref:refs/heads/main",
     "audiences": ["api://AzureADTokenExchange"]
   }'
 
@@ -362,7 +604,7 @@ az ad app federated-credential create \
   --parameters '{
     "name": "github-pr",
     "issuer": "https://token.actions.githubusercontent.com",
-    "subject": "repo:<your-org>/Suppercharge_Microsoft_Fabric:pull_request",
+    "subject": "repo:<your-org>/Supercharge_Microsoft_Fabric:pull_request",
     "audiences": ["api://AzureADTokenExchange"]
   }'
 ```
@@ -376,6 +618,8 @@ Navigate to **Repository Settings** > **Secrets and variables** > **Actions**:
 | `AZURE_CLIENT_ID` | Application (client) ID | From app registration |
 | `AZURE_TENANT_ID` | Directory (tenant) ID | Azure AD tenant |
 | `AZURE_SUBSCRIPTION_ID` | Subscription ID | Target subscription |
+
+</details>
 
 ### Manual Workflow Trigger
 
@@ -467,6 +711,9 @@ az keyvault set-policy \
 
 ## 🔧 Troubleshooting
 
+<details>
+<summary><b>🔍 Click to expand: Common Issues & Solutions</b></summary>
+
 ### Common Issues
 
 #### Issue: Fabric Capacity Deployment Fails
@@ -474,6 +721,8 @@ az keyvault set-policy \
 ```
 Error: Microsoft.Fabric/capacities resource provider not registered
 ```
+
+> ⚠️ **Warning:** Resource provider registration can take up to 10 minutes to complete. Wait for "Registered" status before proceeding.
 
 **Solution:**
 
@@ -505,6 +754,8 @@ az role assignment list --assignee "$(az ad signed-in-user show --query id -o ts
 Error: SKU F64 not available in region
 ```
 
+> 💡 **Pro Tip:** Fabric F64 is available in limited regions. East US 2 and West US 2 typically have the best availability.
+
 **Solution:** Check [Fabric capacity availability](https://learn.microsoft.com/fabric/enterprise/region-availability) and choose a supported region.
 
 ---
@@ -517,7 +768,10 @@ Error: Purview account name already exists
 
 **Solution:** Purview names are globally unique. Use a different name in `.env`.
 
----
+</details>
+
+<details>
+<summary><b>🔍 Click to expand: Deployment Logs & Debugging</b></summary>
 
 ### Deployment Logs
 
@@ -533,7 +787,9 @@ az deployment sub operation list \
   --query "[?properties.provisioningState=='Failed']"
 ```
 
-> ℹ️ **Note:** Keep deployment names handy for troubleshooting. They follow the pattern `fabric-poc-YYYYMMDD-HHMMSS`.
+> 💡 **Pro Tip:** Keep deployment names handy for troubleshooting. They follow the pattern `fabric-poc-YYYYMMDD-HHMMSS`. Store recent deployment names in your notes.
+
+</details>
 
 ---
 
@@ -634,4 +890,4 @@ After successful deployment, proceed with these guides:
 ---
 
 > 📖 **Documentation maintained by:** Microsoft Fabric POC Team
-> 🔗 **Repository:** [Suppercharge_Microsoft_Fabric](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric)
+> 🔗 **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/frgarofa/Supercharge_Microsoft_Fabric)

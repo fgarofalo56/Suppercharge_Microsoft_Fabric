@@ -4,6 +4,16 @@
 
 ---
 
+<div align="center">
+
+![Difficulty](https://img.shields.io/badge/⭐_Difficulty-Beginner-brightgreen?style=for-the-badge)
+![Duration](https://img.shields.io/badge/⏱️_Duration-60--90_mins-blue?style=for-the-badge)
+![Prerequisites](https://img.shields.io/badge/📋_Prerequisites-Tutorial_00-orange?style=for-the-badge)
+
+</div>
+
+---
+
 ## 🎓 Tutorial 01: Bronze Layer - Raw Data Ingestion
 
 | | |
@@ -17,28 +27,169 @@
 
 ### 📍 Progress Tracker
 
-```
-╔════════╦════════╦════════╦════════╦════════╦════════╦════════╦════════╦════════╦════════╗
-║   00   ║   01   ║   02   ║   03   ║   04   ║   05   ║   06   ║   07   ║   08   ║   09   ║
-║ SETUP  ║ BRONZE ║ SILVER ║  GOLD  ║  RT    ║  PBI   ║ PIPES  ║  GOV   ║ MIRROR ║  AI/ML ║
-╠════════╬════════╬════════╬════════╬════════╬════════╬════════╬════════╬════════╬════════╣
-║   ✓    ║   ●    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║   ○    ║
-╚════════╩════════╩════════╩════════╩════════╩════════╩════════╩════════╩════════╩════════╝
-              ▲
-              │
-         YOU ARE HERE
-```
+<div align="center">
+
+<table>
+<thead>
+<tr>
+<th align="center" width="10%">Tutorial</th>
+<th align="left" width="45%">Name</th>
+<th align="center" width="15%">Status</th>
+<th align="center" width="15%">Duration</th>
+<th align="center" width="15%">Difficulty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">00</td>
+<td><a href="../00-environment-setup/README.md">⚙️ Environment Setup</a></td>
+<td align="center"><img src="https://img.shields.io/badge/✓-COMPLETE-success?style=flat-square" alt="Complete"></td>
+<td align="center">45-60 min</td>
+<td align="center">⭐ Beginner</td>
+</tr>
+<tr style="background-color: #e8f5e9;">
+<td align="center"><strong>01</strong></td>
+<td><strong>👉 <a href="../01-bronze-layer/README.md">🥉 Bronze Layer</a></strong></td>
+<td align="center"><img src="https://img.shields.io/badge/●-CURRENT-blue?style=flat-square" alt="Current"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐ Beginner</td>
+</tr>
+<tr>
+<td align="center">02</td>
+<td><a href="../02-silver-layer/README.md">🥈 Silver Layer</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">03</td>
+<td><a href="../03-gold-layer/README.md">🥇 Gold Layer</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">90-120 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">04</td>
+<td><a href="../04-real-time-analytics/README.md">⚡ Real-Time Analytics</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">90-120 min</td>
+<td align="center">⭐⭐⭐ Advanced</td>
+</tr>
+<tr>
+<td align="center">05</td>
+<td><a href="../05-direct-lake-powerbi/README.md">📊 Direct Lake & Power BI</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">06</td>
+<td><a href="../06-data-pipelines/README.md">🔄 Data Pipelines</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">07</td>
+<td><a href="../07-governance-purview/README.md">🛡️ Governance & Purview</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">08</td>
+<td><a href="../08-database-mirroring/README.md">🔄 Database Mirroring</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">60-90 min</td>
+<td align="center">⭐⭐ Intermediate</td>
+</tr>
+<tr>
+<td align="center">09</td>
+<td><a href="../09-advanced-ai-ml/README.md">🤖 Advanced AI/ML</a></td>
+<td align="center"><img src="https://img.shields.io/badge/○-TODO-lightgrey?style=flat-square" alt="Todo"></td>
+<td align="center">90-120 min</td>
+<td align="center">⭐⭐⭐ Advanced</td>
+</tr>
+</tbody>
+</table>
+
+<p><em>💡 Tip: Click any tutorial name to jump directly to it</em></p>
+
+</div>
+
+---
 
 | Navigation | |
 |---|---|
-| **Previous** | [00-Environment Setup](../00-environment-setup/README.md) |
-| **Next** | [02-Silver Layer](../02-silver-layer/README.md) |
+| **Previous** | [⬅️ 00-Environment Setup](../00-environment-setup/README.md) |
+| **Next** | [02-Silver Layer](../02-silver-layer/README.md) ➡️ |
 
 ---
 
 ## 📖 Overview
 
 This tutorial covers implementing the Bronze layer of the medallion architecture - raw data ingestion with minimal transformation. The Bronze layer is the foundation that preserves all source data in its original form, ensuring data lineage and enabling reprocessing when needed.
+
+---
+
+## 📊 Visual Overview
+
+The following sequence diagram illustrates the Bronze layer data ingestion flow, showing how raw data from source systems is captured with full metadata tracking for lineage and audit purposes.
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#CD7F32','primaryTextColor':'#fff','primaryBorderColor':'#8B4513','lineColor':'#8B4513','secondaryColor':'#F5DEB3','tertiaryColor':'#fff'}}}%%
+sequenceDiagram
+    participant SRC as 🎰 Source System<br/>(Slot Machine)
+    participant FILE as 📁 Landing Zone<br/>(Files/output)
+    participant NB as 📓 Bronze Notebook<br/>(PySpark)
+    participant META as 📋 Metadata Tracker
+    participant DELTA as 💾 Bronze Lakehouse<br/>(Delta Table)
+
+    Note over SRC,DELTA: Bronze Layer Ingestion Flow
+
+    SRC->>FILE: 1. Export raw data<br/>(Parquet/CSV/JSON)
+    activate FILE
+    
+    FILE->>NB: 2. Read source file<br/>(Schema-on-Read)
+    activate NB
+    
+    Note over NB: Read with no schema enforcement<br/>Accept data as-is
+    
+    NB->>META: 3. Capture metadata
+    activate META
+    META-->>NB: - _bronze_ingested_at<br/>- _bronze_source_file<br/>- _bronze_batch_id
+    deactivate META
+    
+    NB->>NB: 4. Add metadata columns<br/>(withColumn)
+    
+    NB->>DELTA: 5. Append to Delta table<br/>(mode: append)
+    activate DELTA
+    
+    Note over DELTA: ACID transaction ensures<br/>atomicity & consistency
+    
+    DELTA-->>NB: ✅ Write confirmed<br/>(row count)
+    deactivate DELTA
+    
+    NB->>DELTA: 6. Verify ingestion
+    DELTA-->>NB: Table statistics &<br/>sample records
+    
+    deactivate NB
+    deactivate FILE
+    
+    Note over SRC,DELTA: Data preserved with full lineage
+    
+    rect rgb(205, 127, 50, 0.1)
+        Note right of DELTA: Bronze Layer Benefits:<br/>✓ Complete audit trail<br/>✓ Reprocessable<br/>✓ No data loss<br/>✓ Source schema changes safe
+    end
+```
+
+**Key Concepts:**
+- **Schema-on-Read**: Data is accepted as-is without validation at ingestion time
+- **Metadata Tracking**: Every record includes ingestion timestamp, source file, and batch ID for complete lineage
+- **Append-Only**: Data is never updated or deleted, maintaining full history
+- **ACID Compliance**: Delta Lake guarantees atomic, consistent, isolated, and durable writes
+
+---
 
 ```mermaid
 graph LR
@@ -549,14 +700,93 @@ else:
 
 ## ✅ Validation Checklist
 
-Before proceeding to Silver layer, verify:
+Before moving to the next tutorial, verify:
 
-- [ ] All 6 Bronze tables created
-- [ ] Row counts match source data
-- [ ] Metadata columns present (`_bronze_ingested_at`, `_bronze_source_file`, `_bronze_batch_id`)
-- [ ] Delta format confirmed (can see table history)
-- [ ] No schema errors during ingestion
-- [ ] Verification notebook shows all tables passing
+- [ ] **All Bronze Tables Created** - 6 tables exist in `lh_bronze`
+- [ ] **Data Loaded Successfully** - Row counts match expected source data
+- [ ] **Metadata Columns Present** - All tables have `_bronze_*` columns
+- [ ] **Delta Format Verified** - Can view table history for all tables
+- [ ] **Schema-on-Read Working** - No schema enforcement errors during ingestion
+- [ ] **Verification Script Passes** - `99_bronze_verification` notebook shows all green
+
+<details>
+<summary>🔍 How to verify each item</summary>
+
+### All Bronze Tables Created
+```python
+# List all tables in Bronze lakehouse
+tables = spark.sql("SHOW TABLES IN lh_bronze").collect()
+table_names = [row.tableName for row in tables]
+
+expected_tables = [
+    "bronze_slot_telemetry",
+    "bronze_player_profile",
+    "bronze_financial_txn",
+    "bronze_table_games",
+    "bronze_security_events",
+    "bronze_compliance"
+]
+
+for table in expected_tables:
+    status = "✅" if table in table_names else "❌"
+    print(f"{status} {table}")
+```
+
+### Data Loaded Successfully
+```python
+# Check row counts for each table
+for table in expected_tables:
+    count = spark.table(f"lh_bronze.{table}").count()
+    print(f"{table}: {count:,} rows")
+```
+
+### Metadata Columns Present
+```python
+# Verify metadata columns exist
+table = "bronze_slot_telemetry"
+columns = spark.table(f"lh_bronze.{table}").columns
+
+required_metadata = ["_bronze_ingested_at", "_bronze_source_file", "_bronze_batch_id"]
+for col in required_metadata:
+    status = "✅" if col in columns else "❌"
+    print(f"{status} {col}")
+```
+
+### Delta Format Verified
+```python
+# Check Delta table history
+from delta.tables import DeltaTable
+
+table_name = "lh_bronze.bronze_slot_telemetry"
+delta_table = DeltaTable.forName(spark, table_name)
+
+print("📜 Table History (last 5 versions):")
+delta_table.history(5).select("version", "timestamp", "operation", "operationMetrics").show(truncate=False)
+```
+
+### Schema Validation
+```python
+# Ensure no NULL values in critical columns
+df = spark.table("lh_bronze.bronze_slot_telemetry")
+
+# Check metadata columns are never null
+print("Checking metadata columns for nulls...")
+df.select([
+    sum(when(col("_bronze_ingested_at").isNull(), 1).otherwise(0)).alias("null_ingested_at"),
+    sum(when(col("_bronze_batch_id").isNull(), 1).otherwise(0)).alias("null_batch_id")
+]).show()
+```
+
+### Run Verification Script
+```python
+# Execute the verification notebook
+# Should output:
+# ✅ bronze_slot_telemetry - 1,000,000 records
+# ✅ bronze_player_profile - 50,000 records
+# ... etc
+```
+
+</details>
 
 ---
 

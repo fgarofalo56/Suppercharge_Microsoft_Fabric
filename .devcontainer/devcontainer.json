@@ -247,7 +247,7 @@
     "PYTHONDONTWRITEBYTECODE": "1",
     "PYTHONUNBUFFERED": "1",
     "PIP_NO_CACHE_DIR": "1",
-    "PROJECT_ROOT": "/workspaces/Suppercharge_Microsoft_Fabric"
+    "PROJECT_ROOT": "/workspaces/Supercharge_Microsoft_Fabric"
   },
 
   // Run as non-root user

@@ -2,6 +2,20 @@
 
 > 🏠 [Home](../README.md) > 📚 [Docs](./) > 📋 Prerequisites
 
+<div align="center">
+
+# 📋 Prerequisites
+
+**Setup Requirements & Configuration**
+
+![Category](https://img.shields.io/badge/Category-Setup-lightgrey?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Complete-success?style=for-the-badge)
+![Last Updated](https://img.shields.io/badge/Updated-January_2025-blue?style=for-the-badge)
+
+</div>
+
+---
+
 **Last Updated:** `2025-01-21` | **Version:** 1.0.0
 
 ---
@@ -30,7 +44,7 @@
 | **Scope** | Resource Group | Subscription |
 | **Quota** | Sufficient for F64 | 2x capacity |
 
-> ℹ️ **Note:** Owner role is recommended for initial setup to configure RBAC and resource providers.
+> 📋 **Prerequisites:** Owner role is recommended for initial setup to configure RBAC and resource providers. If you only have Contributor access, coordinate with your subscription owner for role assignments.
 
 ### Resource Provider Registration
 
@@ -52,15 +66,15 @@ az provider list --query "[?namespace=='Microsoft.Fabric'].registrationState" -o
 
 ### Required Resource Providers
 
-| Provider | Purpose | Required |
-|----------|---------|----------|
-| `Microsoft.Fabric` | Fabric capacities and workspaces | Yes |
-| `Microsoft.Purview` | Data governance and catalog | Yes |
-| `Microsoft.Storage` | ADLS Gen2 storage | Yes |
-| `Microsoft.KeyVault` | Secrets management | Yes |
-| `Microsoft.Network` | VNet and private endpoints | Yes |
-| `Microsoft.OperationalInsights` | Log Analytics | Yes |
-| `Microsoft.ManagedIdentity` | Managed identities | Yes |
+| ☁️ Provider | 📋 Purpose | ✅ Required |
+|:------------|:-----------|:-----------:|
+| `Microsoft.Fabric` | Fabric capacities and workspaces | **Yes** |
+| `Microsoft.Purview` | Data governance and catalog | **Yes** |
+| `Microsoft.Storage` | ADLS Gen2 storage | **Yes** |
+| `Microsoft.KeyVault` | Secrets management | **Yes** |
+| `Microsoft.Network` | VNet and private endpoints | **Yes** |
+| `Microsoft.OperationalInsights` | Log Analytics | **Yes** |
+| `Microsoft.ManagedIdentity` | Managed identities | **Yes** |
 
 ### Microsoft Fabric Requirements
 
@@ -76,7 +90,7 @@ az provider list --query "[?namespace=='Microsoft.Fabric'].registrationState" -o
 2. Or [Fabric Admin Portal](https://app.fabric.microsoft.com/admin-portal)
 3. Ensure Fabric is enabled for your organization
 
-> ⚠️ **Warning:** Enabling Fabric requires Azure AD Global Administrator or Fabric Administrator permissions.
+> ⚠️ **Warning:** Enabling Fabric requires Azure AD Global Administrator or Fabric Administrator permissions. Contact your tenant admin if you don't have these roles.
 
 ### Quota Verification
 
@@ -93,21 +107,26 @@ az quota show \
 
 ### Required Tools
 
-| Tool | Version | Installation Command | Purpose |
-|------|---------|---------------------|---------|
-| Azure CLI | 2.50+ | `winget install -e --id Microsoft.AzureCLI` | Azure management |
-| Bicep | 0.22+ | `az bicep install && az bicep upgrade` | Infrastructure as Code |
-| Git | 2.40+ | `winget install -e --id Git.Git` | Version control |
-| PowerShell | 7.0+ | `winget install -e --id Microsoft.PowerShell` | Scripting |
-| Python | 3.10+ | `winget install -e --id Python.Python.3.11` | Data tools |
-| VS Code | Latest | `winget install -e --id Microsoft.VisualStudioCode` | IDE |
+| 🛠️ Tool | 📌 Version | ✅ Verify / Install | 📋 Purpose |
+|:--------|:-----------|:--------------------|:-----------|
+| **Azure CLI** | `2.50+` | `winget install -e --id Microsoft.AzureCLI` | Azure management |
+| **Bicep** | `0.22+` | `az bicep install && az bicep upgrade` | Infrastructure as Code |
+| **Git** | `2.40+` | `winget install -e --id Git.Git` | Version control |
+| **PowerShell** | `7.0+` | `winget install -e --id Microsoft.PowerShell` | Scripting |
+| **Python** | `3.10+` | `winget install -e --id Python.Python.3.11` | Data tools |
+| **VS Code** | `Latest` | `winget install -e --id Microsoft.VisualStudioCode` | IDE |
+
+<details>
+<summary><b>🔍 Click to expand: Optional Tools (Recommended)</b></summary>
 
 ### Optional Tools (Recommended)
 
-| Tool | Version | Installation Command | Purpose |
-|------|---------|---------------------|---------|
-| Docker Desktop | Latest | `winget install -e --id Docker.DockerDesktop` | Container-based data generation |
-| Docker Compose | V2+ | Included with Docker Desktop | Multi-service orchestration |
+| 🛠️ Tool | 📌 Version | ✅ Verify / Install | 📋 Purpose |
+|:--------|:-----------|:--------------------|:-----------|
+| **Docker Desktop** | `Latest` | `winget install -e --id Docker.DockerDesktop` | Container-based data generation |
+| **Docker Compose** | `V2+` | Included with Docker Desktop | Multi-service orchestration |
+
+</details>
 
 ### Installation Commands
 
@@ -140,7 +159,12 @@ az bicep install
 az bicep upgrade
 ```
 
+<details>
+<summary><b>🔍 Click to expand: VS Code Extensions</b></summary>
+
 ### VS Code Extensions
+
+> 💡 **Pro Tip:** Run all extension installations at once by pasting the entire script block into your terminal.
 
 ```bash
 # Install recommended extensions
@@ -153,17 +177,19 @@ code --install-extension ms-vscode-remote.remote-containers
 code --install-extension ms-azuretools.vscode-docker
 ```
 
-| Extension | ID | Purpose |
-|-----------|-----|---------|
-| Bicep | `ms-azuretools.vscode-bicep` | IaC authoring |
-| Azure Account | `ms-vscode.azure-account` | Azure authentication |
-| Python | `ms-python.python` | Python development |
-| Jupyter | `ms-toolsai.jupyter` | Notebook support |
-| GitHub Copilot | `GitHub.copilot` | AI assistance |
-| **Dev Containers** | `ms-vscode-remote.remote-containers` | **One-click dev environment** |
-| **Docker** | `ms-azuretools.vscode-docker` | **Container management** |
+| 🧩 Extension | 🔖 ID | 📋 Purpose |
+|:-------------|:------|:-----------|
+| **Bicep** | `ms-azuretools.vscode-bicep` | IaC authoring |
+| **Azure Account** | `ms-vscode.azure-account` | Azure authentication |
+| **Python** | `ms-python.python` | Python development |
+| **Jupyter** | `ms-toolsai.jupyter` | Notebook support |
+| **GitHub Copilot** | `GitHub.copilot` | AI assistance |
+| **Dev Containers** ⭐ | `ms-vscode-remote.remote-containers` | One-click dev environment |
+| **Docker** ⭐ | `ms-azuretools.vscode-docker` | Container management |
 
-> **Tip:** The Dev Containers extension enables one-click development environment setup. Open the repository and click "Reopen in Container" when prompted.
+> 💡 **Pro Tip:** The Dev Containers extension enables one-click development environment setup. Open the repository and click "Reopen in Container" when prompted.
+
+</details>
 
 ### Dev Container Setup (Alternative to Local Installation)
 
@@ -177,8 +203,8 @@ All other tools (Python, Azure CLI, Bicep, etc.) are pre-installed in the contai
 
 ```bash
 # Quick start with Dev Container
-git clone https://github.com/frgarofa/Suppercharge_Microsoft_Fabric.git
-code Suppercharge_Microsoft_Fabric
+git clone https://github.com/frgarofa/Supercharge_Microsoft_Fabric.git
+code Supercharge_Microsoft_Fabric
 # Then click "Reopen in Container" when prompted
 ```
 
@@ -239,6 +265,8 @@ Python: Python 3.11.7
 
 ### Service Principal Setup (for CI/CD)
 
+> 📋 **Prerequisites:** You'll need this service principal for GitHub Actions automation. Skip this step if you're only doing manual deployments.
+
 ```bash
 # Create service principal
 az ad sp create-for-rbac \
@@ -250,7 +278,7 @@ az ad sp create-for-rbac \
 # Save output for GitHub secrets
 ```
 
-> ⚠️ **Warning:** Store the service principal credentials securely. Never commit them to source control.
+> ⚠️ **Warning:** Store the service principal credentials securely. Never commit them to source control. Use a password manager or Azure Key Vault.
 
 ### Configure OIDC for GitHub Actions
 
@@ -264,7 +292,7 @@ az ad app federated-credential create \
   --parameters '{
     "name": "github-actions-main",
     "issuer": "https://token.actions.githubusercontent.com",
-    "subject": "repo:YOUR_ORG/Suppercharge_Microsoft_Fabric:ref:refs/heads/main",
+    "subject": "repo:YOUR_ORG/Supercharge_Microsoft_Fabric:ref:refs/heads/main",
     "audiences": ["api://AzureADTokenExchange"]
   }'
 ```
@@ -274,6 +302,8 @@ az ad app federated-credential create \
 ## 🌐 Network Requirements
 
 ### Outbound Connectivity
+
+> 📋 **Prerequisites:** If you're behind a corporate firewall, coordinate with your network team to whitelist these endpoints before deployment.
 
 Ensure these endpoints are accessible from your deployment environment:
 
@@ -362,20 +392,25 @@ KEY_VAULT_NAME=               # Key Vault (globally unique)
 
 ### Variable Requirements
 
-| Variable | Required | Format | Example |
-|----------|----------|--------|---------|
-| `AZURE_SUBSCRIPTION_ID` | Yes | GUID | `12345678-1234-1234-1234-123456789012` |
-| `AZURE_TENANT_ID` | Yes | GUID | `12345678-1234-1234-1234-123456789012` |
-| `AZURE_LOCATION` | Yes | Region code | `eastus2`, `westus2` |
-| `ENVIRONMENT` | Yes | String | `dev`, `staging`, `prod` |
-| `PROJECT_PREFIX` | Yes | 3-10 chars | `fabricpoc` |
-| `FABRIC_CAPACITY_SKU` | Yes | SKU name | `F2`, `F4`, `F64` |
-| `PURVIEW_ACCOUNT_NAME` | Yes | Globally unique | `pv-fabricpoc-dev-001` |
-| `STORAGE_ACCOUNT_NAME` | Yes | Globally unique | `stfabricpocdev001` |
+| 🔑 Variable | ✅ Required | 📝 Format | 💡 Example |
+|:------------|:-----------:|:----------|:-----------|
+| `AZURE_SUBSCRIPTION_ID` | **Yes** | GUID | `12345678-1234-1234-1234-123456789012` |
+| `AZURE_TENANT_ID` | **Yes** | GUID | `12345678-1234-1234-1234-123456789012` |
+| `AZURE_LOCATION` | **Yes** | Region code | `eastus2`, `westus2` |
+| `ENVIRONMENT` | **Yes** | String | `dev`, `staging`, `prod` |
+| `PROJECT_PREFIX` | **Yes** | 3-10 chars | `fabricpoc` |
+| `FABRIC_CAPACITY_SKU` | **Yes** | SKU name | `F2`, `F4`, `F64` |
+| `PURVIEW_ACCOUNT_NAME` | **Yes** | Globally unique | `pv-fabricpoc-dev-001` |
+| `STORAGE_ACCOUNT_NAME` | **Yes** | Globally unique | `stfabricpocdev001` |
+
+> ⚠️ **Warning:** Storage account names must be globally unique across all of Azure and use only lowercase letters and numbers (no hyphens or special characters).
 
 ---
 
 ## 🧪 Validation Script
+
+<details>
+<summary><b>🔍 Click to expand: Full Validation Script</b></summary>
 
 Save and run this script to verify prerequisites:
 
@@ -453,9 +488,14 @@ chmod +x verify-prerequisites.sh
 ./verify-prerequisites.sh
 ```
 
+</details>
+
 ---
 
 ## 🔧 Troubleshooting
+
+<details>
+<summary><b>🔍 Click to expand: Troubleshooting Commands & Solutions</b></summary>
 
 ### Azure CLI Login Issues
 
@@ -489,12 +529,14 @@ az provider show --namespace Microsoft.Fabric --query "registrationState"
 
 ### Common Error Messages
 
-| Error | Cause | Solution |
-|-------|-------|----------|
+| ❌ Error | 🔍 Cause | ✅ Solution |
+|:---------|:---------|:-----------|
 | `AuthorizationFailed` | Insufficient permissions | Request Owner/Contributor role |
 | `ResourceProviderNotRegistered` | Provider not enabled | Run registration command |
 | `QuotaExceeded` | Insufficient quota | Request quota increase |
 | `NameNotAvailable` | Resource name taken | Choose a different name |
+
+</details>
 
 ---
 
@@ -525,4 +567,4 @@ After completing prerequisites:
 ---
 
 > 📖 **Documentation maintained by:** Microsoft Fabric POC Team
-> 🔗 **Repository:** [Suppercharge_Microsoft_Fabric](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric)
+> 🔗 **Repository:** [Supercharge_Microsoft_Fabric](https://github.com/frgarofa/Supercharge_Microsoft_Fabric)

@@ -1,14 +1,16 @@
 # 📊 Tutorial 05: Direct Lake & Power BI
 
+> **🏠 [Home](../../README.md)** > **📖 [Tutorials](../README.md)** > **📊 Direct Lake & Power BI**
+
+---
+
 <div align="center">
 
-![Tutorial 05](https://img.shields.io/badge/Tutorial-05-blue?style=for-the-badge)
-![Power BI](https://img.shields.io/badge/Power%20BI-Business%20Intelligence-yellow?style=for-the-badge)
-![Intermediate](https://img.shields.io/badge/Level-Intermediate-yellow?style=for-the-badge)
+![Difficulty](https://img.shields.io/badge/⭐_Difficulty-Intermediate-yellow?style=for-the-badge)
+![Duration](https://img.shields.io/badge/⏱️_Duration-60--90_mins-blue?style=for-the-badge)
+![Prerequisites](https://img.shields.io/badge/📋_Prerequisites-Tutorial_03-orange?style=for-the-badge)
 
 </div>
-
-> **🏠 [Home](../../README.md)** > **📖 [Tutorials](../README.md)** > **📊 Direct Lake & Power BI**
 
 ---
 
@@ -842,34 +844,134 @@ For compliance reporting requiring exact formatting and pagination.
 
 ## ✅ Validation Checklist
 
-Verify your Power BI implementation:
+Before moving to the next tutorial, verify:
 
-| Component | Status | Verification |
-|-----------|--------|--------------|
-| Semantic model created | ⬜ | Model appears in workspace |
-| Storage mode = Direct Lake | ⬜ | Settings show "Direct Lake" |
-| Relationships configured | ⬜ | Diagram shows connected tables |
-| All DAX measures work | ⬜ | Measures return values in report |
-| Executive dashboard complete | ⬜ | All 3 pages with visualizations |
-| Report published | ⬜ | Report accessible in workspace |
-| Data is fresh | ⬜ | Changes in Gold tables appear immediately |
-| (Optional) RLS configured | ⬜ | "View as role" shows filtered data |
+- [ ] **Direct Lake Semantic Model Created** - Model exists with Direct Lake storage mode
+- [ ] **Reports Load Successfully** - Executive dashboard opens without errors
+- [ ] **Visuals Display Data** - All charts and tables show current data
+- [ ] **Relationships Work** - Drill-through and filters function correctly
+- [ ] **DAX Measures Calculate** - All KPIs return expected values
+- [ ] **Auto-Refresh Works** - Data changes appear within seconds
 
-### Quick Validation Steps
+<details>
+<summary>🔍 How to verify each item</summary>
 
-1. **Test Direct Lake freshness:**
-   - Update a record in Gold table
-   - Refresh report page
-   - Verify change appears (within seconds)
+### Direct Lake Semantic Model Created
+```
+1. Navigate to workspace
+2. Look for semantic model (dataset icon)
+3. Click on model > Settings
+4. Under "Storage mode" section, verify:
+   ✅ "Direct Lake" is selected
+   ✅ Source lakehouse shows "lh_gold"
+   ✅ Status shows "Connected"
+```
 
-2. **Test DAX measures:**
-   - Create a table with all measures
-   - Filter by different dates/zones
-   - Verify calculations are correct
+### Reports Load Successfully
+```
+1. Open "Casino Executive Dashboard" report
+2. Verify:
+   - Report loads without error messages
+   - All pages accessible (Executive Summary, Slot Performance, Player Insights)
+   - No "Can't load visual" errors
+   - Data loads within 5-10 seconds
+```
 
-3. **Test performance:**
-   - Report should load in < 5 seconds
-   - Visuals should respond to slicers instantly
+### Visuals Display Data
+```
+Check each visual on each page:
+
+Page 1 - Executive Summary:
+✅ Total Revenue card shows value
+✅ Hold % gauge displays percentage
+✅ Daily trend line chart shows data points
+✅ Top machines table populated
+
+Page 2 - Slot Performance:
+✅ Machine heatmap shows color gradients
+✅ Performance matrix has data
+✅ Trend over time chart displays lines
+
+Page 3 - Player Insights:
+✅ Player segmentation chart shows segments
+✅ Value tier distribution populated
+✅ Top players table shows names/metrics
+```
+
+### Relationships Work
+```
+Test relationship functionality:
+
+1. Click-through test:
+   - Click a zone in bar chart
+   - Verify all other visuals filter to that zone
+
+2. Slicer test:
+   - Select date range in date slicer
+   - Verify all visuals update for that period
+
+3. Drill-through test:
+   - Right-click a machine in the table
+   - Select "Drill through" > Machine Details
+   - Verify detail page shows correct machine data
+```
+
+### DAX Measures Calculate
+```
+Verify key DAX measures in report:
+
+✅ [Total Coin In] - Should be > $0
+✅ [Total Net Win] - Should be positive
+✅ [Hold %] - Should be between 5-15%
+✅ [Theoretical Win] - Should be > $0
+✅ [Variance to Theo] - Should be ± reasonable
+✅ [Player Count] - Should be > 0
+
+Test a measure manually:
+- Select a measure in Fields pane
+- Click "Table view" in Modeling tab
+- Verify it calculates without errors
+```
+
+### Auto-Refresh Works (Direct Lake Test)
+```python
+# 1. Update Gold layer data
+from pyspark.sql.functions import col, lit
+
+# Add a test record with recognizable values
+df = spark.table("lh_gold.gold_slot_performance").limit(1)
+test_record = df.withColumn("net_win", lit(99999.99))
+test_record.write.format("delta").mode("append").saveAsTable("lh_gold.gold_slot_performance")
+
+print("✅ Test record added with net_win = 99999.99")
+```
+
+```
+2. In Power BI:
+   - Open the report (or refresh if already open)
+   - Navigate to Slot Performance page
+   - Look for the test machine
+   - Verify net_win shows 99999.99
+   - Data should appear within 5-10 seconds (no manual refresh needed!)
+```
+
+### Performance Validation
+```
+Test query performance:
+
+1. Open report in Power BI Desktop or Service
+2. Enable Performance Analyzer (View > Performance Analyzer)
+3. Click "Start recording"
+4. Refresh all visuals (Ctrl+R)
+5. Click "Stop recording"
+
+Expected performance:
+✅ Visual queries: < 2 seconds each
+✅ DAX queries: < 1 second for most measures
+✅ Page load: < 5 seconds
+```
+
+</details>
 
 ---
 

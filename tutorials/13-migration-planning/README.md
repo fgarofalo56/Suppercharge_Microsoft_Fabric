@@ -39,7 +39,7 @@
 | Navigation | |
 |---|---|
 | ⬅️ **Previous** | [12-CI/CD DevOps](../12-cicd-devops/README.md) |
-| ➡️ **Next** | [Tutorials Home](../README.md) |
+| ➡️ **Next** | [14-Security & Networking](../14-security-networking/README.md) |
 
 ---
 

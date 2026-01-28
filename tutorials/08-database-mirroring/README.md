@@ -205,7 +205,8 @@ GO
 2. Click **+ New** > **Mirrored database**
 3. Select **Azure SQL Database** or **SQL Server**
 
-![Create Mirrored Database](../../images/mirroring-create.png)
+<!-- Screenshot placeholder: Create Mirrored Database dialog -->
+> 📸 **Screenshot**: In the Fabric workspace, click **+ New** → **Mirrored database** to open the configuration wizard.
 
 ### 1.4 Configure Connection
 

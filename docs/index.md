@@ -107,7 +107,7 @@ az deployment sub create \
 |:--------|:------------|
 | [📖 Getting Started](PREREQUISITES.md) | Prerequisites, setup, and configuration |
 | [🏗️ Architecture](ARCHITECTURE.md) | System design and component overview |
-| [📚 Tutorials](tutorials/README.md) | 12 hands-on learning modules |
+| [📚 Tutorials](tutorials/README.md) | 14 hands-on learning modules |
 | [📅 POC Agenda](poc-agenda/README.md) | 3-day workshop materials |
 | [📊 Reference](GLOSSARY.md) | FAQ, glossary, and standards |
 | [🛠️ Infrastructure](infra/README.md) | Bicep IaC modules |
@@ -191,6 +191,7 @@ This POC addresses key gaming industry regulations:
 | 10 | [Teradata Migration](tutorials/10-teradata-migration/README.md) | ~2 hours |
 | 11 | [SAS Connectivity](tutorials/11-sas-connectivity/README.md) | ~2 hours |
 | 12 | [CI/CD & DevOps](tutorials/12-cicd-devops/README.md) | ~2 hours |
+| 13 | [Migration Planning](tutorials/13-migration-planning/README.md) | ~2 hours |
 
 ---
 

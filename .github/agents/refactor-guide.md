@@ -29,7 +29,7 @@ flowchart TD
     F --> H{More Changes?}
     H -->|Yes| C
     H -->|No| I[Document]
-````
+```
 
 ## Code Smells Catalog
 

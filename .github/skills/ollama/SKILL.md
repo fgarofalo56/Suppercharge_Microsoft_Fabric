@@ -380,9 +380,7 @@ response = ollama.generate(
     prompt='''Write a Python function that:
 1. Takes a list of numbers
 2. Returns the median value
-3. Handles empty lists
-
-```python'''
+3. Handles empty lists'''
 )
 print(response['response'])
 ```

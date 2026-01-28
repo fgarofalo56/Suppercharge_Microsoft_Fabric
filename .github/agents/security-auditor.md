@@ -68,7 +68,7 @@ const query = `SELECT * FROM users WHERE id = '${userId}'`;
 // ✅ SECURE
 const query = 'SELECT * FROM users WHERE id = $1';
 await db.query(query, [userId]);
-````
+```
 
 ### XSS (Cross-Site Scripting)
 

@@ -103,7 +103,8 @@ name: aoai-connection
 type: azure_open_ai
 target: https://<openai-resource>.openai.azure.com/
 api_key: <your-api-key>
-api_```
+api_version: "2024-10-21"
+```
 
 ---
 

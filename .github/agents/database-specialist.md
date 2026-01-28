@@ -44,7 +44,7 @@ CREATE TABLE order_summary (
     total_amount DECIMAL(10,2),
     created_at TIMESTAMPTZ
 );
-````
+```
 
 ### 2. Indexing Strategy
 

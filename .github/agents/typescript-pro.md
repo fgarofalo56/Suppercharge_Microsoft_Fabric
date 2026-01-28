@@ -41,7 +41,7 @@ type Result<T, E = Error> =
 
 // Template literal types
 type EventName<T extends string> = `on${Capitalize<T>}`;
-````
+```
 
 ### React Best Practices
 

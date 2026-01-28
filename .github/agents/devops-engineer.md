@@ -43,7 +43,7 @@ COPY --chown=app:app . .
 USER app
 EXPOSE 3000
 CMD ["node", "server.js"]
-````
+```
 
 ### Docker Compose Patterns
 

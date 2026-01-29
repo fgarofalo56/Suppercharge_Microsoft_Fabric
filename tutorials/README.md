@@ -1,6 +1,6 @@
 # 📖 Tutorials
 
-> 🏠 [Home](../README.md) > 📖 Tutorials
+> 🏠 [Home](../index.md) > 📖 Tutorials
 
 **Last Updated:** `2026-01-28` | **Version:** 1.1.0
 
@@ -191,7 +191,7 @@ Before starting the tutorials, ensure you have:
 
 - [ ] Azure subscription with Fabric enabled
 - [ ] Fabric capacity (F64 recommended, F2 minimum)
-- [ ] Completed the [Prerequisites Guide](../docs/PREREQUISITES.md)
+- [ ] Completed the [Prerequisites Guide](../PREREQUISITES.md)
 - [ ] Generated sample data (optional but recommended)
 
 > 💡 **Tip:** Start with [Tutorial 00](./00-environment-setup/README.md) to set up your environment before proceeding.
@@ -202,15 +202,15 @@ Before starting the tutorials, ensure you have:
 
 | Document | Description |
 |:---------|:------------|
-| [🏗️ Architecture](../docs/ARCHITECTURE.md) | System architecture and design |
-| [🚀 Deployment Guide](../docs/DEPLOYMENT.md) | Infrastructure deployment |
-| [📋 Prerequisites](../docs/PREREQUISITES.md) | Setup requirements |
+| [🏗️ Architecture](../ARCHITECTURE.md) | System architecture and design |
+| [🚀 Deployment Guide](../DEPLOYMENT.md) | Infrastructure deployment |
+| [📋 Prerequisites](../PREREQUISITES.md) | Setup requirements |
 | [📅 POC Agenda](../poc-agenda/README.md) | 3-Day workshop schedule |
 | [📋 Templates](./templates/README.md) | Progress tracker templates |
 
 ---
 
-[⬆️ Back to top](#-tutorials) | [🏠 Home](../README.md)
+[⬆️ Back to top](#-tutorials) | [🏠 Home](../index.md)
 
 ---
 

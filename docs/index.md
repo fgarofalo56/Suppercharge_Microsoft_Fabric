@@ -110,7 +110,7 @@ az deployment sub create \
 | [📚 Tutorials](tutorials/README.md) | 24 hands-on learning modules |
 | [📅 POC Agenda](poc-agenda/README.md) | 3-day workshop materials |
 | [📊 Reference](GLOSSARY.md) | FAQ, glossary, and standards |
-| [🛠️ Infrastructure](infra/README.md) | Bicep IaC modules |
+| [🛠️ Infrastructure](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric/tree/main/infra) | Bicep IaC modules |
 | [🏢 Best Practices](BEST_PRACTICES.md) | Workspace organization, folder structures, environments |
 | [🌐 Networking](NETWORKING.md) | Private endpoints, ExpressRoute, VPN, gateways |
 | [🔄 Disaster Recovery](DISASTER_RECOVERY.md) | Multi-region architecture, RTO/RPO, failover procedures |
@@ -124,10 +124,10 @@ az deployment sub create \
 
 | Resource | Description |
 |:---------|:------------|
-| [📓 Notebooks](../notebooks/) | Ready-to-import Fabric notebooks (Bronze, Silver, Gold, ML) |
-| [📊 Power BI Assets](../powerbi/) | DAX measures and TMDL semantic models |
-| [🔌 SDK Examples](../sdk-examples/) | Fabric REST API and Semantic Link code samples |
-| [⚡ Benchmarks](../benchmarks/) | Performance baselines and load testing scripts |
+| [📓 Notebooks](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric/tree/main/notebooks) | Ready-to-import Fabric notebooks (Bronze, Silver, Gold, ML) |
+| [📊 Power BI Assets](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric/tree/main/powerbi) | DAX measures and TMDL semantic models |
+| [🔌 SDK Examples](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric/tree/main/sdk-examples) | Fabric REST API and Semantic Link code samples |
+| [⚡ Benchmarks](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric/tree/main/benchmarks) | Performance baselines and load testing scripts |
 
 ---
 
@@ -265,7 +265,7 @@ Hands-on learning path
 
 <div class="card" markdown>
 
-### [:material-cog: Infrastructure](infra/README.md)
+### [:material-cog: Infrastructure](https://github.com/fgarofalo56/Suppercharge_Microsoft_Fabric/tree/main/infra)
 
 Bicep IaC modules
 

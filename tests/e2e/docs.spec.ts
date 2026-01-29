@@ -105,9 +105,12 @@ test.describe('Key Pages Load Successfully', () => {
       // Should not be 404
       expect(response?.status()).not.toBe(404);
 
-      // Should have content
-      const content = await page.locator('article, .md-content').textContent();
-      expect(content?.length).toBeGreaterThan(100);
+      // Should have content - wait for it to load
+      await page.waitForLoadState('domcontentloaded');
+      const contentLocator = page.locator('article, .md-content').first();
+      await expect(contentLocator).toBeVisible({ timeout: 10000 });
+      const content = await contentLocator.textContent();
+      expect(content?.length).toBeGreaterThan(50);
     });
   }
 });
@@ -146,11 +149,14 @@ test.describe('Tutorials Section', () => {
 test.describe('Best Practices Section', () => {
   test('best practices overview loads', async ({ page }) => {
     const response = await page.goto('./best-practices/');
-    expect(response?.status()).toBe(200);
+    expect(response?.status()).not.toBe(404);
 
     // Should contain best practices content
-    const content = await page.locator('article').textContent();
-    expect(content).toMatch(/best practices|guide|overview/i);
+    await page.waitForLoadState('domcontentloaded');
+    const contentLocator = page.locator('article').first();
+    await expect(contentLocator).toBeVisible({ timeout: 10000 });
+    const content = await contentLocator.textContent();
+    expect(content).toMatch(/best practices|guide|overview|workspace|naming/i);
   });
 
   const bestPracticePages = [

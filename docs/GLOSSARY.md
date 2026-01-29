@@ -1,6 +1,6 @@
 # 📖 Glossary
 
-> 🏠 [Home](../README.md) > 📚 [Docs](./) > 📖 Glossary
+> 🏠 [Home](index.md) > 📚 [Docs](./) > 📖 Glossary
 
 **Last Updated:** `2025-01-21` | **Version:** 1.0.0
 

@@ -1,6 +1,6 @@
 # 📋 Prerequisites Guide
 
-> 🏠 [Home](../README.md) > 📚 [Docs](./) > 📋 Prerequisites
+> 🏠 [Home](index.md) > 📚 [Docs](./) > 📋 Prerequisites
 
 <div align="center">
 
@@ -548,7 +548,7 @@ After completing prerequisites:
 |------|----------|-------------|
 | 1 | [🏗️ Architecture](ARCHITECTURE.md) | Review system design |
 | 2 | [🚀 Deployment](DEPLOYMENT.md) | Deploy infrastructure |
-| 3 | [Tutorial 00](../tutorials/00-environment-setup/README.md) | Hands-on setup |
+| 3 | [Tutorial 00](tutorials/00-environment-setup/README.md) | Hands-on setup |
 
 ---
 

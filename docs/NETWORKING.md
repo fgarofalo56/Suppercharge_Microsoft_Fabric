@@ -1,6 +1,6 @@
 # 🌐 Networking & Connectivity Guide
 
-> 🏠 [Home](../README.md) > 📚 [Docs](./) > 🌐 Networking & Connectivity
+> 🏠 [Home](index.md) > 📚 [Docs](./) > 🌐 Networking & Connectivity
 
 **Last Updated:** 2026-01-28 | **Version:** 1.0.0
 
@@ -821,8 +821,8 @@ module networkArchitecture 'network.bicep' = {
 |----------|-------------|
 | [🔐 Security Guide](./SECURITY.md) | Security best practices |
 | [🏆 Best Practices](./BEST_PRACTICES.md) | Workspace organization |
-| [📖 Tutorial 22](../tutorials/22-networking-connectivity/README.md) | Networking hands-on tutorial |
-| [📖 Tutorial 23](../tutorials/23-self-hosted-ir-gateways/README.md) | SHIR & Gateway tutorial |
+| [📖 Tutorial 22](tutorials/22-networking-connectivity/README.md) | Networking hands-on tutorial |
+| [📖 Tutorial 23](tutorials/23-self-hosted-ir-gateways/README.md) | SHIR & Gateway tutorial |
 
 ---
 
@@ -836,4 +836,4 @@ module networkArchitecture 'network.bicep' = {
 
 ---
 
-[⬆️ Back to top](#-networking--connectivity-guide) | [🏠 Home](../README.md)
+[⬆️ Back to top](#-networking--connectivity-guide) | [🏠 Home](index.md)

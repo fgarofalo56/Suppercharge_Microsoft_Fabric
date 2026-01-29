@@ -126,4 +126,4 @@ Throughout this guide:
 
 ---
 
-[Back to Documentation](../README.md)
+[Back to Documentation](../index.md)

@@ -1,6 +1,6 @@
 # 🔐 Security and Compliance Guide
 
-> 🏠 [Home](../README.md) > 📚 [Docs](./) > 🔐 Security
+> 🏠 [Home](index.md) > 📚 [Docs](./) > 🔐 Security
 
 <div align="center">
 

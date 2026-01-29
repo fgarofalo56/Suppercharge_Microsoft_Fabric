@@ -1,6 +1,6 @@
 # 🏗️ Architecture Documentation
 
-> 🏠 [Home](../README.md) > 📚 [Docs](./) > 🏗️ Architecture
+> 🏠 [Home](index.md) > 📚 [Docs](./) > 🏗️ Architecture
 
 <div align="center">
 

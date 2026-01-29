@@ -1,6 +1,6 @@
 # 💬 Frequently Asked Questions (FAQ)
 
-> 🏠 [Home](../README.md) > 📚 [Docs](./) > 💬 FAQ
+> 🏠 [Home](index.md) > 📚 [Docs](./) > 💬 FAQ
 
 **Last Updated:** `2025-01-21` | **Version:** 1.0.0
 
@@ -83,7 +83,7 @@ This is a **production-ready proof-of-concept environment** for Microsoft Fabric
 
 **Self-Paced Learning:** 2-4 weeks (2-3 hours per week)
 
-See the [3-Day POC Agenda](../poc-agenda/README.md) for detailed schedules.
+See the [3-Day POC Agenda](poc-agenda/README.md) for detailed schedules.
 
 ---
 
@@ -545,7 +545,7 @@ for event in generator.generate_stream(events_per_second=10):
 - `STREAMING_RATE`: Events per second (default: 10)
 - `BATCH_SIZE`: Events per batch (default: 100)
 
-See [Tutorial 04: Real-Time Analytics](../tutorials/04-real-time-analytics/README.md).
+See [Tutorial 04: Real-Time Analytics](tutorials/04-real-time-analytics/README.md).
 
 </details>
 
@@ -574,7 +574,7 @@ graph LR
 3. **🟠 Advanced** (04-05): Real-time analytics, Power BI
 4. **🔴 Enterprise** (06-09): Pipelines, governance, AI/ML
 
-See [Tutorials README](../tutorials/README.md) for complete learning path.
+See [Tutorials README](tutorials/README.md) for complete learning path.
 
 ---
 
@@ -746,7 +746,7 @@ USING (VORDER);
 - No data import or scheduled refresh required
 - Automatic fallback to DirectQuery if needed
 
-See [Tutorial 05: Direct Lake & Power BI](../tutorials/05-direct-lake-powerbi/README.md).
+See [Tutorial 05: Direct Lake & Power BI](tutorials/05-direct-lake-powerbi/README.md).
 
 ---
 
@@ -1307,7 +1307,7 @@ docker-compose run --rm data-generator --slots 100000 --players 5000
 
 Output: `./output` directory
 
-See [Docker Support](../README.md#-docker-support) in main README.
+See [Docker Support](index.md#-docker-support) in main README.
 
 ---
 
@@ -1453,16 +1453,16 @@ docker-compose pull
 
 | Resource | Link |
 |----------|------|
-| 🏠 **Main README** | [README.md](../README.md) |
+| 🏠 **Main README** | [README.md](index.md) |
 | 🏗️ **Architecture** | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | 🚀 **Deployment** | [DEPLOYMENT.md](DEPLOYMENT.md) |
 | 📋 **Prerequisites** | [PREREQUISITES.md](PREREQUISITES.md) |
 | 🔐 **Security** | [SECURITY.md](SECURITY.md) |
 | 💰 **Cost Estimation** | [COST_ESTIMATION.md](COST_ESTIMATION.md) |
-| 📖 **Tutorials** | [tutorials/](../tutorials/) |
+| 📖 **Tutorials** | [tutorials/](tutorials/) |
 | 🎲 **Data Generation** | [data-generation/](../data-generation/) |
 | 📊 **Reports** | [reports/](../reports/) |
-| 📅 **POC Agenda** | [poc-agenda/](../poc-agenda/) |
+| 📅 **POC Agenda** | [poc-agenda/](poc-agenda/) |
 
 ---
 

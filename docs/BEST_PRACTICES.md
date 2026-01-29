@@ -1,6 +1,6 @@
 # 🏆 Microsoft Fabric Best Practices Guide
 
-> 🏠 [Home](../README.md) > 📚 [Docs](./) > 🏆 Best Practices
+> 🏠 [Home](index.md) > 📚 [Docs](./) > 🏆 Best Practices
 
 **Last Updated:** 2026-01-28 | **Version:** 1.0.0
 
@@ -711,7 +711,7 @@ df.write \
 | [🏗️ Architecture](./ARCHITECTURE.md) | System architecture overview |
 | [🚀 Deployment Guide](./DEPLOYMENT.md) | Infrastructure deployment |
 | [🔐 Security Guide](./SECURITY.md) | Security configuration |
-| [📖 Tutorial 20: Best Practices](../tutorials/20-workspace-best-practices/README.md) | Hands-on best practices tutorial |
+| [📖 Tutorial 20: Best Practices](tutorials/20-workspace-best-practices/README.md) | Hands-on best practices tutorial |
 
 ---
 
@@ -724,7 +724,7 @@ df.write \
 
 ---
 
-[⬆️ Back to top](#-microsoft-fabric-best-practices-guide) | [🏠 Home](../README.md)
+[⬆️ Back to top](#-microsoft-fabric-best-practices-guide) | [🏠 Home](index.md)
 
 ---
 

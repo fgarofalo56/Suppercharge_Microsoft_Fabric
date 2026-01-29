@@ -1,4 +1,4 @@
-[Home](../README.md) > [Docs](./index.md) > Style Guide
+[Home](index.md) > [Docs](./index.md) > Style Guide
 
 # 📝 Documentation Style Guide
 
@@ -92,7 +92,7 @@ Every documentation file **MUST** include these elements in order:
 ### Header Format
 
 ```markdown
-[Home](../README.md) > [Parent Section](./index.md) > Current Page
+[Home](index.md) > [Parent Section](./index.md) > Current Page
 
 # 🏷️ Document Title
 
@@ -549,12 +549,12 @@ Use backticks for:
 Always at document top:
 
 ```markdown
-[Home](../README.md) > [Docs](./index.md) > [API](./api/index.md) > Authentication
+[Home](index.md) > [Docs](./index.md) > [API](./api/index.md) > Authentication
 ```
 
 **Rendered:**
 
-[Home](../README.md) > [Docs](./index.md) > [API](./api/index.md) > Authentication
+[Home](index.md) > [Docs](./index.md) > [API](./api/index.md) > Authentication
 
 ### Internal Links
 
@@ -590,7 +590,7 @@ Always end documents with:
 
 ---
 
-[⬆️ Back to Top](#-document-title) | [📚 All Docs](./index.md) | [🏠 Home](../README.md)
+[⬆️ Back to Top](#-document-title) | [📚 All Docs](./index.md) | [🏠 Home](index.md)
 ```
 
 ---
@@ -636,7 +636,7 @@ docs/
 ### New Document Template
 
 ```markdown
-[Home](../README.md) > [Parent](./index.md) > Document Title
+[Home](index.md) > [Parent](./index.md) > Document Title
 
 # 📄 Document Title
 
@@ -683,7 +683,7 @@ Content...
 
 ---
 
-[⬆️ Back to Top](#-document-title) | [📚 Docs](./index.md) | [🏠 Home](../README.md)
+[⬆️ Back to Top](#-document-title) | [📚 Docs](./index.md) | [🏠 Home](index.md)
 ```
 
 ### API Endpoint Template
@@ -808,8 +808,8 @@ Database server is not running or not accessible.
 |----------|-------------|
 | [copilot-instructions.md](../.github/copilot-instructions.md) | Copilot configuration |
 | [CONTRIBUTING.md](../CONTRIBUTING.md) | Contribution guidelines |
-| [README.md](../README.md) | Project overview |
+| [README.md](index.md) | Project overview |
 
 ---
 
-[⬆️ Back to Top](#-documentation-style-guide) | [📚 Docs](./index.md) | [🏠 Home](../README.md)
+[⬆️ Back to Top](#-documentation-style-guide) | [📚 Docs](./index.md) | [🏠 Home](index.md)

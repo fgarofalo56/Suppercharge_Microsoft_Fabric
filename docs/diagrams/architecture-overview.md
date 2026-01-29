@@ -1,6 +1,6 @@
 # 📊 Architecture Diagrams
 
-> 🏠 [Home](../../README.md) > 📚 [Docs](../) > 📊 Architecture Diagrams
+> 🏠 [Home](../../index.md) > 📚 [Docs](../) > 📊 Architecture Diagrams
 
 **Last Updated:** `2025-01-21` | **Version:** 1.0.0
 

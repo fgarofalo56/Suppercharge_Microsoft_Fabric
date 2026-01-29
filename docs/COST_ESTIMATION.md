@@ -1,6 +1,6 @@
 # 💰 Azure Cost Estimation Guide
 
-> 🏠 [Home](../README.md) > 📚 [Docs](./) > 💰 Cost Estimation
+> 🏠 [Home](index.md) > 📚 [Docs](./) > 💰 Cost Estimation
 
 <div align="center">
 

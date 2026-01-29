@@ -1,6 +1,6 @@
 # ⚡ Quick Start Guide
 
-> 🏠 [Home](../README.md) > 📚 [Docs](./) > ⚡ Quick Start
+> 🏠 [Home](index.md) > 📚 [Docs](./) > ⚡ Quick Start
 
 **Get your Microsoft Fabric Casino Analytics POC running in 5 minutes.**
 
@@ -133,10 +133,10 @@ SHOW TABLES IN bronze;
 
 | Task | Tutorial |
 |------|----------|
-| **Build Silver Layer** | [02-silver-layer](../tutorials/02-silver-layer/) |
-| **Create Gold Aggregations** | [03-gold-layer](../tutorials/03-gold-layer/) |
-| **Set Up Real-Time** | [04-real-time-analytics](../tutorials/04-real-time-analytics/) |
-| **Connect Power BI** | [05-direct-lake-powerbi](../tutorials/05-direct-lake-powerbi/) |
+| **Build Silver Layer** | [02-silver-layer](tutorials/02-silver-layer/) |
+| **Create Gold Aggregations** | [03-gold-layer](tutorials/03-gold-layer/) |
+| **Set Up Real-Time** | [04-real-time-analytics](tutorials/04-real-time-analytics/) |
+| **Connect Power BI** | [05-direct-lake-powerbi](tutorials/05-direct-lake-powerbi/) |
 
 ### Quick Commands Reference
 

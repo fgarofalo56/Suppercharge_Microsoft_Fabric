@@ -448,4 +448,4 @@ az rest --method get --url "https://api.fabric.microsoft.com/v1/workspaces/{id}/
 
 ---
 
-[Back to Documentation](../README.md)
+[Back to Documentation](../index.md)

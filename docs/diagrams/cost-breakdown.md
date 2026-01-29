@@ -1,6 +1,6 @@
 # Cost Breakdown Diagrams
 
-> [Home](../../README.md) > [Docs](../) > [Diagrams](./) > Cost Breakdown
+> [Home](../../index.md) > [Docs](../) > [Diagrams](./) > Cost Breakdown
 
 **Last Updated:** `2025-01-21` | **Version:** 1.0.0
 

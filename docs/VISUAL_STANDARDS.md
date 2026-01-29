@@ -1,4 +1,4 @@
-[Home](../README.md) > [Docs](./index.md) > Visual Standards
+[Home](index.md) > [Docs](./index.md) > Visual Standards
 
 # 🎨 Visual Design Standards
 
@@ -1015,8 +1015,8 @@ gantt
 | ----------------------------------- | ----------------------------------------- |
 | [Style Guide](./STYLE_GUIDE.md)     | Complete documentation style guide        |
 | [Contributing](../CONTRIBUTING.md)  | How to contribute to this project         |
-| [README](../README.md)              | Project overview and quick start          |
+| [README](index.md)              | Project overview and quick start          |
 
 ---
 
-[⬆️ Back to Top](#-visual-design-standards) | [📚 Docs](./index.md) | [🏠 Home](../README.md)
+[⬆️ Back to Top](#-visual-design-standards) | [📚 Docs](./index.md) | [🏠 Home](index.md)

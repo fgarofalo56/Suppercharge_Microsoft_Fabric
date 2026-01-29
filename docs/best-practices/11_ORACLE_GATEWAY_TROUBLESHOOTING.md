@@ -10,6 +10,254 @@ This guide addresses common issues when moving data from on-premises Oracle to M
 
 ---
 
+## Step-by-Step Configuration Guide
+
+Follow these steps in order to configure optimal Oracle-to-Fabric data movement.
+
+### Prerequisites
+
+Before starting, ensure you have:
+- [ ] Administrator access to the gateway server
+- [ ] Access to modify Fabric pipelines
+- [ ] Oracle DBA contact (for connection limit changes if needed)
+
+---
+
+### Step 1: Update Gateway to Latest Version
+
+1. **Check current version:**
+   - Open **On-premises data gateway** application on your gateway server
+   - Note the version number in the title bar or About section
+   - Minimum required: `3000.214.2` or newer
+
+2. **Download latest version:**
+   - Go to: https://powerbi.microsoft.com/gateway/
+   - Click **Download standard mode**
+   - Run the installer and follow prompts
+
+3. **Verify installation:**
+   - Reopen the gateway application
+   - Confirm the version updated
+
+---
+
+### Step 2: Configure Gateway Container Settings
+
+1. **Open the configuration file:**
+   ```
+   Location: C:\Program Files\On-premises data gateway\Microsoft.PowerBI.DataMovement.Pipeline.GatewayCore.dll.config
+   ```
+   - Right-click Notepad → **Run as Administrator**
+   - File → Open → Navigate to the path above
+
+2. **Find the `<applicationSettings>` section** (usually near the end of the file)
+
+3. **Add or modify these settings** inside `<Microsoft.PowerBI.DataMovement.Pipeline.GatewayCore.GatewayCoreSettings>`:
+
+   ```xml
+   <!-- SETTING 1: Maximum parallel containers (CRITICAL) -->
+   <!-- Default is 8 - increase to match or exceed your ForEach batchCount -->
+   <setting name="MashupDefaultPoolContainerMaxCount" serializeAs="String">
+     <value>32</value>
+   </setting>
+
+   <!-- SETTING 2: Memory per container in MB -->
+   <!-- Increase for large result sets -->
+   <setting name="MashupDefaultPoolContainerMaxWorkingSetInMB" serializeAs="String">
+     <value>4096</value>
+   </setting>
+
+   <!-- SETTING 3: DirectQuery container limit -->
+   <setting name="MashupDQPoolContainerMaxCount" serializeAs="String">
+     <value>16</value>
+   </setting>
+
+   <!-- SETTING 4: Disable auto-config (CRITICAL) -->
+   <!-- Must be True to use your manual settings above -->
+   <setting name="MashupDisableContainerAutoConfig" serializeAs="String">
+     <value>True</value>
+   </setting>
+
+   <!-- SETTING 5: Enable streaming for large datasets -->
+   <setting name="StreamBeforeRequestCompletes" serializeAs="String">
+     <value>True</value>
+   </setting>
+   ```
+
+4. **Save the file** (Ctrl+S)
+
+5. **Verify your hardware can support these settings:**
+
+   | Container Count | Minimum RAM | Minimum CPU |
+   |-----------------|-------------|-------------|
+   | 16 containers   | 16 GB       | 8 cores     |
+   | 32 containers   | 32 GB       | 16 cores    |
+   | 64 containers   | 64 GB       | 32 cores    |
+
+---
+
+### Step 3: Restart the Gateway Service
+
+1. **Option A - Using PowerShell (Run as Administrator):**
+   ```powershell
+   Restart-Service PBIEgwService
+   ```
+
+2. **Option B - Using Command Prompt (Run as Administrator):**
+   ```cmd
+   net stop PBIEgwService
+   net start PBIEgwService
+   ```
+
+3. **Option C - Using Services UI:**
+   - Press `Win + R` → Type `services.msc` → Press Enter
+   - Find **On-premises data gateway service**
+   - Right-click → **Restart**
+
+4. **Verify gateway is running:**
+   - Open the gateway application
+   - Confirm status shows "Ready"
+
+---
+
+### Step 4: Configure Pipeline ForEach Activity
+
+1. **Open your pipeline** in Fabric Data Factory
+
+2. **Click on the ForEach activity** to select it
+
+3. **In the Settings tab**, configure:
+
+   | Setting | Value | Notes |
+   |---------|-------|-------|
+   | Sequential | **Unchecked** (false) | Must be unchecked for parallel |
+   | Batch count | 20 | Max is 50, set based on gateway capacity |
+   | Items | Your array expression | e.g., `@activity('Lookup').output.value` |
+
+4. **In JSON view**, verify it looks like:
+   ```json
+   {
+     "name": "ForEachTable",
+     "type": "ForEach",
+     "typeProperties": {
+       "isSequential": false,
+       "batchCount": 20,
+       "items": {
+         "value": "@activity('LookupTables').output.value",
+         "type": "Expression"
+       }
+     }
+   }
+   ```
+
+---
+
+### Step 5: Configure Copy Activity for Parallel Extraction
+
+1. **Open the Copy Activity** inside your ForEach loop
+
+2. **In the Source tab**, configure partitioning:
+
+   **For Oracle tables WITH partitions:**
+   - Partition option: **Physical partitions of table**
+
+   **For Oracle tables WITHOUT partitions:**
+   - Partition option: **Dynamic range**
+   - Partition column: Choose a numeric/date column with good distribution (e.g., `ORDER_ID`, `TRANSACTION_DATE`)
+   - Partition upper bound: Maximum value (e.g., `100000000`)
+   - Partition lower bound: Minimum value (e.g., `1`)
+
+3. **In the Settings tab**, configure:
+
+   | Setting | Value | Notes |
+   |---------|-------|-------|
+   | Degree of copy parallelism | 16 | Threads within each copy activity |
+   | Data Integration Units | Auto or 32 | Leave Auto for cloud, set for on-prem |
+
+4. **In JSON view**, your source should look like:
+   ```json
+   {
+     "source": {
+       "type": "OracleSource",
+       "partitionOption": "DynamicRange",
+       "partitionSettings": {
+         "partitionColumnName": "ORDER_ID",
+         "partitionUpperBound": "100000000",
+         "partitionLowerBound": "1"
+       }
+     },
+     "parallelCopies": 16
+   }
+   ```
+
+---
+
+### Step 6: Verify Parallelism is Working
+
+1. **Run your pipeline**
+
+2. **Open the pipeline run** in Monitor
+
+3. **Click on the ForEach activity** to expand it
+
+4. **Check the Activity runs tab:**
+   - Look at the **Start time** column
+   - If parallelism is working: Multiple activities start within seconds of each other
+   - If NOT working: Activities start one after another (sequential)
+
+5. **Check resource utilization** on gateway server:
+   ```powershell
+   # Run this during pipeline execution
+   Get-Process | Where-Object { $_.Name -like "*Gateway*" } |
+       Select-Object Name, CPU, @{N='Memory(MB)';E={$_.WorkingSet64/1MB}}, Threads
+   ```
+
+---
+
+### Step 7: (Optional) Configure Oracle Connection Limits
+
+If you see connection errors in Oracle or the gateway logs:
+
+1. **Check current Oracle limits** (requires DBA access):
+   ```sql
+   SELECT name, value FROM v$parameter
+   WHERE name IN ('processes', 'sessions', 'open_cursors');
+   ```
+
+2. **Increase if needed** (DBA must execute):
+   ```sql
+   ALTER SYSTEM SET processes = 500 SCOPE=SPFILE;
+   ALTER SYSTEM SET sessions = 572 SCOPE=SPFILE;
+   -- Requires Oracle restart
+   ```
+
+3. **Alternative: Reduce Fabric parallelism** to match Oracle limits:
+   - Reduce `batchCount` in ForEach
+   - Reduce `parallelCopies` in Copy Activity
+
+---
+
+### Configuration Quick Reference Card
+
+After completing all steps, your configuration should be:
+
+| Component | Setting | Recommended Value |
+|-----------|---------|-------------------|
+| **Gateway Config** | MashupDefaultPoolContainerMaxCount | 32+ |
+| **Gateway Config** | MashupDisableContainerAutoConfig | True |
+| **Gateway Config** | MashupDefaultPoolContainerMaxWorkingSetInMB | 4096 |
+| **ForEach Activity** | isSequential | false |
+| **ForEach Activity** | batchCount | 20 |
+| **Copy Activity** | partitionOption | DynamicRange or PhysicalPartitionsOfTable |
+| **Copy Activity** | parallelCopies | 16 |
+
+**Key Formula:**
+```
+Gateway Containers ≥ ForEach batchCount × 2
+```
+
+---
+
 ## Common Issues Checklist
 
 | Symptom | Likely Cause | Solution Section |

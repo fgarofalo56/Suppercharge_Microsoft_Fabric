@@ -24,6 +24,7 @@ This comprehensive guide provides best practices for all aspects of Microsoft Fa
 | [Warehouse Configuration](./08_WAREHOUSE_SETUP.md) | Schema design, statistics, query optimization |
 | [Oracle & SQL Server Patterns](./09_SOURCE_SPECIFIC_PATTERNS.md) | Large table loads, parallel extraction, incremental patterns |
 | [Decision Guide](./10_DECISION_GUIDE.md) | When to use pipeline vs dataflow vs Spark vs lakehouse vs warehouse |
+| [Oracle Gateway Troubleshooting](./11_ORACLE_GATEWAY_TROUBLESHOOTING.md) | Gateway config, ForEach parallelism, Oracle optimization |
 
 ---
 

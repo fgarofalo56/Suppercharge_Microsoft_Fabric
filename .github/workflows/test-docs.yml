@@ -1,0 +1,138 @@
+# GitHub Actions workflow to test documentation with Playwright
+name: Test Documentation (Playwright)
+
+on:
+  # Run after docs deployment
+  workflow_run:
+    workflows: ["Deploy Documentation"]
+    types:
+      - completed
+
+  # Run on PRs that modify docs
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - 'docs/**'
+      - 'tutorials/**'
+      - 'poc-agenda/**'
+      - 'mkdocs.yml'
+      - 'tests/e2e/**'
+      - '.github/workflows/test-docs.yml'
+
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 'Base URL to test (leave empty for GitHub Pages)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # Only run if deployment succeeded or manual/PR trigger
+    if: |
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Install dependencies
+        run: |
+          cd tests/e2e
+          npm ci
+
+      - name: Install Playwright browsers
+        run: |
+          cd tests/e2e
+          npx playwright install --with-deps chromium
+
+      - name: Set test URL
+        id: url
+        run: |
+          if [[ -n "${{ github.event.inputs.base_url }}" ]]; then
+            echo "base_url=${{ github.event.inputs.base_url }}" >> $GITHUB_OUTPUT
+          else
+            echo "base_url=https://fgarofalo56.github.io/Suppercharge_Microsoft_Fabric/" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Wait for deployment to propagate
+        if: github.event_name == 'workflow_run'
+        run: |
+          echo "Waiting 30 seconds for GitHub Pages to update..."
+          sleep 30
+
+      - name: Run Playwright tests
+        run: |
+          cd tests/e2e
+          BASE_URL="${{ steps.url.outputs.base_url }}" npx playwright test
+        env:
+          CI: true
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: tests/e2e/playwright-report/
+          retention-days: 30
+
+      - name: Upload test screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-screenshots
+          path: tests/e2e/test-results/
+          retention-days: 7
+
+      - name: Test summary
+        if: always()
+        run: |
+          echo "## 🧪 Playwright Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Base URL:** ${{ steps.url.outputs.base_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [[ -f tests/e2e/test-results/.last-run.json ]]; then
+            echo "### Results" >> $GITHUB_STEP_SUMMARY
+            cat tests/e2e/test-results/.last-run.json >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ❌ Documentation Tests Failed
+
+            Playwright tests found issues with the documentation. Please review:
+
+            - Check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details
+            - Download the \`playwright-report\` artifact for the full HTML report
+            - Download \`playwright-screenshots\` for failure screenshots
+
+            Common issues:
+            - Broken links (404 errors)
+            - Missing images
+            - Navigation problems
+            - Page load failures`
+            })

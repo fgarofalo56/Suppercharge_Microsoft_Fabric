@@ -16,7 +16,7 @@ on:
       - 'CHANGELOG.md'
       - 'CONTRIBUTING.md'
       - '.github/workflows/docs.yml'
-  
+
   # Allow manual trigger
   workflow_dispatch:
 
@@ -39,13 +39,13 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0  # Fetch all history for git info
-      
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.12'
           cache: 'pip'
-      
+
       - name: Install dependencies
         run: |
           pip install --upgrade pip
@@ -54,28 +54,129 @@ jobs:
             mkdocs-minify-plugin>=0.8.0 \
             pymdown-extensions>=10.0 \
             pillow \
-            cairosvg
-      
+            cairosvg \
+            linkchecker
+
       - name: Prepare documentation structure
         run: |
+          echo "📁 Preparing documentation structure..."
+
           # Copy external folders into docs/ for MkDocs to find them
+          echo "Copying tutorials..."
           cp -r tutorials docs/tutorials
+
+          echo "Copying poc-agenda..."
           cp -r poc-agenda docs/poc-agenda
+
+          echo "Copying infra README..."
           mkdir -p docs/infra
           cp infra/README.md docs/infra/README.md
-          
+
           # Copy root-level files into docs/
+          echo "Copying root-level files..."
           cp CHANGELOG.md docs/CHANGELOG.md
           cp CONTRIBUTING.md docs/CONTRIBUTING.md
-          
-          # Create homepage from index.md if it exists, otherwise use README
-          if [ -f index.md ]; then
-            cp index.md docs/index.md
+
+          # List the docs structure for debugging
+          echo ""
+          echo "📂 Documentation structure:"
+          find docs -type f -name "*.md" | head -50
+          echo "..."
+          echo "Total markdown files: $(find docs -type f -name '*.md' | wc -l)"
+
+      - name: Validate internal links
+        run: |
+          echo "🔗 Checking for broken internal links..."
+
+          # Check for common link issues in markdown files
+          broken_links=0
+
+          # Check for links to non-existent files
+          for file in $(find docs -name "*.md"); do
+            # Extract markdown links [text](path)
+            links=$(grep -oP '\[.*?\]\(\K[^)]+(?=\))' "$file" 2>/dev/null || true)
+            for link in $links; do
+              # Skip external links, anchors, and mailto
+              if [[ "$link" == http* ]] || [[ "$link" == \#* ]] || [[ "$link" == mailto:* ]]; then
+                continue
+              fi
+
+              # Get the directory of the current file
+              dir=$(dirname "$file")
+
+              # Remove anchor from link
+              link_path="${link%%#*}"
+
+              # Skip if empty after removing anchor
+              if [[ -z "$link_path" ]]; then
+                continue
+              fi
+
+              # Check if the linked file exists
+              if [[ "$link_path" == /* ]]; then
+                # Absolute path (from docs root)
+                target="docs${link_path}"
+              else
+                # Relative path
+                target="$dir/$link_path"
+              fi
+
+              # Normalize path
+              target=$(realpath -m "$target" 2>/dev/null || echo "$target")
+
+              if [[ ! -f "$target" ]] && [[ ! -d "$target" ]]; then
+                echo "❌ Broken link in $file: $link -> $target"
+                broken_links=$((broken_links + 1))
+              fi
+            done
+          done
+
+          if [[ $broken_links -gt 0 ]]; then
+            echo ""
+            echo "⚠️ Found $broken_links potentially broken links"
+            echo "Note: Some may be valid if they reference generated content"
+          else
+            echo "✅ No obvious broken internal links found"
           fi
-      
+
       - name: Build documentation
-        run: mkdocs build --strict
-      
+        run: |
+          echo "🏗️ Building documentation with MkDocs..."
+          mkdocs build --strict
+          echo "✅ Build completed successfully"
+
+      - name: Validate built site
+        run: |
+          echo "🔍 Validating built site structure..."
+
+          # Check that key pages exist
+          required_pages=(
+            "site/index.html"
+            "site/QUICK_START/index.html"
+            "site/tutorials/index.html"
+            "site/best-practices/index.html"
+          )
+
+          missing=0
+          for page in "${required_pages[@]}"; do
+            if [[ -f "$page" ]]; then
+              echo "✅ Found: $page"
+            else
+              echo "❌ Missing: $page"
+              missing=$((missing + 1))
+            fi
+          done
+
+          if [[ $missing -gt 0 ]]; then
+            echo "⚠️ Warning: $missing expected pages missing"
+            echo "Continuing anyway - they may have different paths"
+          fi
+
+          # Count total pages
+          total_pages=$(find site -name "*.html" | wc -l)
+          echo ""
+          echo "📊 Total HTML pages generated: $total_pages"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
@@ -91,3 +192,12 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Deployment summary
+        run: |
+          echo "## 🚀 Documentation Deployed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

@@ -166,6 +166,16 @@ nav:
     - 11 - SAS Connectivity: tutorials/11-sas-connectivity/README.md
     - 12 - CI/CD & DevOps: tutorials/12-cicd-devops/README.md
     - 13 - Migration Planning: tutorials/13-migration-planning/README.md
+    - 14 - Security & Networking: tutorials/14-security-networking/README.md
+    - 15 - Cost Optimization: tutorials/15-cost-optimization/README.md
+    - 16 - Performance Tuning: tutorials/16-performance-tuning/README.md
+    - 17 - Monitoring & Alerting: tutorials/17-monitoring-alerting/README.md
+    - 18 - Data Sharing: tutorials/18-data-sharing/README.md
+    - 19 - Copilot & AI Features: tutorials/19-copilot-ai/README.md
+    - 20 - Workspace Best Practices: tutorials/20-workspace-best-practices/README.md
+    - 21 - GeoAnalytics & ArcGIS: tutorials/21-geoanalytics-arcgis/README.md
+    - 22 - Networking & Connectivity: tutorials/22-networking-connectivity/README.md
+    - 23 - SHIR & Data Gateways: tutorials/23-shir-data-gateways/README.md
     - Cheat Sheet: tutorials/CHEAT_SHEET.md
   
   - POC Agenda:
@@ -176,12 +186,26 @@ nav:
     - Demo Runbook: poc-agenda/DEMO_RUNBOOK.md
     - Diagram Guide: poc-agenda/DIAGRAM_GUIDE.md
   
+  - Best Practices:
+    - Overview: best-practices/README.md
+    - Workspaces & Naming: best-practices/01_WORKSPACES_NAMING.md
+    - Data Gateway: best-practices/02_DATA_GATEWAY.md
+    - Pipelines & Data Movement: best-practices/03_PIPELINES_DATA_MOVEMENT.md
+    - Metadata-Driven Pipelines: best-practices/04_METADATA_DRIVEN_PIPELINES.md
+    - Spark & Notebooks: best-practices/05_SPARK_NOTEBOOKS.md
+    - Dataflows Gen2: best-practices/06_DATAFLOWS.md
+    - Lakehouse Setup: best-practices/07_LAKEHOUSE_SETUP.md
+    - Warehouse Setup: best-practices/08_WAREHOUSE_SETUP.md
+    - Oracle & SQL Server Patterns: best-practices/09_SOURCE_SPECIFIC_PATTERNS.md
+    - Decision Guide: best-practices/10_DECISION_GUIDE.md
+    - Oracle Gateway Troubleshooting: best-practices/11_ORACLE_GATEWAY_TROUBLESHOOTING.md
+
   - Reference:
     - FAQ: FAQ.md
     - Glossary: GLOSSARY.md
     - Style Guide: STYLE_GUIDE.md
     - Visual Standards: VISUAL_STANDARDS.md
-  
+
   - Infrastructure:
     - Overview: infra/README.md
     - Contributing: CONTRIBUTING.md

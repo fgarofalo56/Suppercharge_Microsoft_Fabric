@@ -37,16 +37,16 @@ function isInternalLink(href: string, baseUrl: string): boolean {
 
 test.describe('Documentation Site Health', () => {
   test('homepage loads successfully', async ({ page }) => {
-    const response = await page.goto('/');
+    const response = await page.goto('./');
     expect(response?.status()).toBe(200);
 
     // Check for key homepage elements
     await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('nav')).toBeVisible();
+    await expect(page.locator('nav').first()).toBeVisible();
   });
 
   test('site has proper title and metadata', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('./');
 
     const title = await page.title();
     expect(title).toContain('Microsoft Fabric');
@@ -57,7 +57,7 @@ test.describe('Documentation Site Health', () => {
   });
 
   test('navigation menu is functional', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('./');
 
     // Check main navigation tabs exist
     const navTabs = page.locator('.md-tabs__list .md-tabs__item');
@@ -71,7 +71,7 @@ test.describe('Documentation Site Health', () => {
   });
 
   test('search functionality exists', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('./');
 
     // Check search input exists
     const searchInput = page.locator('[data-md-component="search"] input, .md-search__input');
@@ -79,7 +79,7 @@ test.describe('Documentation Site Health', () => {
   });
 
   test('dark/light mode toggle exists', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('./');
 
     // Check for theme toggle button
     const themeToggle = page.locator('[data-md-component="palette"] button, .md-header__button[data-md-color-scheme]').first();
@@ -89,13 +89,13 @@ test.describe('Documentation Site Health', () => {
 
 test.describe('Key Pages Load Successfully', () => {
   const keyPages = [
-    { path: '/', name: 'Homepage' },
-    { path: '/QUICK_START/', name: 'Quick Start' },
-    { path: '/PREREQUISITES/', name: 'Prerequisites' },
-    { path: '/ARCHITECTURE/', name: 'Architecture' },
-    { path: '/tutorials/', name: 'Tutorials Overview' },
-    { path: '/best-practices/', name: 'Best Practices Overview' },
-    { path: '/FAQ/', name: 'FAQ' },
+    { path: './', name: 'Homepage' },
+    { path: './QUICK_START/', name: 'Quick Start' },
+    { path: './PREREQUISITES/', name: 'Prerequisites' },
+    { path: './ARCHITECTURE/', name: 'Architecture' },
+    { path: './tutorials/', name: 'Tutorials Overview' },
+    { path: './best-practices/', name: 'Best Practices Overview' },
+    { path: './FAQ/', name: 'FAQ' },
   ];
 
   for (const { path, name } of keyPages) {
@@ -114,12 +114,12 @@ test.describe('Key Pages Load Successfully', () => {
 
 test.describe('Tutorials Section', () => {
   test('tutorials overview page loads', async ({ page }) => {
-    const response = await page.goto('/tutorials/');
+    const response = await page.goto('./tutorials/');
     expect(response?.status()).toBe(200);
   });
 
   test('tutorial navigation contains expected items', async ({ page }) => {
-    await page.goto('/tutorials/');
+    await page.goto('./tutorials/');
 
     // Check that tutorial links exist in navigation or content
     const pageContent = await page.content();
@@ -129,10 +129,10 @@ test.describe('Tutorials Section', () => {
   });
 
   const tutorialPaths = [
-    '/tutorials/00-environment-setup/',
-    '/tutorials/01-bronze-layer/',
-    '/tutorials/02-silver-layer/',
-    '/tutorials/03-gold-layer/',
+    './tutorials/00-environment-setup/',
+    './tutorials/01-bronze-layer/',
+    './tutorials/02-silver-layer/',
+    './tutorials/03-gold-layer/',
   ];
 
   for (const path of tutorialPaths) {
@@ -145,7 +145,7 @@ test.describe('Tutorials Section', () => {
 
 test.describe('Best Practices Section', () => {
   test('best practices overview loads', async ({ page }) => {
-    const response = await page.goto('/best-practices/');
+    const response = await page.goto('./best-practices/');
     expect(response?.status()).toBe(200);
 
     // Should contain best practices content
@@ -154,10 +154,10 @@ test.describe('Best Practices Section', () => {
   });
 
   const bestPracticePages = [
-    '/best-practices/01_WORKSPACES_NAMING/',
-    '/best-practices/02_DATA_GATEWAY/',
-    '/best-practices/10_DECISION_GUIDE/',
-    '/best-practices/11_ORACLE_GATEWAY_TROUBLESHOOTING/',
+    './best-practices/01_WORKSPACES_NAMING/',
+    './best-practices/02_DATA_GATEWAY/',
+    './best-practices/10_DECISION_GUIDE/',
+    './best-practices/11_ORACLE_GATEWAY_TROUBLESHOOTING/',
   ];
 
   for (const path of bestPracticePages) {
@@ -170,18 +170,18 @@ test.describe('Best Practices Section', () => {
 
 test.describe('Link Validation', () => {
   test('homepage has no broken internal links', async ({ page }) => {
-    await page.goto('/');
-    await checkPageLinks(page, '/');
+    await page.goto('./');
+    await checkPageLinks(page, './');
   });
 
   test('tutorials overview has no broken internal links', async ({ page }) => {
-    await page.goto('/tutorials/');
-    await checkPageLinks(page, '/tutorials/');
+    await page.goto('./tutorials/');
+    await checkPageLinks(page, './tutorials/');
   });
 
   test('best practices overview has no broken internal links', async ({ page }) => {
-    await page.goto('/best-practices/');
-    await checkPageLinks(page, '/best-practices/');
+    await page.goto('./best-practices/');
+    await checkPageLinks(page, './best-practices/');
   });
 });
 
@@ -225,7 +225,7 @@ async function checkPageLinks(page: Page, currentPath: string): Promise<void> {
 
 test.describe('Images and Assets', () => {
   test('homepage images load correctly', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('./');
 
     const images = await page.locator('img').all();
 
@@ -254,7 +254,7 @@ test.describe('Images and Assets', () => {
       }
     });
 
-    await page.goto('/');
+    await page.goto('./');
 
     // All CSS should load successfully
     const failedCss = responses.filter(r => r.status >= 400);
@@ -264,7 +264,7 @@ test.describe('Images and Assets', () => {
 
 test.describe('Mermaid Diagrams', () => {
   test('mermaid diagrams render on architecture page', async ({ page }) => {
-    await page.goto('/ARCHITECTURE/');
+    await page.goto('./ARCHITECTURE/');
 
     // Wait for mermaid to initialize
     await page.waitForTimeout(2000);
@@ -285,7 +285,7 @@ test.describe('Mermaid Diagrams', () => {
 test.describe('Code Blocks', () => {
   test('code blocks have copy button', async ({ page }) => {
     // Navigate to a page with code examples
-    await page.goto('/best-practices/11_ORACLE_GATEWAY_TROUBLESHOOTING/');
+    await page.goto('./best-practices/11_ORACLE_GATEWAY_TROUBLESHOOTING/');
 
     // Look for code blocks
     const codeBlocks = page.locator('pre code');
@@ -306,7 +306,7 @@ test.describe('Responsive Design', () => {
   test('site is mobile-friendly', async ({ page }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
-    await page.goto('/');
+    await page.goto('./');
 
     // Mobile menu should exist
     const mobileMenu = page.locator('.md-header__button[data-md-toggle="drawer"]').first();
@@ -319,7 +319,7 @@ test.describe('Responsive Design', () => {
 
   test('site works on tablet', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 1024 });
-    await page.goto('/');
+    await page.goto('./');
 
     // Navigation should be visible
     const nav = page.locator('nav');
@@ -333,7 +333,7 @@ test.describe('Responsive Design', () => {
 
 test.describe('Accessibility', () => {
   test('page has proper heading structure', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('./');
 
     // Should have exactly one h1
     const h1Count = await page.locator('h1').count();
@@ -346,7 +346,7 @@ test.describe('Accessibility', () => {
   });
 
   test('images have alt text', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('./');
 
     const images = await page.locator('img').all();
     const missingAlt: string[] = [];
@@ -368,7 +368,7 @@ test.describe('Accessibility', () => {
   });
 
   test('links are distinguishable', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('./');
 
     // Links should have different styling than regular text
     const link = page.locator('article a').first();
@@ -385,7 +385,7 @@ test.describe('Accessibility', () => {
 test.describe('Performance', () => {
   test('page loads within acceptable time', async ({ page }) => {
     const startTime = Date.now();
-    await page.goto('/');
+    await page.goto('./');
     const loadTime = Date.now() - startTime;
 
     // Should load within 10 seconds (generous for CI)
@@ -403,7 +403,7 @@ test.describe('Performance', () => {
       }
     });
 
-    await page.goto('/');
+    await page.goto('./');
     await page.waitForLoadState('networkidle');
 
     // Filter out known acceptable errors
@@ -423,7 +423,7 @@ test.describe('Performance', () => {
 // Comprehensive link crawler test
 test.describe('Full Site Link Crawl', () => {
   test('crawl all navigation links for 404s', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('./');
 
     // Get all navigation links
     const navLinks = await page.locator('.md-nav__link[href]').all();

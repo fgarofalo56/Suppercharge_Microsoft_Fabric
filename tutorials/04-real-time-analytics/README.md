@@ -1,6 +1,6 @@
 # ⚡ Tutorial 04: Real-Time Analytics
 
-> **🏠 [Home](../../README.md)** > **📖 [Tutorials](../README.md)** > **⚡ Real-Time Analytics**
+> **🏠 [Home](../../index.md)** > **📖 [Tutorials](../index.md)** > **⚡ Real-Time Analytics**
 
 ---
 
@@ -1255,7 +1255,7 @@ Continue your learning journey:
 
 | Previous | Up | Next |
 |:---------|:--:|-----:|
-| [⬅️ 03-Gold Layer](../03-gold-layer/README.md) | [📖 Tutorials Index](../README.md) | [05-Direct Lake & Power BI ➡️](../05-direct-lake-powerbi/README.md) |
+| [⬅️ 03-Gold Layer](../03-gold-layer/README.md) | [📖 Tutorials Index](../index.md) | [05-Direct Lake & Power BI ➡️](../05-direct-lake-powerbi/README.md) |
 
 ---
 

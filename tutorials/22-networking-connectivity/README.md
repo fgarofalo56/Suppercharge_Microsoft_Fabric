@@ -778,7 +778,7 @@ az network express-route show \
 
 ## Additional Resources
 
-- [Networking Documentation](../../docs/NETWORKING.md)
+- [Networking Documentation](../NETWORKING.md)
 - [Private Endpoints for Fabric](https://learn.microsoft.com/en-us/fabric/security/security-private-links-overview)
 - [ExpressRoute Documentation](https://learn.microsoft.com/en-us/azure/expressroute/)
 
@@ -792,4 +792,4 @@ Continue to:
 
 ---
 
-[Back to Tutorials](../README.md) | [Back to Main](../../README.md)
+[Back to Tutorials](../index.md) | [Back to Main](../../index.md)

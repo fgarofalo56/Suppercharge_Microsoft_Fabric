@@ -1,6 +1,6 @@
 # Tutorial 01: Bronze Layer
 
-> **🏠 [Home](../../README.md)** > **📖 [Tutorials](../README.md)** > **🥉 Bronze Layer**
+> **🏠 [Home](../../index.md)** > **📖 [Tutorials](../index.md)** > **🥉 Bronze Layer**
 
 ---
 
@@ -287,7 +287,7 @@ graph TB
 Before starting, ensure you have:
 
 - [ ] Completed [Tutorial 00: Environment Setup](../00-environment-setup/README.md)
-- [ ] Generated sample data (see [Data Generation](../../data-generation/README.md))
+- [ ] Generated sample data (see `data-generation/` folder in repo)
 - [ ] Access to `lh_bronze` Lakehouse
 
 > ⚠️ **Warning:** If you haven't generated sample data yet, do so before continuing. The notebooks in this tutorial expect data files to exist.
@@ -922,7 +922,7 @@ Continue to **[Tutorial 02: Silver Layer](../02-silver-layer/README.md)** to lea
 
 | Previous | Up | Next |
 |----------|-----|------|
-| [⬅️ 00-Environment Setup](../00-environment-setup/README.md) | [📖 Tutorials Index](../README.md) | [02-Silver Layer](../02-silver-layer/README.md) ➡️ |
+| [⬅️ 00-Environment Setup](../00-environment-setup/README.md) | [📖 Tutorials Index](../index.md) | [02-Silver Layer](../02-silver-layer/README.md) ➡️ |
 
 ---
 

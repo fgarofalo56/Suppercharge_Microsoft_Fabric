@@ -8,7 +8,7 @@
 
 </div>
 
-> **[Home](../../README.md)** > **[Tutorials](../README.md)** > **Cost Management & Capacity Optimization**
+> **[Home](../../index.md)** > **[Tutorials](../index.md)** > **Cost Management & Capacity Optimization**
 
 ---
 
@@ -1563,7 +1563,7 @@ Continue to **[Tutorial 16: Performance Tuning](../16-performance-tuning/README.
 
 | Previous | Up | Next |
 |----------|-----|------|
-| [14-Security & Compliance](../14-security-networking/README.md) | [Tutorials Index](../README.md) | [16-Performance Tuning](../16-performance-tuning/README.md) |
+| [14-Security & Compliance](../14-security-networking/README.md) | [Tutorials Index](../index.md) | [16-Performance Tuning](../16-performance-tuning/README.md) |
 
 ---
 

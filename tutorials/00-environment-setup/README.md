@@ -1,6 +1,6 @@
 # Tutorial 00: Environment Setup
 
-> **🏠 [Home](../../README.md)** > **📖 [Tutorials](../README.md)** > **⚙️ Environment Setup**
+> **🏠 [Home](../../index.md)** > **📖 [Tutorials](../index.md)** > **⚙️ Environment Setup**
 
 ---
 
@@ -523,7 +523,7 @@ Continue to **[Tutorial 01: Bronze Layer](../01-bronze-layer/README.md)** to sta
 
 | Previous | Up | Next |
 |----------|-----|------|
-| N/A | [📖 Tutorials Index](../README.md) | [01-Bronze Layer](../01-bronze-layer/README.md) ➡️ |
+| N/A | [📖 Tutorials Index](../index.md) | [01-Bronze Layer](../01-bronze-layer/README.md) ➡️ |
 
 ---
 

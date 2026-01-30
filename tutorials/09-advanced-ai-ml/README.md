@@ -1,6 +1,6 @@
 # 🤖 Tutorial 09: Advanced AI/ML
 
-> **🏠 [Home](../../README.md)** > **📖 [Tutorials](../README.md)** > **🤖 Advanced AI/ML**
+> **🏠 [Home](../../index.md)** > **📖 [Tutorials](../index.md)** > **🤖 Advanced AI/ML**
 
 ---
 
@@ -1279,7 +1279,7 @@ You now have hands-on experience with:
 
 ### What's Next?
 
-1. **Review the [POC Agenda](../../poc-agenda/README.md)** for workshop preparation
+1. **Review the [POC Agenda](../poc-agenda/)** for workshop preparation
 2. **Customize** the solution for your specific casino requirements
 3. **Present** to stakeholders using the provided materials
 4. **Scale** to production with enterprise governance
@@ -1290,7 +1290,7 @@ You now have hands-on experience with:
 
 Continue to **[Tutorial 10: Teradata Migration](../10-teradata-migration/README.md)** to learn how to migrate from Teradata to Microsoft Fabric.
 
-Or review the **[POC Agenda](../../poc-agenda/README.md)** for workshop preparation, presentation materials, and stakeholder demonstrations.
+Or review the **[POC Agenda](../poc-agenda/)** for workshop preparation, presentation materials, and stakeholder demonstrations.
 
 ---
 
@@ -1318,7 +1318,7 @@ Or review the **[POC Agenda](../../poc-agenda/README.md)** for workshop preparat
 
 | ⬅️ Previous | ⬆️ Up | ➡️ Next |
 |------------|------|--------|
-| [08-Database Mirroring](../08-database-mirroring/README.md) | [Tutorials Index](../README.md) | [10-Teradata Migration](../10-teradata-migration/README.md) |
+| [08-Database Mirroring](../08-database-mirroring/README.md) | [Tutorials Index](../index.md) | [10-Teradata Migration](../10-teradata-migration/README.md) |
 
 ---
 

@@ -1,6 +1,6 @@
 # 📊 Tutorial 05: Direct Lake & Power BI
 
-> **🏠 [Home](../../README.md)** > **📖 [Tutorials](../README.md)** > **📊 Direct Lake & Power BI**
+> **🏠 [Home](../../index.md)** > **📖 [Tutorials](../index.md)** > **📊 Direct Lake & Power BI**
 
 ---
 
@@ -1142,7 +1142,7 @@ Continue your learning journey:
 
 | Previous | Up | Next |
 |:---------|:--:|-----:|
-| [⬅️ 04-Real-Time Analytics](../04-real-time-analytics/README.md) | [📖 Tutorials Index](../README.md) | [06-Data Pipelines ➡️](../06-data-pipelines/README.md) |
+| [⬅️ 04-Real-Time Analytics](../04-real-time-analytics/README.md) | [📖 Tutorials Index](../index.md) | [06-Data Pipelines ➡️](../06-data-pipelines/README.md) |
 
 ---
 

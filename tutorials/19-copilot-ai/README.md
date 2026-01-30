@@ -1,6 +1,6 @@
 # Tutorial 19: Copilot & AI-Assisted Development for Microsoft Fabric
 
-> **[Home](../../README.md)** > **[Tutorials](../README.md)** > **Copilot & AI-Assisted Development**
+> **[Home](../../index.md)** > **[Tutorials](../index.md)** > **Copilot & AI-Assisted Development**
 
 ---
 
@@ -52,7 +52,7 @@
 | Navigation | |
 |---|---|
 | **Previous** | [18-Data Sharing](../18-data-sharing/README.md) |
-| **Next** | [Tutorials Home](../README.md) - Series Complete! |
+| **Next** | [Tutorials Home](../index.md) - Series Complete! |
 
 ---
 
@@ -1153,7 +1153,7 @@ You are now ready to implement Microsoft Fabric in production!
 ### Immediate Actions
 
 1. **Start Your POC**
-   - Use the [3-Day Workshop Agenda](../../poc-agenda/README.md) to guide stakeholders
+   - Use the [3-Day Workshop Agenda](../poc-agenda/) to guide stakeholders
    - Focus on one high-value use case first
    - Demonstrate quick wins within the first week
 
@@ -1217,7 +1217,7 @@ You are now ready to implement Microsoft Fabric in production!
 
 | Previous | Up | Next |
 |----------|-----|------|
-| [18-Data Sharing](../18-data-sharing/README.md) | [Tutorials Index](../README.md) | [Tutorials Home](../README.md) - Complete! |
+| [18-Data Sharing](../18-data-sharing/README.md) | [Tutorials Index](../index.md) | [Tutorials Home](../index.md) - Complete! |
 
 ---
 

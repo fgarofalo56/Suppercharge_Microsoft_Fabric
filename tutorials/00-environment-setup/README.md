@@ -527,4 +527,4 @@ Continue to **[Tutorial 01: Bronze Layer](../01-bronze-layer/README.md)** to sta
 
 ---
 
-> 💬 **Questions or issues?** Open an issue in the [GitHub repository](https://github.com/your-repo/issues).
+> 💬 **Questions or issues?** Open an issue in the [GitHub repository](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric/issues).

@@ -1148,7 +1148,7 @@ Continue your learning journey:
 
 <div align="center">
 
-**Questions or issues?** Open an issue in the [GitHub repository](https://github.com/your-repo/issues)
+**Questions or issues?** Open an issue in the [GitHub repository](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric/issues)
 
 *Tutorial 05 of 10 in the Microsoft Fabric Casino POC Series*
 

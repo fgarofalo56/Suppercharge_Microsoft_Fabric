@@ -46,6 +46,8 @@
 
 ---
 
+> **📸 Note**: This tutorial contains screenshot placeholders with detailed descriptions of what should be captured. When running through this tutorial in your environment, we encourage you to capture your own screenshots at the indicated locations to document your specific implementation.
+
 ## 📋 Overview
 
 This tutorial covers implementing real-time analytics for casino floor monitoring using **Fabric Real-Time Intelligence**. You will create streaming pipelines that process slot machine events in near real-time, enabling instant visibility into floor operations, jackpots, and machine performance.
@@ -1261,7 +1263,7 @@ Continue your learning journey:
 
 <div align="center">
 
-**Questions or issues?** Open an issue in the [GitHub repository](https://github.com/your-repo/issues)
+**Questions or issues?** Open an issue in the [GitHub repository](https://github.com/frgarofa/Suppercharge_Microsoft_Fabric/issues)
 
 *Tutorial 04 of 10 in the Microsoft Fabric Casino POC Series*
 

@@ -118,6 +118,10 @@ Casino and gaming operations handle highly regulated data:
 
 Microsoft Purview provides unified data governance:
 
+![Federated Data Governance](https://learn.microsoft.com/en-us/purview/media/datagov-federated-approach.png)
+
+*Microsoft Purview enables a federated approach to data governance. Source: [Data governance solutions](https://learn.microsoft.com/en-us/purview/governance-solutions-overview)*
+
 | Capability | Description |
 |------------|-------------|
 | **Data Catalog** | Discover and understand data assets |

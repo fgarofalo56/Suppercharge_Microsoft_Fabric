@@ -312,6 +312,89 @@ with Microsoft and validate by testing your own runbook (see
 
 ---
 
+## 🎬 Worked example — casino workload regional failover
+
+A concrete walkthrough, grounded in this project's own POC assets, of what
+the six sections above look like in sequence. This is **illustrative**, built
+from this repo's `scripts/fabric-cicd-deploy.py` and F64 capacity model — not
+a Microsoft-validated runbook. For the operational, step-by-step version see
+[Multi-Region Failover runbook](../runbooks/multi-region-failover.md) and
+[Disaster Recovery Execution runbook](../runbooks/disaster-recovery-execution.md).
+
+### Scenario
+
+The casino-gaming POC's primary Fabric capacity (F64, East US 2) becomes
+unreachable during a declared Azure regional incident. Slot telemetry
+ingestion, the Silver/Gold medallion pipelines, and the Direct Lake Power BI
+reports all stop refreshing.
+
+### Use case walkthrough
+
+**Phase 1 — Incident, before any customer action (Microsoft-controlled)**
+
+- Fabric declares the regional disaster; no customer action is possible or
+  expected at this point (§1, §2).
+- Power BI reports for the casino floor-monitoring dashboard remain
+  **viewable** in read-only mode — pit bosses can still see the last
+  successfully refreshed KPIs, they just won't update.
+- The Bronze/Silver/Gold notebooks in `notebooks/bronze/`, `notebooks/silver/`,
+  `notebooks/gold/` cannot be opened or run from the failed workspace.
+
+**Phase 2 — Recovery (customer-executed)**
+
+```bash
+# 1. Stand up new Fabric capacity outside the primary geo (manual, portal or CLI)
+az resource create --resource-type Microsoft.Fabric/capacities \
+  --resource-group rg-casino-dr --name casino-fabric-dr \
+  --properties '{"sku":{"name":"F64","tier":"Fabric"}}' \
+  --location westus2
+
+# 2. Recreate workspaces on the new capacity with the SAME names
+#    (required for the recovery scripts below to resolve item references)
+
+# 3. Redeploy every Git-tracked Fabric item from source control —
+#    this project's own fabric-cicd script does exactly this (§3):
+python scripts/fabric-cicd-deploy.py \
+  --workspace-id <new-dr-workspace-guid> \
+  --environment prod \
+  --item-type-in-scope Notebook Lakehouse SemanticModel \
+  --dry-run   # confirm scope first, then re-run without --dry-run
+```
+
+- Lakehouse and Warehouse **definitions** come back from Git via the script
+  above; the **data** inside them does not — that's a separate reingest or
+  restore-from-OneLake-replica step (§2, §3).
+- KQL databases (used by this POC's Real-Time Intelligence /Eventhouse
+  slot-telemetry path) are **not preserved through failover at all** and need
+  their own backup/restore strategy — they're the one component this
+  worked example cannot wave past.
+
+**Phase 3 — Validate, then resume operations**
+
+- Confirm OneLake read/write via the ADLS Gen2 API against the new workspace
+  before declaring recovery complete (§2, §4 "what you can genuinely test").
+- Resume slot-telemetry ingestion into the new Bronze layer; verify Silver
+  dedup and Gold KPI aggregation produce the expected row counts against a
+  known-good sample before reconnecting the Power BI semantic model.
+
+**Phase 4 — Failback, when East US 2 is healthy again**
+
+- Per §5, public guidance does not confirm whether this is automatic —
+  treat it as the same manual process in reverse: new capacity/workspaces
+  back in East US 2, redeploy from Git, migrate any data written during the
+  incident forward. Escalate the specifics to your Microsoft account team
+  before committing to a runbook.
+
+### Where this maps to the cost/risk options in §6
+
+This worked example follows **Option B (scripted recovery automation)** —
+it's why the repo ships `fabric-cicd-deploy.py` as a first-class asset rather
+than a one-off script. Option A would stop after Phase 1 and rebuild Phase 2
+by hand; Option C would have Phase 2's target capacity already running before
+the incident starts.
+
+---
+
 ## ❓ Questions to escalate to Microsoft
 
 Take these to your Microsoft account team or FastTrack engineer before they
